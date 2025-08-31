@@ -2,25 +2,25 @@
   "2024-25": {
     "core": [
       {
-        "name": "John Doe",
+        "name": "Bhawna Bharti",
         "por": "President",
-        "img": "/members/john.jpg",
+        "img": "/members/",
         "socials": {
-          "instagram": "https://instagram.com/johndoe",
+          "instagram": "https://instagram.com/",
           "facebook": "",
-          "linkedin": "https://linkedin.com/in/johndoe"
+          "linkedin": "https://linkedin.com/"
         }
       }
     ],
     "executive": [
       {
-        "name": "Mike Ross",
-        "por": "Secretary",
-        "img": "/members/mike.jpg",
+        "name": "Anmol",
+        "por": "executive",
+        "img": "/members/",
         "socials": {
           "instagram": "",
           "facebook": "",
-          "linkedin": "https://linkedin.com/in/mikeross"
+          "linkedin": "https://linkedin.com/in"
         }
       }
     ]
@@ -28,23 +28,63 @@
   "2025-26": {
     "core": [
       {
-        "name": "Jane Smith",
-        "por": "Vice President",
+        "name": "Bhawna Bharti",
+        "por": "President",
         "img": "",
         "socials": {
           "instagram": "",
-          "facebook": "https://facebook.com/janesmith",
+          "facebook": "https://facebook.com/",
           "linkedin": ""
+        }
+      },
+      {
+        "name": "Anmol",
+        "por": "executive",
+        "img": "/members/",
+        "socials": {
+          "instagram": "",
+          "facebook": "",
+          "linkedin": "https://linkedin.com/in"
+        }
+      },
+      {
+        "name": "Agrima",
+        "por": "executive",
+        "img": "/members/",
+        "socials": {
+          "instagram": "",
+          "facebook": "",
+          "linkedin": "https://linkedin.com/in"
         }
       }
     ],
     "executive": [
       {
-        "name": "Rachel Zane",
+        "name": "Devanuj",
         "por": "Treasurer",
         "img": "",
         "socials": {
-          "instagram": "https://instagram.com/rachelzane",
+          "instagram": "https://instagram.com/",
+          "facebook": "",
+          "linkedin": ""
+        }
+      },
+      {
+        "name": "Devanuj",
+        "por": "Treasurer",
+        "img": "",
+        "socials": {
+          "instagram": "https://instagram.com/",
+          "facebook": "",
+          "linkedin": ""
+        }
+      },
+      {
+        "name": "Devanuj",
+        "por": "Treasurer",
+        "img": "",
+        "socials": {
+          "instagram": "https://instagram.com/",
           "facebook": "",
           "linkedin": ""
         }
