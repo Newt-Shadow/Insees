@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
-// 👇 This is the critical fix
-export const runtime = "nodejs";
+export const runtime = "nodejs"; // ✅ Matches Prisma engine
 
 export async function GET() {
   try {
