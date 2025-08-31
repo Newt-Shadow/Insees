@@ -22,6 +22,16 @@
           "facebook": "",
           "linkedin": "https://linkedin.com/in"
         }
+      },
+      {
+        "name": "Shubham",
+        "por": "executive",
+        "img": "/members/",
+        "socials": {
+          "instagram": "",
+          "facebook": "",
+          "linkedin": "https://linkedin.com/in"
+        }
       }
     ]
   },
