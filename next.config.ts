@@ -1,7 +1,19 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com",
+      },
+      {
+        protocol: "https",
+        hostname: "*.public.blob.vercel-storage.com", // ✅ allow all subdomains of Vercel Blob
+      },
+    ],
+  },
+  /* other config options */
 };
 
 export default nextConfig;

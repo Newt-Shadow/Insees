@@ -1,7 +1,7 @@
+"use client";
 import React, { useEffect, useState } from "react";
 import ResourceAccordion from "./ResourceAccordion";
 import styled from "styled-components";
-import resourcesData from "../../public/data/resources.json";
 
 const Wrapper = styled.div`
   background: black;
@@ -33,7 +33,17 @@ const Resources: React.FC = () => {
   const [semesters, setSemesters] = useState<Semester[]>([]);
 
   useEffect(() => {
-    setSemesters(resourcesData.semesters);
+    const fetchResources = async () => {
+      try {
+        const res = await fetch("/api/resources");
+        const data = await res.json();
+        setSemesters(data.semesters); // matches your API shape
+      } catch (err) {
+        console.error("Failed to fetch resources:", err);
+      }
+    };
+
+    fetchResources();
   }, []);
 
   return (

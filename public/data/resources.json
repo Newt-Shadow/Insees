@@ -2,20 +2,63 @@
   "semesters": [
     {
       "title": "1st Semester Study Material",
-      "files": [
-        { "name": "Engineering Mathematics.pdf", "url": "/files/1st/math.pdf" },
-        { "name": "Basic Electronics.docx", "url": "/files/1st/electronics.docx" }
+      "subjects": [
+        {
+          "name": "Engineering Mathematics",
+          "driveLink": "https://drive.google.com/drive/folders/1A2B3C_MATH",
+          "files": []
+        },
+        {
+          "name": "Basic Electronics",
+          "driveLink": null,
+          "files": [
+            { "name": "Basic Electronics Notes.pdf", "url": "/files/1st/electronics_notes.pdf" },
+            { "name": "Basic Electronics Lab Manual.docx", "url": "/files/1st/electronics_lab.docx" }
+          ]
+        },
+        {
+          "name": "Engineering Drawing",
+          "driveLink": "https://drive.google.com/drive/folders/1A2B3C_DRAW",
+          "files": [
+            { "name": "Drawing Sheets.zip", "url": "/files/1st/drawing_sheets.zip" }
+          ]
+        }
       ]
     },
     {
       "title": "2nd Semester Study Material",
-      "files": [
-        { "name": "Physics Notes.pdf", "url": "/files/2nd/physics.pdf" }
+      "subjects": [
+        {
+          "name": "Physics",
+          "driveLink": "https://drive.google.com/drive/folders/2X3Y_PHYSICS",
+          "files": []
+        },
+        {
+          "name": "Chemistry",
+          "driveLink": null,
+          "files": [
+            { "name": "Chemistry Notes.pdf", "url": "/files/2nd/chemistry.pdf" }
+          ]
+        }
       ]
     },
     {
       "title": "3rd Semester Study Material",
-      "files": []
+      "subjects": [
+        {
+          "name": "Signals and Systems",
+          "driveLink": "https://drive.google.com/drive/folders/3S4T_SIGNALS",
+          "files": []
+        },
+        {
+          "name": "Digital Logic Design",
+          "driveLink": null,
+          "files": [
+            { "name": "DLD Lecture Notes.pdf", "url": "/files/3rd/dld_notes.pdf" },
+            { "name": "DLD Assignments.docx", "url": "/files/3rd/dld_assignments.docx" }
+          ]
+        }
+      ]
     }
   ]
 }

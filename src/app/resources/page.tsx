@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from "react";
 import ResourceAccordion from "@/components/ResourceAccordion";
 import styled from "styled-components";
-import resourcesData from "../../../public/data/resources.json";
 import { Navbar } from "@/components/navbar";
 
 const Wrapper = styled.div`
@@ -31,35 +30,44 @@ const Subtitle = styled.p`
   line-height: 1.6;
 `;
 
-type Semester = {
-  title: string;
-  files: { name: string; url: string }[];
-};
+type FileType = { name: string; url: string };
+type Subject = { name: string; driveLink?: string; files: FileType[] };
+type Semester = { title: string; subjects: Subject[] };
 
 const ResourcesPage: React.FC = () => {
   const [semesters, setSemesters] = useState<Semester[]>([]);
 
   useEffect(() => {
-    setSemesters(resourcesData.semesters);
+    const fetchResources = async () => {
+      try {
+        const res = await fetch("/api/resources");
+        const data = await res.json();
+        setSemesters(data.semesters);
+      } catch (err) {
+        console.error("Failed to fetch resources:", err);
+      }
+    };
+
+    fetchResources();
   }, []);
 
   return (
     <>
-    <Navbar />
-    <Wrapper>
-      <Title>Resources</Title>
-      <Subtitle>
-        Instrumentation and Electronics Engineering Society.
-        <br />
-        National Institute of Technology, Silchar.
-      </Subtitle>
+      <Navbar />
+      <Wrapper>
+        <Title>Resources</Title>
+        <Subtitle>
+          Instrumentation and Electronics Engineering Society.
+          <br />
+          National Institute of Technology, Silchar.
+        </Subtitle>
 
-      <div style={{ maxWidth: "700px", margin: "0 auto" }}>
-        {semesters.map((sem, idx) => (
-          <ResourceAccordion key={idx} title={sem.title} files={sem.files} />
-        ))}
-      </div>
-    </Wrapper>
+        <div style={{ maxWidth: "700px", margin: "0 auto" }}>
+          {semesters.map((sem, idx) => (
+            <ResourceAccordion key={idx} title={sem.title} subjects={sem.subjects} />
+          ))}
+        </div>
+      </Wrapper>
     </>
   );
 };

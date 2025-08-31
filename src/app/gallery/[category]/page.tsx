@@ -1,18 +1,44 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import galleryData from "../../../../public/data/gallery.json";
+
+interface GalleryImage {
+  src: string;
+  category: string;
+}
+
+interface GalleryConfig {
+  driveLink?: string;
+  images: GalleryImage[];
+}
 
 export default function GalleryCategoryPage() {
   const { category } = useParams<{ category: string }>();
-  const formattedCategory = category
-    ? category.replace(/-/g, " ")
-    : "all";
+  const [galleryConfig, setGalleryConfig] = useState<GalleryConfig | null>(null);
+
+  useEffect(() => {
+    const fetchGallery = async () => {
+      try {
+        const res = await fetch("/api/gallery");
+        const data = await res.json();
+        setGalleryConfig(data);
+      } catch (err) {
+        console.error("Failed to fetch gallery:", err);
+      }
+    };
+    fetchGallery();
+  }, []);
+
+  if (!galleryConfig) {
+    return <div className="bg-black text-white min-h-screen flex items-center justify-center">Loading...</div>;
+  }
+
+  const formattedCategory = category ? category.replace(/-/g, " ") : "all";
 
   const images =
-    formattedCategory === "all"
-      ? galleryData.images
-      : galleryData.images.filter(
+    formattedCategory.toLowerCase() === "all"
+      ? galleryConfig.images
+      : galleryConfig.images.filter(
           (img) =>
             img.category.toLowerCase() === formattedCategory.toLowerCase()
         );

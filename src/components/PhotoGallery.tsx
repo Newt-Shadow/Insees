@@ -1,11 +1,15 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import galleryData from "../../public/data/gallery.json";
 
 interface GalleryImage {
   src: string;
   category: string;
+}
+
+interface GalleryConfig {
+  images: GalleryImage[];
+  driveLink?: string;
 }
 
 const categories = ["All", "Alpha Cresando", "Orientation", "Freshers", "Farewell"];
@@ -14,25 +18,42 @@ export const PhotoGallery: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState("All");
   const [displayImages, setDisplayImages] = useState<GalleryImage[]>([]);
   const [hasMore, setHasMore] = useState(false);
+  const [galleryConfig, setGalleryConfig] = useState<GalleryConfig | null>(null);
 
+  // Fetch gallery data from API
   useEffect(() => {
+    const fetchGallery = async () => {
+      try {
+        const res = await fetch("/api/gallery");
+        const data = await res.json();
+        setGalleryConfig(data);
+      } catch (err) {
+        console.error("Failed to fetch gallery:", err);
+      }
+    };
+    fetchGallery();
+  }, []);
+
+  // Filter + shuffle images when category changes
+  useEffect(() => {
+    if (!galleryConfig) return;
+
     let selectedImages =
       activeCategory === "All"
-        ? [...galleryData.images] // all images
-        : galleryData.images.filter((img) => img.category === activeCategory);
+        ? [...galleryConfig.images]
+        : galleryConfig.images.filter((img) => img.category === activeCategory);
 
     if (activeCategory === "All") {
-      // shuffle only once per reload
       selectedImages = selectedImages.sort(() => Math.random() - 0.5);
     }
 
     setHasMore(selectedImages.length > 9);
     setDisplayImages(selectedImages.slice(0, 9));
-  }, [activeCategory]);
+  }, [activeCategory, galleryConfig]);
 
   const getSeeMoreLink = () => {
-    if (galleryData.driveLink) {
-      return galleryData.driveLink;
+    if (galleryConfig?.driveLink) {
+      return galleryConfig.driveLink;
     }
     return `/gallery/${activeCategory.toLowerCase().replace(/\s+/g, "-")}`;
   };
@@ -82,7 +103,10 @@ export const PhotoGallery: React.FC = () => {
             const isLastTile = hasMore && i === displayImages.length - 1;
 
             return (
-              <div key={i} className="relative w-full h-full overflow-hidden rounded-lg">
+              <div
+                key={i}
+                className="relative w-full h-full overflow-hidden rounded-lg"
+              >
                 <Image
                   src={img.src}
                   alt={img.category}
@@ -92,7 +116,7 @@ export const PhotoGallery: React.FC = () => {
                          33vw"
                   className="object-cover"
                   placeholder="blur"
-                  blurDataURL="/blur.png" // small placeholder image
+                  blurDataURL="/blur.png"
                 />
                 {isLastTile && (
                   <a

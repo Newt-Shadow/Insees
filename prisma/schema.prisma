@@ -1,0 +1,99 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql" 
+  url      = env("DATABASE_URL")
+}
+
+// ----------------------------------------------------
+// Members (by Year)
+// ----------------------------------------------------
+model Year {
+  id      Int      @id @default(autoincrement())
+  label   String   @unique        // e.g. "2024-25"
+  members Member[]
+}
+
+model Member {
+  id       Int       @id @default(autoincrement())
+  name     String
+  por      String               // Position of Responsibility (President, Treasurer, etc.)
+  img      String?              // profile image (optional)
+  socials  Json                 // { instagram, facebook, linkedin }
+  type     MemberType
+
+  yearId   Int
+  year     Year      @relation(fields: [yearId], references: [id])
+
+  @@index([yearId])
+}
+
+enum MemberType {
+  CORE
+  EXECUTIVE
+}
+
+// ----------------------------------------------------
+// Semesters -> Subjects -> Files
+// ----------------------------------------------------
+model Semester {
+  id       Int       @id @default(autoincrement())
+  title    String    @unique   // e.g. "1st Semester Study Material"
+  subjects Subject[]
+}
+
+model Subject {
+  id          Int       @id @default(autoincrement())
+  name        String
+  semesterId  Int
+  semester    Semester  @relation(fields: [semesterId], references: [id])
+
+  driveLink   String?   // ✅ Optional Google Drive link
+  files       File[]    // ✅ Files still allowed (optional)
+
+  @@unique([name, semesterId]) // ensures subject name is unique within a semester
+}
+
+model File {
+  id        Int      @id @default(autoincrement())
+  name      String   // e.g. "Engineering Mathematics.pdf"
+  url       String   // e.g. Blob/Cloudinary/Vercel URL
+  subjectId Int
+  subject   Subject  @relation(fields: [subjectId], references: [id])
+
+  @@index([subjectId])
+}
+
+// ----------------------------------------------------
+// Gallery
+// ----------------------------------------------------
+model GalleryConfig {
+  id        Int       @id @default(autoincrement())
+  driveLink String    // Google Drive folder link
+  images    Gallery[]
+}
+
+model Gallery {
+  id              Int           @id @default(autoincrement())
+  src             String        // Blob URL (public link)
+  key             String        // Blob key (e.g. "gallery/12345-file.png")
+  category        String
+  galleryConfigId Int
+  galleryConfig   GalleryConfig @relation(fields: [galleryConfigId], references: [id])
+
+  @@index([galleryConfigId])
+}
+
+// ----------------------------------------------------
+// Events
+// ----------------------------------------------------
+model Event {
+  id          Int    @id @default(autoincrement())
+  title       String
+  highlight   String
+  description String
+  color       String  // e.g. "amber", "green", "blue"
+  icon        String  // e.g. "FaRocket", "FaUsers"
+}

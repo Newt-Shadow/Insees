@@ -52,7 +52,7 @@ const StyledDetails = styled(AccordionDetails)`
 
   ul {
     list-style-type: disc;
-    padding-left: 24px; /* proper indent like Google Drive */
+    padding-left: 24px;
     margin: 0;
   }
 
@@ -75,9 +75,12 @@ const StyledDetails = styled(AccordionDetails)`
   }
 `;
 
+type FileType = { name: string; url: string };
+type Subject = { name: string; driveLink?: string; files: FileType[] };
+
 type Props = {
   title: string;
-  files: { name: string; url: string }[];
+  subjects: Subject[];
 };
 
 const getFileIcon = (filename: string) => {
@@ -96,27 +99,46 @@ const getFileIcon = (filename: string) => {
   }
 };
 
-const ResourceAccordion: React.FC<Props> = ({ title, files }) => {
+const ResourceAccordion: React.FC<Props> = ({ title, subjects }) => {
   return (
     <StyledAccordion>
       <StyledSummary expandIcon={<FiChevronRight color="#00ff99" size={18} />}>
         <Typography>{title}</Typography>
       </StyledSummary>
       <StyledDetails>
-        {files.length > 0 ? (
+        {subjects.length > 0 ? (
           <ul>
-            {files.map((file, i) => (
+            {subjects.map((subj, i) => (
               <li key={i}>
-                {getFileIcon(file.name)}
-                <a href={file.url} target="_blank" rel="noopener noreferrer">
-                  {file.name}
-                </a>
+                <strong>{subj.name}</strong>
+                {subj.driveLink && (
+                  <a
+                    href={subj.driveLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ marginLeft: "8px" }}
+                  >
+                    [Drive Link]
+                  </a>
+                )}
+                {subj.files.length > 0 && (
+                  <ul>
+                    {subj.files.map((file, j) => (
+                      <li key={j}>
+                        {getFileIcon(file.name)}
+                        <a href={file.url} target="_blank" rel="noopener noreferrer">
+                          {file.name}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </li>
             ))}
           </ul>
         ) : (
           <Typography style={{ color: "#555" }}>
-            No files available.
+            No subjects available.
           </Typography>
         )}
       </StyledDetails>
