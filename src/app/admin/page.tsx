@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 interface UploadedImage {
   id: number;
@@ -12,6 +14,16 @@ interface UploadedImage {
 const categories = ["Alpha Cresando", "Orientation", "Freshers", "Farewell"] as const;
 
 export default function AdminPage() {
+  const router = useRouter();
+  const isProd = process.env.NODE_ENV === "production";
+
+  // 🚀 Redirect to home if production
+  useEffect(() => {
+    if (isProd) {
+      router.push("/");
+    }
+  }, [isProd, router]);
+
   const [files, setFiles] = useState<File[]>([]);
   const [uploadCategory, setUploadCategory] = useState<string>("");
   const [manageCategory, setManageCategory] = useState<string>("");
@@ -107,6 +119,9 @@ export default function AdminPage() {
     }
   };
 
+  // 🚀 Show nothing while redirecting in production
+  if (isProd) return null;
+
   return (
     <div className="p-6 max-w-4xl mx-auto space-y-12">
       {/* Upload Section */}
@@ -141,7 +156,13 @@ export default function AdminPage() {
           <div className="grid grid-cols-3 gap-4">
             {files.map((file, idx) => (
               <div key={idx} className="relative border rounded overflow-hidden">
-                <img src={URL.createObjectURL(file)} alt={file.name} className="w-full h-24 object-cover" />
+                <Image
+                  src={URL.createObjectURL(file)}
+                  alt={file.name}
+                  width={200}
+                  height={200}
+                  className="w-full h-24 object-cover"
+                />
                 <div className="absolute bottom-0 bg-black bg-opacity-50 text-white text-xs p-1 w-full text-center">
                   {file.name}
                 </div>
@@ -190,7 +211,13 @@ export default function AdminPage() {
           <div className="grid grid-cols-3 gap-4 mt-2">
             {selectedCategoryImages.map((img) => (
               <div key={img.id} className="relative border rounded overflow-hidden">
-                <img src={img.src} alt={img.category} className="w-full h-24 object-cover" />
+                <Image
+                  src={img.src}
+                  alt={img.category}
+                  width={200}
+                  height={200}
+                  className="w-full h-24 object-cover"
+                />
                 <input
                   type="checkbox"
                   checked={selectedToDelete.includes(img.id)}
