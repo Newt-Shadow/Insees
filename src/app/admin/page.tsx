@@ -1,4 +1,3 @@
-// app/admin/page.tsx
 "use client";
 
 import { useState, useRef, useEffect } from "react";
@@ -6,30 +5,28 @@ import { useState, useRef, useEffect } from "react";
 interface UploadedImage {
   id: number;
   src: string;
-  key: string; // Exact blob key
+  key: string;
   category: string;
 }
 
-const categories = ["Alpha Cresando", "Orientation", "Freshers", "Farewell"];
+const categories = ["Alpha Cresando", "Orientation", "Freshers", "Farewell"] as const;
 
 export default function AdminPage() {
   const [files, setFiles] = useState<File[]>([]);
-  const [uploadCategory, setUploadCategory] = useState("");
-  const [manageCategory, setManageCategory] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [uploadCategory, setUploadCategory] = useState<string>("");
+  const [manageCategory, setManageCategory] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
   const [selectedCategoryImages, setSelectedCategoryImages] = useState<UploadedImage[]>([]);
-  const [loadingCategory, setLoadingCategory] = useState(false);
+  const [loadingCategory, setLoadingCategory] = useState<boolean>(false);
   const [selectedToDelete, setSelectedToDelete] = useState<number[]>([]);
-  const [refreshFlag, setRefreshFlag] = useState(false);
+  const [refreshFlag, setRefreshFlag] = useState<boolean>(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // --- File selection ---
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) setFiles(Array.from(e.target.files));
   };
 
-  // --- Upload images ---
   const handleUpload = async () => {
     if (!files.length || !uploadCategory) return alert("Select files and category");
 
@@ -40,7 +37,7 @@ export default function AdminPage() {
 
     try {
       const res = await fetch("/api/upload", { method: "POST", body: formData });
-      const data = await res.json();
+      const data: { success: boolean; uploadedImages?: UploadedImage[]; error?: string } = await res.json();
       setLoading(false);
 
       if (data.success) {
@@ -51,13 +48,13 @@ export default function AdminPage() {
       } else {
         alert("Upload failed: " + data.error);
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       setLoading(false);
-      alert("Upload failed: " + err.message);
+      const message = err instanceof Error ? err.message : String(err);
+      alert("Upload failed: " + message);
     }
   };
 
-  // --- Fetch images for selected category ---
   useEffect(() => {
     if (!manageCategory) return setSelectedCategoryImages([]);
 
@@ -65,11 +62,12 @@ export default function AdminPage() {
       setLoadingCategory(true);
       try {
         const res = await fetch(`/api/upload?category=${encodeURIComponent(manageCategory)}&t=${Date.now()}`);
-        const data = await res.json();
+        const data: { images?: UploadedImage[] } = await res.json();
         setSelectedCategoryImages(data.images || []);
         setSelectedToDelete([]);
-      } catch (err: any) {
-        alert("Failed to fetch images: " + err.message);
+      } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : String(err);
+        alert("Failed to fetch images: " + message);
         setSelectedCategoryImages([]);
       }
       setLoadingCategory(false);
@@ -78,14 +76,12 @@ export default function AdminPage() {
     fetchImages();
   }, [manageCategory, refreshFlag]);
 
-  // --- Select / unselect images ---
   const toggleSelectImage = (id: number) => {
     setSelectedToDelete((prev) => (prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]));
   };
 
-  // --- Bulk delete ---
   const handleBulkDelete = async () => {
-    if (selectedToDelete.length === 0) return alert("Select at least one image to delete");
+    if (!selectedToDelete.length) return alert("Select at least one image to delete");
     if (!confirm(`Delete ${selectedToDelete.length} images?`)) return;
 
     const toDelete = selectedCategoryImages
@@ -98,21 +94,22 @@ export default function AdminPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ items: toDelete }),
       });
-      const data = await res.json();
+      const data: { success: boolean; error?: string } = await res.json();
       if (data.success) {
         setRefreshFlag((f) => !f);
         alert("Selected images deleted successfully");
       } else {
         alert("Failed to delete: " + data.error);
       }
-    } catch (err: any) {
-      alert("Failed to delete: " + err.message);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err);
+      alert("Failed to delete: " + message);
     }
   };
 
   return (
     <div className="p-6 max-w-4xl mx-auto space-y-12">
-      {/* --- Upload Section --- */}
+      {/* Upload Section */}
       <div className="space-y-4">
         <h1 className="text-3xl font-bold mb-6">📤 Upload Gallery Images</h1>
 
@@ -162,7 +159,7 @@ export default function AdminPage() {
         </button>
       </div>
 
-      {/* --- Manage Section --- */}
+      {/* Manage Section */}
       <div className="space-y-4">
         <h1 className="text-3xl font-bold mb-4">🖼 Manage Images by Category</h1>
 
@@ -205,7 +202,9 @@ export default function AdminPage() {
           </div>
         )}
 
-        {selectedCategoryImages.length === 0 && !loadingCategory && manageCategory && <p>No images found for {manageCategory}.</p>}
+        {selectedCategoryImages.length === 0 && !loadingCategory && manageCategory && (
+          <p>No images found for {manageCategory}.</p>
+        )}
       </div>
     </div>
   );
