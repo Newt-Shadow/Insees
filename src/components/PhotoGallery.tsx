@@ -157,6 +157,7 @@ export const PhotoGallery: React.FC = () => {
                     >
                       <span className="text-lg font-medium text-white">
                         See More →
+                        
                       </span>
                     </a>
                   )}
