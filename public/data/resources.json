@@ -1,0 +1,21 @@
+{
+  "semesters": [
+    {
+      "title": "1st Semester Study Material",
+      "files": [
+        { "name": "Engineering Mathematics.pdf", "url": "/files/1st/math.pdf" },
+        { "name": "Basic Electronics.docx", "url": "/files/1st/electronics.docx" }
+      ]
+    },
+    {
+      "title": "2nd Semester Study Material",
+      "files": [
+        { "name": "Physics Notes.pdf", "url": "/files/2nd/physics.pdf" }
+      ]
+    },
+    {
+      "title": "3rd Semester Study Material",
+      "files": []
+    }
+  ]
+}

@@ -1,103 +1,128 @@
-import Image from "next/image";
+"use client";
+import { useState } from "react";
+import { Menu, X } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { FloatingIcon } from "../components/FloatingIcon";
+import { EmailForm } from "../components/EmailForm";
+import { ScrollHint } from "../components/ScrollHint";
+import { ContactSection } from "../components/ContactSection";
+import { EventsTimeline } from "../components/EventsTimeline";
+import { AboutSection } from "../components/AboutSection";
+import { Navbar } from "../components/navbar";
 
 export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const [menuOpen, setMenuOpen] = useState(false);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+  // --- Inline Tailwind extension ---
+  const glowColors = {
+    blue: "shadow-[0_0_20px_6px_rgba(59,130,246,0.6)]",
+    green: "shadow-[0_0_20px_6px_rgba(34,197,94,0.6)]",
+    amber: "shadow-[0_0_20px_6px_rgba(245,158,11,0.6)]",
+    orange: "shadow-[0_0_20px_6px_rgba(249,115,22,0.6)]",
+  };
+
+  return (
+    <>
+      {/* Navbar */}
+      <Navbar />
+
+      {/* Mobile Drawer Menu */}
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            initial={{ x: "100%" }}
+            animate={{ x: 0 }}
+            exit={{ x: "100%" }}
+            transition={{ duration: 0.4, ease: "easeInOut" }}
+            className="fixed top-0 right-0 h-screen w-64 bg-black/90 backdrop-blur-md z-50 p-6 flex flex-col"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+            <button
+              onClick={() => setMenuOpen(false)}
+              className="self-end text-gray-300 hover:text-white"
+            >
+              <X className="w-7 h-7" />
+            </button>
+            <ul className="mt-12 space-y-6 text-gray-200 text-lg">
+              <li
+                onClick={() => setMenuOpen(false)}
+                className="hover:text-teal-300 cursor-pointer"
+              >
+                About
+              </li>
+              <li
+                onClick={() => setMenuOpen(false)}
+                className="hover:text-teal-300 cursor-pointer"
+              >
+                Events
+              </li>
+              <li
+                onClick={() => setMenuOpen(false)}
+                className="hover:text-teal-300 cursor-pointer"
+              >
+                Contact
+              </li>
+            </ul>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Hero Section */}
+      <main className="relative min-h-screen flex flex-col items-center justify-center text-white font-[Poppins,sans-serif] overflow-hidden">
+        {/* Background Radial */}
+        <div className="absolute inset-0 bg-[radial-gradient(1200px_600px_at_50%_40%,rgba(255,255,255,.06),transparent)]" />
+
+        {/* Floating Electronics Icons */}
+        <FloatingIcon
+          className={`absolute rounded-xl p-[3px] top-[28%] left-[12%] ${glowColors.amber}`}
+          color="amber"
+          src="/resistor.svg"
+          float={24}
+          delay={0.4}
+        />
+        <FloatingIcon
+          className={`absolute top-[17%] rounded-xl p-[3px]  left-1/2 -translate-x-1/2 ${glowColors.blue}`}
+          color="blue"
+          src="/capacitor.svg"
+          float={22}
+          delay={0.8}
+        />
+        <FloatingIcon
+          className={`absolute rounded-xl p-[3px]  bottom-[20%] left-[18%] ${glowColors.green}`}
+          color="green"
+          src="/led.svg"
+          float={20}
+          delay={1.2}
+        />
+        <FloatingIcon
+          className={`absolute rounded-xl p-[3px]  top-[24%] right-[12%] ${glowColors.orange}`}
+          color="orange"
+          src="/ic.svg"
+          float={26}
+          delay={1.6}
+        />
+
+        {/* Center Title + Form */}
+        <div className="relative z-10 flex flex-col items-center text-center px-4">
+          <h1 className="text-6xl md:text-7xl font-extrabold tracking-wide bg-gradient-to-t from-gray-300 to-white text-transparent bg-clip-text">
+            INSEES
+          </h1>
+          <p className="mt-6 text-base md:text-lg text-gray-300 max-w-2xl">
+            Instrumentation and Electronics Engineering Society. <br />
+            National Institute of Technology, Silchar.
+          </p>
+
+          {/* Email Form */}
+          <EmailForm />
         </div>
+
+        {/* Scroll Hint */}
+        <ScrollHint />
       </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+
+      {/* Sections */}
+      <AboutSection />
+      <EventsTimeline />
+      <ContactSection />
+    </>
   );
 }

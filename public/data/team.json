@@ -1,0 +1,54 @@
+{
+  "2024-25": {
+    "core": [
+      {
+        "name": "John Doe",
+        "por": "President",
+        "img": "/members/john.jpg",
+        "socials": {
+          "instagram": "https://instagram.com/johndoe",
+          "facebook": "",
+          "linkedin": "https://linkedin.com/in/johndoe"
+        }
+      }
+    ],
+    "executive": [
+      {
+        "name": "Mike Ross",
+        "por": "Secretary",
+        "img": "/members/mike.jpg",
+        "socials": {
+          "instagram": "",
+          "facebook": "",
+          "linkedin": "https://linkedin.com/in/mikeross"
+        }
+      }
+    ]
+  },
+  "2025-26": {
+    "core": [
+      {
+        "name": "Jane Smith",
+        "por": "Vice President",
+        "img": "",
+        "socials": {
+          "instagram": "",
+          "facebook": "https://facebook.com/janesmith",
+          "linkedin": ""
+        }
+      }
+    ],
+    "executive": [
+      {
+        "name": "Rachel Zane",
+        "por": "Treasurer",
+        "img": "",
+        "socials": {
+          "instagram": "https://instagram.com/rachelzane",
+          "facebook": "",
+          "linkedin": ""
+        }
+      }
+    ]
+  }
+}
