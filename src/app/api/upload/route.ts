@@ -16,39 +16,26 @@ const sanitizeFileName = (name: string) =>
 export async function POST(req: Request) {
   try {
     const BLOB_READ_WRITE_TOKEN = process.env.BLOB_READ_WRITE_TOKEN;
-    if (!BLOB_READ_WRITE_TOKEN) {
+    if (!BLOB_READ_WRITE_TOKEN)
       return NextResponse.json(
         { error: "BLOB_READ_WRITE_TOKEN not set" },
         { status: 500 }
       );
-    }
 
     const formData = await req.formData();
     const category = (formData.get("category") as string)?.trim();
     const files = formData.getAll("files") as File[];
 
-    if (!category) {
-      return NextResponse.json(
-        { error: "No category provided" },
-        { status: 400 }
-      );
-    }
-    if (!files.length) {
-      return NextResponse.json(
-        { error: "No files uploaded" },
-        { status: 400 }
-      );
-    }
+    if (!category) return NextResponse.json({ error: "No category provided" }, { status: 400 });
+    if (!files.length) return NextResponse.json({ error: "No files uploaded" }, { status: 400 });
 
     const uploadedImages: UploadedImage[] = [];
 
-    // 🔑 Ensure at least one GalleryConfig exists
+    // Ensure at least one GalleryConfig exists
     let config = await prisma.galleryConfig.findFirst();
     if (!config) {
       config = await prisma.galleryConfig.create({
-        data: {
-          driveLink: "https://example.com/default-drive-folder", // TODO: replace with real drive link
-        },
+        data: { driveLink: "https://example.com/default-drive-folder" },
       });
     }
 
@@ -62,22 +49,11 @@ export async function POST(req: Request) {
         token: BLOB_READ_WRITE_TOKEN,
       });
 
-      // Save record in DB
       const record = await prisma.gallery.create({
-        data: {
-          src: url,
-          key,
-          category,
-          galleryConfigId: config.id, // ✅ Always valid now
-        },
+        data: { src: url, key, category, galleryConfigId: config.id },
       });
 
-      uploadedImages.push({
-        id: record.id,
-        src: url,
-        key,
-        category,
-      });
+      uploadedImages.push({ id: record.id, src: url, key, category });
     }
 
     return NextResponse.json({ success: true, uploadedImages });
@@ -87,7 +63,7 @@ export async function POST(req: Request) {
   }
 }
 
-// --- GET: Fetch images by category ---
+// --- GET: Fetch images by category & validate existence ---
 export async function GET(req: Request) {
   try {
     const url = new URL(req.url);
@@ -101,7 +77,19 @@ export async function GET(req: Request) {
       orderBy: { id: "desc" },
     });
 
-    return NextResponse.json({ images });
+    // ✅ Only keep images that exist on Vercel Blob
+    const validImages = await Promise.all(
+      images.map(async (img) => {
+        try {
+          const res = await fetch(img.src, { method: "HEAD" });
+          return res.ok ? img : null;
+        } catch {
+          return null;
+        }
+      })
+    );
+
+    return NextResponse.json({ images: validImages.filter(Boolean) });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err);
     return NextResponse.json({ error: message }, { status: 500 });
