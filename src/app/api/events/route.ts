@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
-export const runtime = "edge"; // ✅ tells Next.js to deploy this as Edge Function
+export const runtime = "edge"; // important!
 
 export async function GET() {
   try {
