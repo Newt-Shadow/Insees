@@ -3,11 +3,16 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import galleryData from "../../public/data/gallery.json";
 
+interface GalleryImage {
+  src: string;
+  category: string;
+}
+
 const categories = ["All", "Alpha Cresando", "Orientation", "Freshers", "Farewell"];
 
 export const PhotoGallery: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState("All");
-  const [displayImages, setDisplayImages] = useState<any[]>([]);
+  const [displayImages, setDisplayImages] = useState<GalleryImage[]>([]);
   const [hasMore, setHasMore] = useState(false);
 
   useEffect(() => {
