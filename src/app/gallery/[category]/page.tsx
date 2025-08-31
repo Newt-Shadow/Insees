@@ -2,6 +2,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 
+
+
 interface GalleryImage {
   src: string;
   category: string;
