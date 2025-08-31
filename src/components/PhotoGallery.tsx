@@ -36,11 +36,11 @@ export const PhotoGallery: React.FC = () => {
 
   // Filter + shuffle images when category changes
   useEffect(() => {
-    if (!galleryConfig) return;
+    if (!galleryConfig?.images) return; // ✅ guard for null
 
     let selectedImages =
       activeCategory === "All"
-        ? [...galleryConfig.images]
+        ? [...(galleryConfig.images ?? [])]
         : galleryConfig.images.filter((img) => img.category === activeCategory);
 
     if (activeCategory === "All") {
@@ -52,9 +52,9 @@ export const PhotoGallery: React.FC = () => {
   }, [activeCategory, galleryConfig]);
 
   const getSeeMoreLink = () => {
-    if (galleryConfig?.driveLink) {
-      return galleryConfig.driveLink;
-    }
+    // if (galleryConfig?.driveLink) {
+    //   return galleryConfig.driveLink;
+    // }
     return `/gallery/${activeCategory.toLowerCase().replace(/\s+/g, "-")}`;
   };
 

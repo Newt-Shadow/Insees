@@ -27,30 +27,49 @@ export async function POST(req: Request) {
     const category = (formData.get("category") as string)?.trim();
     const files = formData.getAll("files") as File[];
 
-    if (!category)
+    if (!category) {
       return NextResponse.json(
         { error: "No category provided" },
         { status: 400 }
       );
-    if (!files.length)
+    }
+    if (!files.length) {
       return NextResponse.json(
         { error: "No files uploaded" },
         { status: 400 }
       );
+    }
 
     const uploadedImages: UploadedImage[] = [];
+
+    // 🔑 Ensure at least one GalleryConfig exists
+    let config = await prisma.galleryConfig.findFirst();
+    if (!config) {
+      config = await prisma.galleryConfig.create({
+        data: {
+          driveLink: "https://example.com/default-drive-folder", // TODO: replace with real drive link
+        },
+      });
+    }
 
     for (const file of files) {
       const sanitizedName = sanitizeFileName(file.name);
       const key = `gallery/${Date.now()}-${sanitizedName}`;
 
+      // Upload to Vercel Blob
       const { url } = await put(key, file, {
         access: "public",
         token: BLOB_READ_WRITE_TOKEN,
       });
 
+      // Save record in DB
       const record = await prisma.gallery.create({
-        data: { src: url, key, category, galleryConfigId: 1 },
+        data: {
+          src: url,
+          key,
+          category,
+          galleryConfigId: config.id, // ✅ Always valid now
+        },
       });
 
       uploadedImages.push({
