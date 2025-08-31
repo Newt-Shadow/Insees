@@ -11,45 +11,26 @@ interface UploadedImage {
   category: string;
 }
 
-type Category = "Alpha Cresando" | "Orientation" | "Freshers" | "Farewell";
-
-const categories: Category[] = ["Alpha Cresando", "Orientation", "Freshers", "Farewell"];
-
-interface UploadResponse {
-  success: boolean;
-  uploadedImages?: UploadedImage[];
-  error?: string;
-}
-
-interface FetchImagesResponse {
-  images?: UploadedImage[];
-}
-
-interface BulkDeleteItem {
+type BulkDeleteResult = {
   id: number;
-  url: string;
-}
+  deleted: boolean;
+};
 
-interface BulkDeleteResponse {
-  success: boolean;
-  results?: { id: number; url: string; deleted: boolean }[];
-  error?: string;
-}
+const categories = ["Alpha Cresando", "Orientation", "Freshers", "Farewell"] as const;
 
 export default function AdminPage() {
   const router = useRouter();
   const isProd = process.env.NODE_ENV === "production";
 
+  // Redirect to home in production
   useEffect(() => {
-    if (isProd) {
-      router.push("/");
-    }
+    if (isProd) router.push("/");
   }, [isProd, router]);
 
   const [files, setFiles] = useState<File[]>([]);
-  const [uploadCategory, setUploadCategory] = useState<Category | "">("");
-  const [manageCategory, setManageCategory] = useState<Category | "">("");
-  const [loading, setLoading] = useState(false);
+  const [uploadCategory, setUploadCategory] = useState<string>("");
+  const [manageCategory, setManageCategory] = useState<string>("");
+  const [loadingUpload, setLoadingUpload] = useState(false);
   const [loadingCategory, setLoadingCategory] = useState(false);
   const [selectedCategoryImages, setSelectedCategoryImages] = useState<UploadedImage[]>([]);
   const [selectedToDelete, setSelectedToDelete] = useState<number[]>([]);
@@ -64,28 +45,32 @@ export default function AdminPage() {
   const handleUpload = async () => {
     if (!files.length || !uploadCategory) return alert("Select files and category");
 
-    setLoading(true);
+    setLoadingUpload(true);
     const formData = new FormData();
     formData.append("category", uploadCategory);
     files.forEach((file) => formData.append("files", file));
 
     try {
       const res = await fetch("/api/upload", { method: "POST", body: formData });
-      const data: UploadResponse = await res.json();
+      const data: {
+        success: boolean;
+        uploadedImages?: UploadedImage[];
+        error?: string;
+      } = await res.json();
 
-      if (data.success && data.uploadedImages) {
-        setSelectedCategoryImages((prev) => [...data.uploadedImages, ...prev]);
+      if (data.success && data.uploadedImages?.length) {
+        setSelectedCategoryImages((prev) => [...(data.uploadedImages ?? []), ...prev]);
         setFiles([]);
         if (fileInputRef.current) fileInputRef.current.value = "";
       } else {
-        alert("Upload failed: " + data.error);
+        alert("Upload failed: " + (data.error ?? "Unknown error"));
       }
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : String(err);
       alert("Upload failed: " + message);
     }
 
-    setLoading(false);
+    setLoadingUpload(false);
   };
 
   // ---------------- Fetch Images ----------------
@@ -95,10 +80,11 @@ export default function AdminPage() {
     const fetchImages = async () => {
       setLoadingCategory(true);
       try {
-        const res = await fetch(`/api/upload?category=${encodeURIComponent(manageCategory)}&t=${Date.now()}`);
-        const data: FetchImagesResponse = await res.json();
-        // filter only valid src
-        setSelectedCategoryImages((data.images ?? []).filter((img) => img.src));
+        const res = await fetch(
+          `/api/upload?category=${encodeURIComponent(manageCategory)}&t=${Date.now()}`
+        );
+        const data: { images?: UploadedImage[] } = await res.json();
+        setSelectedCategoryImages((data.images ?? []).filter((img) => !!img.src));
         setSelectedToDelete([]);
       } catch (err: unknown) {
         const message = err instanceof Error ? err.message : String(err);
@@ -123,11 +109,11 @@ export default function AdminPage() {
     if (!selectedToDelete.length) return alert("Select at least one image to delete");
     if (!confirm(`Delete ${selectedToDelete.length} images?`)) return;
 
-    const toDelete: BulkDeleteItem[] = selectedCategoryImages
+    const toDelete = selectedCategoryImages
       .filter((img) => selectedToDelete.includes(img.id))
       .map((img) => ({ id: img.id, url: img.src }));
 
-    // Optimistic UI update
+    // Optimistically remove images from UI
     setSelectedCategoryImages((prev) => prev.filter((img) => !selectedToDelete.includes(img.id)));
     setSelectedToDelete([]);
 
@@ -137,8 +123,14 @@ export default function AdminPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ items: toDelete }),
       });
-      const data: BulkDeleteResponse = await res.json();
-      if (!data.success) alert("Some images could not be deleted: " + data.error);
+      const data: {
+        success: boolean;
+        results?: BulkDeleteResult[];
+        error?: string;
+      } = await res.json();
+      if (!data.success) {
+        alert("Some images could not be deleted: " + (data.error ?? "Unknown error"));
+      }
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : String(err);
       alert("Failed to delete: " + message);
@@ -156,7 +148,7 @@ export default function AdminPage() {
         <select
           className="border text-cyan-600 p-3 w-full rounded focus:outline-none focus:ring-2 focus:ring-cyan-400"
           value={uploadCategory}
-          onChange={(e) => setUploadCategory(e.target.value as Category)}
+          onChange={(e) => setUploadCategory(e.target.value)}
         >
           <option value="">Select Category</option>
           {categories.map((cat) => (
@@ -205,10 +197,10 @@ export default function AdminPage() {
 
         <button
           onClick={handleUpload}
-          disabled={loading}
+          disabled={loadingUpload}
           className="bg-blue-600 text-white px-6 py-2 rounded disabled:opacity-50 hover:bg-blue-700 transition"
         >
-          {loading ? "Uploading..." : "Upload"}
+          {loadingUpload ? "Uploading..." : "Upload"}
         </button>
       </div>
 
@@ -220,7 +212,7 @@ export default function AdminPage() {
           <select
             className="border text-cyan-600 p-3 rounded focus:outline-none focus:ring-2 focus:ring-cyan-400"
             value={manageCategory}
-            onChange={(e) => setManageCategory(e.target.value as Category)}
+            onChange={(e) => setManageCategory(e.target.value)}
           >
             <option value="">Select Category</option>
             {categories.map((cat) => (
