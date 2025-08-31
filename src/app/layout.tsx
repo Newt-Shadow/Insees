@@ -7,8 +7,11 @@ const poppins = Poppins({ subsets: ["latin"], weight: ["300","400","600","700","
 
 
 export const metadata: Metadata = {
-title: "INSEES — NIT Silchar",
-description: "Instrumentation and Electronics Engineering Society, NIT Silchar",
+  title: "INSEES — NIT Silchar",
+  description: "Instrumentation and Electronics Engineering Society, NIT Silchar",
+  icons: {
+    icon: "/favicon.ico", // ✅ favicon path
+  },
 };
 
 
