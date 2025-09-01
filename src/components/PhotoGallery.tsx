@@ -1,56 +1,39 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 
-interface GalleryImage {
+export interface GalleryImage {
+  id?: number;
   src: string;
   category: string;
-  id?: number;
 }
 
-interface GalleryConfig {
+export interface GalleryConfig {
   driveLink?: string;
   images: GalleryImage[];
 }
 
+interface PhotoGalleryProps {
+  initialGalleryConfig?: GalleryConfig | null;
+}
+
 const categories = ["All", "Alpha Cresando", "Orientation", "Freshers", "Farewell"];
 
-export const PhotoGallery: React.FC = () => {
+const PhotoGallery: React.FC<PhotoGalleryProps> = ({ initialGalleryConfig }) => {
   const [activeCategory, setActiveCategory] = useState("All");
   const [displayImages, setDisplayImages] = useState<GalleryImage[]>([]);
-  const [galleryConfig, setGalleryConfig] = useState<GalleryConfig | null>(null);
-
-  // ---------------- Fetch Gallery ----------------
-  const fetchGallery = async () => {
-    try {
-      const res = await fetch("/api/gallery?t=" + Date.now());
-      const data: GalleryConfig = await res.json();
-      setGalleryConfig(data);
-    } catch (err) {
-      console.error("Failed to fetch gallery:", err);
-    }
-  };
 
   useEffect(() => {
-    fetchGallery();
-    const interval = setInterval(fetchGallery, 60000);
-    return () => clearInterval(interval);
-  }, []);
+    if (!initialGalleryConfig?.images) return;
 
-  // ---------------- Filter Images ----------------
-  useEffect(() => {
-    if (!galleryConfig?.images) return;
-
-    const filteredImages =
+    const filtered =
       activeCategory === "All"
-        ? [...galleryConfig.images]
-        : galleryConfig.images.filter((img) => img.category === activeCategory);
+        ? initialGalleryConfig.images
+        : initialGalleryConfig.images.filter((img) => img.category === activeCategory);
 
-    // Take first 9 images only
-    const finalImages = filteredImages.slice(0, 9);
-    setDisplayImages(finalImages);
-  }, [galleryConfig, activeCategory]);
+    setDisplayImages(filtered.slice(0, 9));
+  }, [activeCategory, initialGalleryConfig]);
 
   const getSeeMoreLink = () =>
     `/gallery/${activeCategory.toLowerCase().replace(/\s+/g, "-")}`;
@@ -96,13 +79,11 @@ export const PhotoGallery: React.FC = () => {
 
         {/* Gallery Grid */}
         {displayImages.length === 0 ? (
-          <p className="text-center text-gray-400">
-            No images found in this category.
-          </p>
+          <p className="text-center text-gray-400">No images found in this category.</p>
         ) : (
           <div className="grid grid-cols-3 grid-rows-3 gap-3 max-w-6xl w-full mx-auto">
             {displayImages.map((img, i) => {
-              const isLast = i === displayImages.length - 1; // always overlay last
+              const isLast = i === displayImages.length - 1;
               return (
                 <div
                   key={i}
@@ -112,20 +93,14 @@ export const PhotoGallery: React.FC = () => {
                     src={img.src}
                     alt={img.category}
                     fill
-                    unoptimized
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     className="object-cover"
-                    placeholder="blur"
-                    blurDataURL="/blur.png"
                   />
                   {isLast && (
                     <a
                       href={getSeeMoreLink()}
                       className="absolute inset-0 flex items-center justify-center bg-black/60 hover:bg-black/80 transition"
                     >
-                      <span className="text-lg font-medium text-white">
-                        See More →
-                      </span>
+                      <span className="text-lg font-medium text-white">See More →</span>
                     </a>
                   )}
                 </div>
@@ -137,3 +112,5 @@ export const PhotoGallery: React.FC = () => {
     </div>
   );
 };
+
+export default PhotoGallery;
