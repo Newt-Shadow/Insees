@@ -3,34 +3,34 @@ import { prisma } from "../../../../lib/prisma";
 
 interface DeleteItem {
   id: number;
-  url: string;
+  key: string;
 }
 
-// --- Delete a single blob with retry ---
-async function deleteBlob(url: string, token: string, retries = 3, delay = 1000) {
+// Delete blob with retry
+async function deleteBlob(key: string, token: string, retries = 3, delay = 1000) {
+  // ✅ correct endpoint (no /api/blob/)
+  const blobApiUrl = `https://blob.vercel-storage.com/${encodeURIComponent(key)}`;
+
   for (let i = 0; i < retries; i++) {
-    try {
-      const res = await fetch(url, {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` },
-      });
+    const res = await fetch(blobApiUrl, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
-      if (res.ok) return;
-      const text = await res.text();
+    if (res.ok || res.status === 404) return; // deleted or already gone
 
-      if (res.status === 404 && i < retries - 1) {
-        await new Promise((r) => setTimeout(r, delay));
-        continue;
-      }
-
-      throw new Error(`Failed to delete blob "${url}": ${res.status} ${text}`);
-    } catch (err) {
-      if (i === retries - 1) throw err;
+    if (i < retries - 1) {
+      await new Promise((r) => setTimeout(r, delay));
+      continue;
     }
+
+    const text = await res.text();
+    throw new Error(`Blob delete failed: ${res.status} ${text}`);
   }
 }
 
-// --- POST: Bulk delete ---
 export async function POST(req: Request) {
   try {
     const BLOB_TOKEN = process.env.BLOB_READ_WRITE_TOKEN;
@@ -42,7 +42,6 @@ export async function POST(req: Request) {
     }
 
     const body: { items: DeleteItem[] } = await req.json();
-
     if (!Array.isArray(body.items) || body.items.length === 0) {
       return NextResponse.json({ error: "No items provided" }, { status: 400 });
     }
@@ -50,8 +49,12 @@ export async function POST(req: Request) {
     const results = await Promise.all(
       body.items.map(async (item) => {
         try {
-          await deleteBlob(item.url, BLOB_TOKEN);
+          // delete blob first
+          await deleteBlob(item.key, BLOB_TOKEN);
+
+          // delete db record
           await prisma.gallery.delete({ where: { id: item.id } });
+
           return { id: item.id, success: true };
         } catch (err: unknown) {
           const message = err instanceof Error ? err.message : String(err);

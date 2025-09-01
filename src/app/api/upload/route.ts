@@ -63,35 +63,25 @@ export async function POST(req: Request) {
   }
 }
 
-// --- GET: Fetch images by category & validate existence ---
+// --- GET: Fetch images by category ---
+// --- GET: Fetch images by category ---
 export async function GET(req: Request) {
   try {
     const url = new URL(req.url);
-    const category = url.searchParams.get("category")?.trim() || undefined;
+    const category = url.searchParams.get("category")?.trim();
 
     const images: UploadedImage[] = await prisma.gallery.findMany({
       where: category
-        ? { category: { equals: category, mode: "insensitive" } }
+        ? { category: { contains: category, mode: "insensitive" } } // 🔥 changed
         : undefined,
       select: { id: true, src: true, key: true, category: true },
       orderBy: { id: "desc" },
     });
 
-    // ✅ Only keep images that exist on Vercel Blob
-    const validImages = await Promise.all(
-      images.map(async (img) => {
-        try {
-          const res = await fetch(img.src, { method: "HEAD" });
-          return res.ok ? img : null;
-        } catch {
-          return null;
-        }
-      })
-    );
-
-    return NextResponse.json({ images: validImages.filter(Boolean) });
+    return NextResponse.json({ images });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err);
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }
+

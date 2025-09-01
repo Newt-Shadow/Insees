@@ -19,9 +19,7 @@ const categories = ["All", "Alpha Cresando", "Orientation", "Freshers", "Farewel
 export const PhotoGallery: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState("All");
   const [displayImages, setDisplayImages] = useState<GalleryImage[]>([]);
-  const [hasMore, setHasMore] = useState(false);
   const [galleryConfig, setGalleryConfig] = useState<GalleryConfig | null>(null);
-  const [loading, setLoading] = useState(true);
 
   // ---------------- Fetch Gallery ----------------
   const fetchGallery = async () => {
@@ -35,59 +33,27 @@ export const PhotoGallery: React.FC = () => {
   };
 
   useEffect(() => {
-    setLoading(true);
-    fetchGallery().finally(() => setLoading(false));
-
-    // Optional light polling every 60s
+    fetchGallery();
     const interval = setInterval(fetchGallery, 60000);
     return () => clearInterval(interval);
   }, []);
 
-  // ---------------- Validate Images ----------------
+  // ---------------- Filter Images ----------------
   useEffect(() => {
     if (!galleryConfig?.images) return;
 
-    const validateImages = async () => {
-      setLoading(true);
+    const filteredImages =
+      activeCategory === "All"
+        ? [...galleryConfig.images]
+        : galleryConfig.images.filter((img) => img.category === activeCategory);
 
-      const filteredImages =
-        activeCategory === "All"
-          ? [...galleryConfig.images]
-          : galleryConfig.images.filter((img) => img.category === activeCategory);
-
-      // New robust check: load each image
-      // inside validateImages()
-      const validImages = await Promise.all(
-        filteredImages.map(
-          (img) =>
-            new Promise<GalleryImage | null>((resolve) => {
-              const testImg = new window.Image(); // <--- use browser Image, not Next.js Image
-              testImg.src = img.src;
-              testImg.onload = () => resolve(img);
-              testImg.onerror = () => resolve(null);
-            })
-        )
-      );
-
-
-      const finalImages = (validImages.filter(Boolean) as GalleryImage[]).slice(0, 9);
-      setDisplayImages(finalImages);
-      setHasMore(finalImages.length < filteredImages.length);
-      setLoading(false);
-    };
-
-    validateImages();
+    // Take first 9 images only
+    const finalImages = filteredImages.slice(0, 9);
+    setDisplayImages(finalImages);
   }, [galleryConfig, activeCategory]);
 
   const getSeeMoreLink = () =>
     `/gallery/${activeCategory.toLowerCase().replace(/\s+/g, "-")}`;
-
-  // if (loading)
-  //   return (
-  //     <div className="bg-black text-white min-h-screen flex items-center justify-center">
-  //       Loading gallery...
-  //     </div>
-  //   );
 
   return (
     <div className="bg-black min-h-screen text-white">
@@ -117,10 +83,11 @@ export const PhotoGallery: React.FC = () => {
             <button
               key={cat}
               onClick={() => setActiveCategory(cat)}
-              className={`px-5 py-1 rounded-full text-sm ${activeCategory === cat
+              className={`px-5 py-1 rounded-full text-sm ${
+                activeCategory === cat
                   ? "bg-white/10 text-white"
                   : "bg-transparent text-gray-400 hover:text-white"
-                }`}
+              }`}
             >
               {cat}
             </button>
@@ -135,29 +102,29 @@ export const PhotoGallery: React.FC = () => {
         ) : (
           <div className="grid grid-cols-3 grid-rows-3 gap-3 max-w-6xl w-full mx-auto">
             {displayImages.map((img, i) => {
-              const isLastTile = hasMore && i === displayImages.length - 1;
+              const isLast = i === displayImages.length - 1; // always overlay last
               return (
                 <div
                   key={i}
-                  className="relative w-full h-64 overflow-hidden rounded-lg transition-transform hover:scale-105 duration-300"
+                  className="relative w-full h-64 overflow-hidden rounded-lg group"
                 >
                   <Image
                     src={img.src}
                     alt={img.category}
                     fill
+                    unoptimized
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     className="object-cover"
                     placeholder="blur"
                     blurDataURL="/blur.png"
                   />
-                  {isLastTile && (
+                  {isLast && (
                     <a
                       href={getSeeMoreLink()}
-                      className="absolute inset-0 flex items-center justify-center bg-black/50 hover:bg-black/70 transition"
+                      className="absolute inset-0 flex items-center justify-center bg-black/60 hover:bg-black/80 transition"
                     >
                       <span className="text-lg font-medium text-white">
                         See More →
-                        
                       </span>
                     </a>
                   )}

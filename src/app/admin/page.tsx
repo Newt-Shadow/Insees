@@ -111,7 +111,7 @@ export default function AdminPage() {
 
     const toDelete = selectedCategoryImages
       .filter((img) => selectedToDelete.includes(img.id))
-      .map((img) => ({ id: img.id, url: img.src }));
+      .map((img) => ({ id: img.id, key: img.key })); // ✅ FIXED: use key, not url
 
     // Optimistically remove images from UI
     setSelectedCategoryImages((prev) => prev.filter((img) => !selectedToDelete.includes(img.id)));
@@ -134,6 +134,26 @@ export default function AdminPage() {
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : String(err);
       alert("Failed to delete: " + message);
+    }
+  };
+
+  // ---------------- Clear Orphans ----------------
+  const handleClearOrphans = async () => {
+    if (!confirm("This will scan and clear all broken blobs from the database. Proceed?")) return;
+
+    try {
+      const res = await fetch("/api/upload/clear-orphans", { method: "POST" });
+      const data: { success: boolean; cleared?: number; message?: string; error?: string } =
+        await res.json();
+
+      if (data.success) {
+        alert(data.message ?? `Cleared ${data.cleared ?? 0} orphaned records.`);
+      } else {
+        alert("Error clearing orphans: " + (data.error ?? "Unknown error"));
+      }
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err);
+      alert("Failed to clear: " + message);
     }
   };
 
@@ -185,6 +205,7 @@ export default function AdminPage() {
                   alt={file.name}
                   width={200}
                   height={200}
+                  unoptimized // ✅ Added
                   className="w-full h-24 object-cover"
                 />
                 <div className="absolute bottom-0 bg-black bg-opacity-50 text-white text-xs p-1 w-full text-center">
@@ -243,6 +264,7 @@ export default function AdminPage() {
                   alt={img.category}
                   width={200}
                   height={200}
+                  unoptimized // ✅ Added
                   className="w-full h-24 object-cover"
                   onError={(e) => {
                     (e.target as HTMLImageElement).style.display = "none";
@@ -262,6 +284,14 @@ export default function AdminPage() {
         {!loadingCategory && selectedCategoryImages.length === 0 && manageCategory && (
           <p>No images found for {manageCategory}.</p>
         )}
+      </div>
+      <div className="mt-10 text-center">
+        <button
+          onClick={handleClearOrphans}
+          className="bg-orange-600 text-white px-6 py-2 rounded hover:bg-orange-700 transition"
+        >
+          🧹 Clear Orphaned Records
+        </button>
       </div>
     </div>
   );
