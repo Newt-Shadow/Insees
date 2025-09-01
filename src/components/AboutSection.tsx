@@ -1,7 +1,7 @@
-"use client";
+// ❌ remove "use client"
 import React from "react";
 
-export const AboutSection: React.FC = () => {
+export const AboutSection = () => {
   return (
     <section
       id="about"

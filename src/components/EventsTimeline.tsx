@@ -1,5 +1,4 @@
 "use client";
-import React, { useEffect, useState } from "react";
 import {
   FaRocket,
   FaGraduationCap,
@@ -16,23 +15,7 @@ interface EventType {
   icon: "FaRocket" | "FaGraduationCap" | "FaUsers" | "default";
 }
 
-export const EventsTimeline: React.FC = () => {
-  const [events, setEvents] = useState<EventType[]>([]);
-
-  // Fetch from your API route
-  useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        const res = await fetch("/api/events");
-        const data = await res.json();
-        setEvents(data);
-      } catch (err) {
-        console.error("Failed to fetch events:", err);
-      }
-    };
-    fetchEvents();
-  }, []);
-
+export const EventsTimeline: React.FC<{ events: EventType[] }> = ({ events }) => {
   const icons: Record<string, React.ReactNode> = {
     FaRocket: <FaRocket className="text-white text-sm" />,
     FaGraduationCap: <FaGraduationCap className="text-white text-sm" />,
@@ -48,23 +31,15 @@ export const EventsTimeline: React.FC = () => {
   };
 
   return (
-    <section
-      id="events"
-      className="relative w-full min-h-screen flex flex-col items-center justify-center px-6 font-sans"
-    >
-      {/* Title */}
+    <section id="events" className="relative w-full min-h-screen flex flex-col items-center justify-center px-6 font-sans">
       <h2 className="text-4xl md:text-5xl font-bold text-gray-300 mb-16 relative z-10">
         Events <span className="text-gray-400 font-medium">Timeline</span>
       </h2>
 
-      {/* Timeline wrapper */}
       <div className="flex flex-col gap-16 w-full max-w-3xl relative z-10">
-        {/* Vertical line */}
         <div className="absolute left-[22px] top-0 bottom-0 w-[2px] bg-gradient-to-b from-white/20 to-transparent" />
-
         {events.map((event) => (
           <div key={event.id} className="relative pl-16">
-            {/* Glowing Icon */}
             <div
               className={`absolute left-0 top-1 flex items-center justify-center w-10 h-10 rounded-full ${
                 glowColors[event.color] || glowColors.amber
@@ -72,8 +47,6 @@ export const EventsTimeline: React.FC = () => {
             >
               {icons[event.icon] || icons.default}
             </div>
-
-            {/* Title */}
             <h3
               className={`text-sm mb-2 ${
                 event.color === "amber"
@@ -87,8 +60,6 @@ export const EventsTimeline: React.FC = () => {
             >
               {event.title}
             </h3>
-
-            {/* Description */}
             <p className="text-lg text-gray-200 leading-relaxed">
               <span
                 className={`font-semibold ${
