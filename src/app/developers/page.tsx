@@ -70,13 +70,20 @@ function DinoGame() {
     return () => cancelAnimationFrame(animation);
   }, [jumping]);
 
-  // Jump on space
+  // Controls: keyboard + mobile tap
   useEffect(() => {
-    const handler = (e: KeyboardEvent) => {
+    const keyHandler = (e: KeyboardEvent) => {
       if (e.code === "Space") setJumping(true);
     };
-    window.addEventListener("keydown", handler);
-    return () => window.removeEventListener("keydown", handler);
+    const tapHandler = () => setJumping(true);
+
+    window.addEventListener("keydown", keyHandler);
+    window.addEventListener("touchstart", tapHandler);
+
+    return () => {
+      window.removeEventListener("keydown", keyHandler);
+      window.removeEventListener("touchstart", tapHandler);
+    };
   }, []);
 
   return (
@@ -94,8 +101,10 @@ export default function DevelopersPage() {
   const [selectedGame, setSelectedGame] = useState<null | "dino" | "mario">(null);
   const [iframeError, setIframeError] = useState(false);
 
-  // Easter Egg trigger (type "dev")
+  // Easter Egg trigger (type "dev" only on desktop > 1024px)
   useEffect(() => {
+    if (window.innerWidth <= 1024) return; // disable on mobile/tablet
+
     let buffer = "";
     const handler = (e: KeyboardEvent) => {
       if (/^[a-zA-Z]$/.test(e.key)) {
@@ -229,6 +238,25 @@ export default function DevelopersPage() {
             </motion.div>
           )}
         </AnimatePresence>
+
+        {/* Floating Easter Egg Button (only for <= 1024px) */}
+        <motion.div
+          className="fixed bottom-6 right-6 lg:hidden bg-gradient-to-r from-purple-600 to-blue-500 text-white px-5 py-3 rounded-full shadow-lg cursor-pointer font-bold text-sm md:text-base z-50"
+          whileHover={{ scale: 1.1, rotate: 2 }}
+          whileTap={{ scale: 0.95 }}
+          animate={{
+            y: [0, -6, 0],
+            boxShadow: [
+              "0 0 20px rgba(168,85,247,0.6)",
+              "0 0 40px rgba(59,130,246,0.6)",
+              "0 0 20px rgba(168,85,247,0.6)",
+            ],
+          }}
+          transition={{ duration: 3, repeat: Infinity }}
+          onClick={() => setEasterEgg(true)}
+        >
+          🎮 Play Games
+        </motion.div>
       </main>
 
       {/* Developers Members Section */}
