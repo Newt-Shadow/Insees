@@ -5,13 +5,14 @@ import { ScrollHint } from "../components/ScrollHint";
 import { ContactSection } from "../components/ContactSection";
 import { EventsTimeline } from "../components/EventsTimeline";
 import { AboutSection } from "../components/AboutSection";
+import MeetDevelopersButton from "@/components/MeetDevelopersButton";
 
 // ✅ Fetch server-side (SSR/SSG depending on config)
 async function getEvents() {
   const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/events`, {
     // For SSR on every request:
     // cache: "no-store"
-    
+
     // For SSG (build-time static):
     next: { revalidate: 60 }, // revalidate every 60s
   });
@@ -87,6 +88,7 @@ export default async function Home() {
       <AboutSection />
       <EventsTimeline events={events} /> {/* ✅ Passing pre-fetched events */}
       <ContactSection />
+      <MeetDevelopersButton />
     </>
   );
 }

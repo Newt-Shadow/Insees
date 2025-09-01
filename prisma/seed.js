@@ -25,7 +25,7 @@ async function main() {
         {
           name: "Anmol",
           por: "executive",
-          img: "/members/",
+          img: "/members/Anmol.jpeg",
           socials: {
             instagram: "",
             facebook: "",

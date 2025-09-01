@@ -1,5 +1,5 @@
 "use client";
-import { FaInstagram, FaFacebook, FaLinkedin } from "react-icons/fa";
+import { FaInstagram, FaFacebook, FaLinkedin, FaGithub } from "react-icons/fa";
 import { motion } from "framer-motion";
 
 interface MemberProps {
@@ -10,6 +10,7 @@ interface MemberProps {
     instagram?: string;
     facebook?: string;
     linkedin?: string;
+    github?: string;
   };
 }
 
@@ -34,7 +35,7 @@ export const MemberCard = ({ name, por, img, socials }: MemberProps) => {
           <div className="w-full h-full bg-gray-400 animate-pulse" />
         )}
         {/* Overlay Effect */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition duration-500" />
+        <div className="absolute inset-0 bg-gradient-to-t  opacity-0 group-hover:opacity-100 transition duration-500" />
       </div>
 
       {/* Content */}
@@ -75,6 +76,16 @@ export const MemberCard = ({ name, por, img, socials }: MemberProps) => {
               className="hover:text-sky-500 transition-colors"
             >
               <FaLinkedin />
+            </a>
+          )}
+          {socials.github && (
+            <a
+              href={socials.github}
+              target="_blank"
+              rel="noreferrer"
+              className="hover:text-gray-400 transition-colors"
+            >
+              <FaGithub />
             </a>
           )}
         </div>
