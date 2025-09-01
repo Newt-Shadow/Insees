@@ -97,3 +97,23 @@ model Event {
   color       String  // e.g. "amber", "green", "blue"
   icon        String  // e.g. "FaRocket", "FaUsers"
 }
+
+// ----------------------------------------------------
+// Contact Messages
+// ----------------------------------------------------
+model ContactMessage {
+  id        Int      @id @default(autoincrement())
+  email     String
+  message   String
+  createdAt DateTime @default(now())
+}
+
+// ----------------------------------------------------
+// Newsletter Emails (from EmailForm)
+// ----------------------------------------------------
+model NewsletterEmail {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  createdAt DateTime @default(now())
+}
+

@@ -1,52 +1,74 @@
 "use client";
-import { motion, AnimatePresence } from "framer-motion";
+
 import { X } from "lucide-react";
-import React from "react";
+import { motion } from "framer-motion";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
+interface MenuDrawerProps {
+  open: boolean;
+  onClose: () => void;
+  navLinks: { name: string; path: string }[];
+}
 
-type DrawerProps = { open: boolean; onClose: () => void; };
+export const MenuDrawer: React.FC<MenuDrawerProps> = ({ open, onClose, navLinks }) => {
+  const pathname = usePathname();
 
+  return (
+    <motion.div
+      initial={{ x: "100%" }}
+      animate={{ x: open ? 0 : "100%" }}
+      exit={{ x: "100%" }}
+      transition={{ duration: 0.45, ease: "easeInOut" }}
+      className="fixed top-0 right-0 h-screen w-72 bg-black/70 backdrop-blur-2xl 
+                 border-l border-white/10 shadow-2xl z-50 p-6 flex flex-col"
+    >
+      {/* Close Button */}
+      <button
+        onClick={onClose}
+        className="self-end text-gray-400 hover:text-white transition-colors"
+      >
+        <X className="w-7 h-7" />
+      </button>
 
-export const MenuDrawer: React.FC<DrawerProps> = ({ open, onClose }) => {
-return (
-<AnimatePresence>
-{open && (
-<motion.aside
-initial={{ opacity: 0 }}
-animate={{ opacity: 1 }}
-exit={{ opacity: 0 }}
-className="fixed inset-0 z-40"
->
-{/* Backdrop */}
-<div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
-
-
-{/* Panel */}
-<motion.div
-initial={{ x: 320 }}
-animate={{ x: 0 }}
-exit={{ x: 320 }}
-transition={{ type: "spring", stiffness: 260, damping: 26 }}
-className="absolute right-0 top-0 h-full w-[84vw] max-w-[420px] bg-neutral-900/80 border-l border-white/10 backdrop-blur-xl p-6 flex flex-col gap-6"
->
-<div className="flex items-center justify-between">
-<h3 className="text-xl font-semibold tracking-wide">INSEES</h3>
-<button onClick={onClose} className="p-2 rounded-md hover:bg-white/5">
-<X />
-</button>
-</div>
-<nav className="mt-4 grid gap-3 text-lg">
-<a className="hover:text-white/90 text-white/70" href="#about">About</a>
-<a className="hover:text-white/90 text-white/70" href="#events">Events</a>
-<a className="hover:text-white/90 text-white/70" href="#teams">Team</a>
-<a className="hover:text-white/90 text-white/70" href="#contact">Contact</a>
-</nav>
-<div className="mt-auto text-sm text-white/60">
-© {new Date().getFullYear()} INSEES, NIT Silchar
-</div>
-</motion.div>
-</motion.aside>
-)}
-</AnimatePresence>
-);
+      {/* Links */}
+      <motion.ul
+        className="mt-12 space-y-6 text-gray-200 text-lg font-medium"
+        initial="hidden"
+        animate="visible"
+        variants={{
+          hidden: { opacity: 0, x: 30 },
+          visible: {
+            opacity: 1,
+            x: 0,
+            transition: { staggerChildren: 0.1 },
+          },
+        }}
+      >
+        {navLinks.map((link, i) => (
+          <motion.li
+            key={i}
+            variants={{
+              hidden: { opacity: 0, x: 20 },
+              visible: { opacity: 1, x: 0 },
+            }}
+            whileHover={{ x: 8 }}
+            transition={{ type: "spring", stiffness: 200 }}
+            onClick={onClose}
+            className="cursor-pointer"
+          >
+            <Link
+              href={link.path}
+              scroll={true}
+              className={`${
+                pathname === link.path ? "text-teal-300" : "hover:text-teal-300"
+              }`}
+            >
+              {link.name}
+            </Link>
+          </motion.li>
+        ))}
+      </motion.ul>
+    </motion.div>
+  );
 };

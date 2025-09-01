@@ -16,7 +16,7 @@ type BulkDeleteResult = {
   deleted: boolean;
 };
 
-const categories = ["Alpha Cresando", "Orientation", "Freshers", "Farewell"] as const;
+const categories = ["Alpha Crescendo", "Orientation", "Freshers", "Farewell"] as const;
 
 export default function AdminPage() {
   const router = useRouter();

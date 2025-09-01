@@ -199,7 +199,7 @@ async function main() {
   // --------------------------
   const events = [
     {
-      title: "Alpha Cresando",
+      title: "Alpha Crescendo",
       highlight: "Supercharge collaboration.",
       description: "We provide unlimited repositories, best-in-class version control, and the world's most powerful open source community—so your team can work more efficiently together.",
       color: "amber",

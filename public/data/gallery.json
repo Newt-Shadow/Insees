@@ -1,15 +1,15 @@
 {
   "driveLink": "https://drive.google.com/drive/folders/12345", 
   "images": [
-    { "src": "/gallery/1.jpg", "category": "Alpha Cresando" },
-    { "src": "/gallery/2.png", "category": "Alpha Cresando" },
+    { "src": "/gallery/1.jpg", "category": "Alpha Crescendo" },
+    { "src": "/gallery/2.png", "category": "Alpha Crescendo" },
     { "src": "/gallery/3.jpg", "category": "Orientation" },
     { "src": "/gallery/4.jpeg", "category": "Orientation" },
     { "src": "/gallery/5.png", "category": "Freshers" },
     { "src": "/gallery/6.png", "category": "Freshers" },
     { "src": "/gallery/7.png", "category": "Farewell" },
     { "src": "/gallery/8.png", "category": "Farewell" },
-    { "src": "/gallery/9.jpg", "category": "Alpha Cresando" },
+    { "src": "/gallery/9.jpg", "category": "Alpha Crescendo" },
     { "src": "/gallery/10.jpeg", "category": "Freshers" }
   ]
 }
