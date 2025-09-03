@@ -5,16 +5,10 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 interface UploadedImage {
-  id: number;
-  src: string;
-  key: string;
+  id: string; // Cloudinary public_id
+  src: string; // secure_url
   category: string;
 }
-
-type BulkDeleteResult = {
-  id: number;
-  deleted: boolean;
-};
 
 const categories = ["Alpha Crescendo", "Orientation", "Freshers", "Farewell"] as const;
 
@@ -33,7 +27,7 @@ export default function AdminPage() {
   const [loadingUpload, setLoadingUpload] = useState(false);
   const [loadingCategory, setLoadingCategory] = useState(false);
   const [selectedCategoryImages, setSelectedCategoryImages] = useState<UploadedImage[]>([]);
-  const [selectedToDelete, setSelectedToDelete] = useState<number[]>([]);
+  const [selectedToDelete, setSelectedToDelete] = useState<string[]>([]);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -52,22 +46,18 @@ export default function AdminPage() {
 
     try {
       const res = await fetch("/api/upload", { method: "POST", body: formData });
-      const data: {
-        success: boolean;
-        uploadedImages?: UploadedImage[];
-        error?: string;
-      } = await res.json();
+      const data: { success: boolean; uploadedImages?: UploadedImage[]; error?: string } =
+        await res.json();
 
       if (data.success && data.uploadedImages?.length) {
-        setSelectedCategoryImages((prev) => [...(data.uploadedImages ?? []), ...prev]);
+        setSelectedCategoryImages((prev) => [...data.uploadedImages!, ...prev]);
         setFiles([]);
         if (fileInputRef.current) fileInputRef.current.value = "";
       } else {
         alert("Upload failed: " + (data.error ?? "Unknown error"));
       }
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : String(err);
-      alert("Upload failed: " + message);
+      alert("Upload failed: " + (err as Error).message);
     }
 
     setLoadingUpload(false);
@@ -80,15 +70,12 @@ export default function AdminPage() {
     const fetchImages = async () => {
       setLoadingCategory(true);
       try {
-        const res = await fetch(
-          `/api/upload?category=${encodeURIComponent(manageCategory)}&t=${Date.now()}`
-        );
+        const res = await fetch(`/api/upload?category=${encodeURIComponent(manageCategory)}`);
         const data: { images?: UploadedImage[] } = await res.json();
-        setSelectedCategoryImages((data.images ?? []).filter((img) => !!img.src));
+        setSelectedCategoryImages(data.images ?? []);
         setSelectedToDelete([]);
       } catch (err: unknown) {
-        const message = err instanceof Error ? err.message : String(err);
-        alert("Failed to fetch images: " + message);
+        alert("Failed to fetch images: " + (err as Error).message);
         setSelectedCategoryImages([]);
       }
       setLoadingCategory(false);
@@ -98,7 +85,7 @@ export default function AdminPage() {
   }, [manageCategory]);
 
   // ---------------- Toggle Select ----------------
-  const toggleSelectImage = (id: number) => {
+  const toggleSelectImage = (id: string) => {
     setSelectedToDelete((prev) =>
       prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
     );
@@ -109,11 +96,9 @@ export default function AdminPage() {
     if (!selectedToDelete.length) return alert("Select at least one image to delete");
     if (!confirm(`Delete ${selectedToDelete.length} images?`)) return;
 
-    const toDelete = selectedCategoryImages
-      .filter((img) => selectedToDelete.includes(img.id))
-      .map((img) => ({ id: img.id, key: img.key })); // ✅ FIXED: use key, not url
+    const toDelete = selectedToDelete.map((id) => ({ id }));
 
-    // Optimistically remove images from UI
+    // Optimistic UI update
     setSelectedCategoryImages((prev) => prev.filter((img) => !selectedToDelete.includes(img.id)));
     setSelectedToDelete([]);
 
@@ -123,37 +108,30 @@ export default function AdminPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ items: toDelete }),
       });
-      const data: {
-        success: boolean;
-        results?: BulkDeleteResult[];
-        error?: string;
-      } = await res.json();
+      const data = await res.json();
       if (!data.success) {
         alert("Some images could not be deleted: " + (data.error ?? "Unknown error"));
       }
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : String(err);
-      alert("Failed to delete: " + message);
+      alert("Failed to delete: " + (err as Error).message);
     }
   };
 
-  // ---------------- Clear Orphans ----------------
-  const handleClearOrphans = async () => {
-    if (!confirm("This will scan and clear all broken blobs from the database. Proceed?")) return;
-
+  // ---------------- Kill Switch ----------------
+  const handleKillSwitch = async () => {
+    if (!confirm("☠️ This will DELETE EVERYTHING in your Cloudinary account. Proceed?")) return;
     try {
-      const res = await fetch("/api/upload/clear-orphans", { method: "POST" });
-      const data: { success: boolean; cleared?: number; message?: string; error?: string } =
-        await res.json();
-
+      const res = await fetch("/api/upload/kill", { method: "POST" });
+      const data = await res.json();
       if (data.success) {
-        alert(data.message ?? `Cleared ${data.cleared ?? 0} orphaned records.`);
+        alert(data.message);
+        setSelectedCategoryImages([]);
+        setSelectedToDelete([]);
       } else {
-        alert("Error clearing orphans: " + (data.error ?? "Unknown error"));
+        alert("Kill failed: " + (data.error ?? "Unknown error"));
       }
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : String(err);
-      alert("Failed to clear: " + message);
+      alert("Kill failed: " + (err as Error).message);
     }
   };
 
@@ -205,7 +183,7 @@ export default function AdminPage() {
                   alt={file.name}
                   width={200}
                   height={200}
-                  unoptimized // ✅ Added
+                  unoptimized
                   className="w-full h-24 object-cover"
                 />
                 <div className="absolute bottom-0 bg-black bg-opacity-50 text-white text-xs p-1 w-full text-center">
@@ -264,11 +242,8 @@ export default function AdminPage() {
                   alt={img.category}
                   width={200}
                   height={200}
-                  unoptimized // ✅ Added
+                  unoptimized
                   className="w-full h-24 object-cover"
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).style.display = "none";
-                  }}
                 />
                 <input
                   type="checkbox"
@@ -285,12 +260,14 @@ export default function AdminPage() {
           <p>No images found for {manageCategory}.</p>
         )}
       </div>
+
+      {/* Kill Switch */}
       <div className="mt-10 text-center">
         <button
-          onClick={handleClearOrphans}
-          className="bg-orange-600 text-white px-6 py-2 rounded hover:bg-orange-700 transition"
+          onClick={handleKillSwitch}
+          className="bg-black text-white px-6 py-2 rounded hover:bg-red-700 transition"
         >
-          🧹 Clear Orphaned Records
+          ☠️ Kill Switch (Delete Everything)
         </button>
       </div>
     </div>

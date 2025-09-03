@@ -1,27 +1,16 @@
 import { NextResponse } from "next/server";
-import { put } from "@vercel/blob";
-import { prisma } from "../../../lib/prisma";
+import { v2 as cloudinary } from "cloudinary";
 
-interface UploadedImage {
-  id: number;
-  src: string;
-  key: string;
-  category: string;
-}
-
-const sanitizeFileName = (name: string) =>
-  name.replace(/[^a-zA-Z0-9.-]/g, "_");
+// Cloudinary config from .env
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME!,
+  api_key: process.env.CLOUDINARY_API_KEY!,
+  api_secret: process.env.CLOUDINARY_API_SECRET!,
+});
 
 // --- POST: Upload images ---
 export async function POST(req: Request) {
   try {
-    const BLOB_READ_WRITE_TOKEN = process.env.BLOB_READ_WRITE_TOKEN;
-    if (!BLOB_READ_WRITE_TOKEN)
-      return NextResponse.json(
-        { error: "BLOB_READ_WRITE_TOKEN not set" },
-        { status: 500 }
-      );
-
     const formData = await req.formData();
     const category = (formData.get("category") as string)?.trim();
     const files = formData.getAll("files") as File[];
@@ -29,59 +18,67 @@ export async function POST(req: Request) {
     if (!category) return NextResponse.json({ error: "No category provided" }, { status: 400 });
     if (!files.length) return NextResponse.json({ error: "No files uploaded" }, { status: 400 });
 
-    const uploadedImages: UploadedImage[] = [];
-
-    // Ensure at least one GalleryConfig exists
-    let config = await prisma.galleryConfig.findFirst();
-    if (!config) {
-      config = await prisma.galleryConfig.create({
-        data: { driveLink: "https://example.com/default-drive-folder" },
-      });
-    }
+    const uploadedImages: { id: string; src: string; key: string; category: string }[] = [];
 
     for (const file of files) {
-      const sanitizedName = sanitizeFileName(file.name);
-      const key = `gallery/${Date.now()}-${sanitizedName}`;
+      const arrayBuffer = await file.arrayBuffer();
+      const buffer = Buffer.from(arrayBuffer);
 
-      // Upload to Vercel Blob
-      const { url } = await put(key, file, {
-        access: "public",
-        token: BLOB_READ_WRITE_TOKEN,
+      // upload to Cloudinary inside category folder
+      const result = await cloudinary.uploader.upload_stream({
+        folder: `insees/gallery/${category}`,
+        resource_type: "image",
       });
 
-      const record = await prisma.gallery.create({
-        data: { src: url, key, category, galleryConfigId: config.id },
+      // manually pipe buffer into upload_stream
+      await new Promise<void>((resolve, reject) => {
+        const upload = cloudinary.uploader.upload_stream(
+          { folder: `insees/gallery/${category}`, resource_type: "image" },
+          (err, res) => {
+            if (err || !res) return reject(err);
+            uploadedImages.push({
+              id: res.public_id,
+              src: res.secure_url,
+              key: res.public_id,
+              category,
+            });
+            resolve();
+          }
+        );
+        upload.end(buffer);
       });
-
-      uploadedImages.push({ id: record.id, src: url, key, category });
     }
 
     return NextResponse.json({ success: true, uploadedImages });
-  } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : String(err);
-    return NextResponse.json({ error: message }, { status: 500 });
+  } catch (err: any) {
+    return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }
 
-// --- GET: Fetch images by category ---
 // --- GET: Fetch images by category ---
 export async function GET(req: Request) {
   try {
     const url = new URL(req.url);
     const category = url.searchParams.get("category")?.trim();
 
-    const images: UploadedImage[] = await prisma.gallery.findMany({
-      where: category
-        ? { category: { contains: category, mode: "insensitive" } } // 🔥 changed
-        : undefined,
-      select: { id: true, src: true, key: true, category: true },
-      orderBy: { id: "desc" },
-    });
+    if (!category)
+      return NextResponse.json({ images: [] });
+
+    const { resources } = await cloudinary.search
+      .expression(`folder:insees/gallery/${category}`)
+      .sort_by("public_id", "desc")
+      .max_results(100)
+      .execute();
+
+    const images = resources.map((r: any, idx: number) => ({
+      id: idx + 1, // frontend needs numeric id
+      src: r.secure_url,
+      key: r.public_id,
+      category,
+    }));
 
     return NextResponse.json({ images });
-  } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : String(err);
-    return NextResponse.json({ error: message }, { status: 500 });
+  } catch (err: any) {
+    return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }
-

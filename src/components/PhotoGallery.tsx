@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense, lazy } from "react";
+import { motion } from "framer-motion";
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
 
 export interface GalleryImage {
   id?: number;
@@ -11,33 +11,46 @@ export interface GalleryImage {
 }
 
 export interface GalleryConfig {
-  driveLink?: string;
   images: GalleryImage[];
 }
 
 interface PhotoGalleryProps {
   initialGalleryConfig?: GalleryConfig | null;
+  initialCategories?: string[];
 }
 
-const categories = ["All", "Alpha Crescendo", "Orientation", "Freshers", "Farewell"];
+const GalleryGrid = lazy(() => import("./GalleryGrid"));
 
-const PhotoGallery: React.FC<PhotoGalleryProps> = ({ initialGalleryConfig }) => {
+const PhotoGallery: React.FC<PhotoGalleryProps> = ({
+  initialGalleryConfig,
+  initialCategories = [],
+}) => {
   const [activeCategory, setActiveCategory] = useState("All");
-  const [displayImages, setDisplayImages] = useState<GalleryImage[]>([]);
+  const [categories, setCategories] = useState<string[]>(["All"]);
+  const [imagesByCategory, setImagesByCategory] = useState<
+    Record<string, GalleryImage[]>
+  >({});
 
   useEffect(() => {
     if (!initialGalleryConfig?.images) return;
 
-    const filtered =
-      activeCategory === "All"
-        ? initialGalleryConfig.images
-        : initialGalleryConfig.images.filter((img) => img.category === activeCategory);
+    const catSet =
+      initialCategories.length > 0
+        ? initialCategories
+        : Array.from(
+            new Set(initialGalleryConfig.images.map((img) => img.category))
+          );
 
-    setDisplayImages(filtered.slice(0, 9));
-  }, [activeCategory, initialGalleryConfig]);
+    setCategories(["All", ...catSet]);
 
-  const getSeeMoreLink = () =>
-    `/gallery/${activeCategory.toLowerCase().replace(/\s+/g, "-")}`;
+    const grouped: Record<string, GalleryImage[]> = {};
+    for (const img of initialGalleryConfig.images) {
+      if (!grouped[img.category]) grouped[img.category] = [];
+      grouped[img.category].push(img);
+    }
+    grouped["All"] = initialGalleryConfig.images;
+    setImagesByCategory(grouped);
+  }, [initialGalleryConfig, initialCategories]);
 
   return (
     <div className="bg-black min-h-screen text-white">
@@ -51,7 +64,6 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = ({ initialGalleryConfig }) => 
           className="object-cover grayscale"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/90" />
-
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
@@ -76,7 +88,7 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = ({ initialGalleryConfig }) => 
               key={cat}
               whileTap={{ scale: 0.9 }}
               onClick={() => setActiveCategory(cat)}
-              className={`relative px-5 py-2 rounded-full cursor-pointer  text-sm md:text-base font-medium transition`}
+              className={`relative px-5 py-2 rounded-full cursor-pointer text-sm md:text-base font-medium transition`}
             >
               <span
                 className={
@@ -98,65 +110,28 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = ({ initialGalleryConfig }) => 
           ))}
         </div>
 
-        {/* Gallery Grid */}
-        <AnimatePresence mode="wait">
-          {displayImages.length === 0 ? (
-            <motion.p
-              key="empty"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="text-center text-gray-400"
-            >
-              No images found in this category.
-            </motion.p>
-          ) : (
-            <motion.div
-              key="grid"
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.6 }}
-              className="
-                grid 
-                grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 
-                gap-3 sm:gap-4 max-w-7xl mx-auto"
-            >
-              {displayImages.map((img, i) => {
-                const isLast = i === displayImages.length - 1;
-                return (
-                  <motion.div
-                    key={i}
-                    className="relative w-full aspect-square overflow-hidden rounded-xl group shadow-md"
-                    whileHover={{ scale: 1.03 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <Image
-                      src={img.src}
-                      alt={img.category}
-                      fill
-                      sizes="(max-width: 640px) 100vw,
-                             (max-width: 1024px) 50vw,
-                             25vw"
-                      className="object-cover transition-transform duration-500 group-hover:scale-110"
-                    />
-                    {isLast && (
-                      <a
-                        href={getSeeMoreLink()}
-                        target="_blank"
-                        className="absolute inset-0 flex items-center justify-center bg-black/60 hover:bg-black/80 transition"
-                      >
-                        <span className="px-6 py-3 rounded-lg bg-gradient-to-r text-white font-semibold shadow-lg hover:shadow-xl">
-                          See More →
-                        </span>
-                      </a>
-                    )}
-                  </motion.div>
-                );
-              })}
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {/* Suspense per category */}
+        <div className="space-y-16">
+          {categories
+            .filter((cat) => cat === activeCategory)
+            .map((cat) => (
+              <Suspense
+                key={cat}
+                fallback={
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4 max-w-7xl mx-auto animate-pulse">
+                    {Array.from({ length: 10 }).map((_, i) => (
+                      <div
+                        key={i}
+                        className="w-full aspect-square bg-gray-800 rounded-xl"
+                      />
+                    ))}
+                  </div>
+                }
+              >
+                <GalleryGrid category={cat} images={imagesByCategory[cat] || []} />
+              </Suspense>
+            ))}
+        </div>
       </section>
     </div>
   );

@@ -1,27 +1,47 @@
-import PhotoGallery, { GalleryConfig } from "@/components/PhotoGallery";
+import { Suspense } from "react";
 import { Navbar } from "@/components/navbar";
-import { prisma } from "@/lib/prisma";
+import PhotoGallery, { GalleryConfig } from "@/components/PhotoGallery";
 
-export default async function GalleryPage() {
-  const galleryConfig = await prisma.galleryConfig.findFirst({
-    include: { images: true },
+async function fetchGallery() {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/gallery`, {
+    cache: "no-store",
   });
+  if (!res.ok) throw new Error("Failed to fetch gallery");
+  return res.json();
+}
 
-  const formattedGallery: GalleryConfig | null = galleryConfig
-    ? {
-        driveLink: galleryConfig.driveLink,
-        images: galleryConfig.images.map((img) => ({
-          id: img.id,
-          src: img.src,
-          category: img.category,
-        })),
-      }
-    : null;
+async function GalleryContent() {
+  const { categories, images } = await fetchGallery();
 
+  const formattedGallery: GalleryConfig = {
+    images: images.map((img: any, i: number) => ({
+      id: i,
+      src: img.src,
+      category: img.category,
+    })),
+  };
+
+  return (
+    <PhotoGallery
+      initialGalleryConfig={formattedGallery}
+      initialCategories={categories}
+    />
+  );
+}
+
+export default function GalleryPage() {
   return (
     <>
       <Navbar />
-      <PhotoGallery initialGalleryConfig={formattedGallery} />
+      <Suspense
+        fallback={
+          <div className="min-h-screen flex items-center justify-center text-white">
+            <p className="animate-pulse text-gray-400">Loading gallery...</p>
+          </div>
+        }
+      >
+        <GalleryContent />
+      </Suspense>
     </>
   );
 }
