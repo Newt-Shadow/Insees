@@ -2,6 +2,9 @@ import { NextResponse } from "next/server";
 import { cloudinary } from "@/lib/cloudinary";
 import type { ResourceApiResponse } from "cloudinary";
 
+export const runtime = "nodejs";
+
+
 function normalizeCategory(name: string) {
   return name
     .trim()
