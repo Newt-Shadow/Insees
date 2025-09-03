@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { v2 as cloudinary } from "cloudinary";
+import { v2 as cloudinary, UploadApiResponse } from "cloudinary";
 
 // Cloudinary config from .env
 cloudinary.config({
@@ -8,6 +8,28 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET!,
 });
 
+// --- Types ---
+interface UploadedImage {
+  id: string;
+  src: string;
+  key: string;
+  category: string;
+}
+
+// --- Helper: upload buffer ---
+function uploadBuffer(buffer: Buffer, category: string): Promise<UploadApiResponse> {
+  return new Promise((resolve, reject) => {
+    const upload = cloudinary.uploader.upload_stream(
+      { folder: `insees/gallery/${category}`, resource_type: "image" },
+      (err, result) => {
+        if (err || !result) return reject(err);
+        resolve(result);
+      }
+    );
+    upload.end(buffer);
+  });
+}
+
 // --- POST: Upload images ---
 export async function POST(req: Request) {
   try {
@@ -15,43 +37,32 @@ export async function POST(req: Request) {
     const category = (formData.get("category") as string)?.trim();
     const files = formData.getAll("files") as File[];
 
-    if (!category) return NextResponse.json({ error: "No category provided" }, { status: 400 });
-    if (!files.length) return NextResponse.json({ error: "No files uploaded" }, { status: 400 });
+    if (!category) {
+      return NextResponse.json({ error: "No category provided" }, { status: 400 });
+    }
+    if (!files.length) {
+      return NextResponse.json({ error: "No files uploaded" }, { status: 400 });
+    }
 
-    const uploadedImages: { id: string; src: string; key: string; category: string }[] = [];
+    const uploadedImages: UploadedImage[] = [];
 
     for (const file of files) {
       const arrayBuffer = await file.arrayBuffer();
       const buffer = Buffer.from(arrayBuffer);
+      const res = await uploadBuffer(buffer, category);
 
-      // upload to Cloudinary inside category folder
-      const result = await cloudinary.uploader.upload_stream({
-        folder: `insees/gallery/${category}`,
-        resource_type: "image",
-      });
-
-      // manually pipe buffer into upload_stream
-      await new Promise<void>((resolve, reject) => {
-        const upload = cloudinary.uploader.upload_stream(
-          { folder: `insees/gallery/${category}`, resource_type: "image" },
-          (err, res) => {
-            if (err || !res) return reject(err);
-            uploadedImages.push({
-              id: res.public_id,
-              src: res.secure_url,
-              key: res.public_id,
-              category,
-            });
-            resolve();
-          }
-        );
-        upload.end(buffer);
+      uploadedImages.push({
+        id: res.public_id,
+        src: res.secure_url,
+        key: res.public_id,
+        category,
       });
     }
 
     return NextResponse.json({ success: true, uploadedImages });
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 });
+  } catch (err) {
+    const errorMessage = err instanceof Error ? err.message : "Unknown error";
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }
 
@@ -61,8 +72,9 @@ export async function GET(req: Request) {
     const url = new URL(req.url);
     const category = url.searchParams.get("category")?.trim();
 
-    if (!category)
+    if (!category) {
       return NextResponse.json({ images: [] });
+    }
 
     const { resources } = await cloudinary.search
       .expression(`folder:insees/gallery/${category}`)
@@ -70,15 +82,16 @@ export async function GET(req: Request) {
       .max_results(100)
       .execute();
 
-    const images = resources.map((r: any, idx: number) => ({
-      id: idx + 1, // frontend needs numeric id
+    const images: UploadedImage[] = (resources as UploadApiResponse[]).map((r, idx) => ({
+      id: String(idx + 1), // frontend still gets unique id
       src: r.secure_url,
       key: r.public_id,
       category,
     }));
 
     return NextResponse.json({ images });
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 });
+  } catch (err) {
+    const errorMessage = err instanceof Error ? err.message : "Unknown error";
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }
