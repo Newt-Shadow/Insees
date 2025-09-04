@@ -4,6 +4,6 @@
 import CelebrationOverlay from "@/components/CelebrationOverlay";
 
 export default function CelebrationWrapper() {
-  return <CelebrationOverlay  />;
+  return <CelebrationOverlay autoStart={true} autoCloseAfter={12000} />;
   }
   

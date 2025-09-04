@@ -2,10 +2,6 @@
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
-import type confetti from "canvas-confetti";
-
-
-
 
 /**
  * Masterpiece CelebrationOverlay
@@ -32,7 +28,7 @@ const CelebrationOverlay: React.FC<CelebrationProps> = ({
   confettiDuration = 5000,
 }) => {
   // --- state & refs (core logic kept identical where applicable) ---
-  const [confettiFn, setConfettiFn] = useState<typeof confetti | null>(null);
+  const [confettiFn, setConfettiFn] = useState<any | null>(null);
   const [showOverlay, setShowOverlay] = useState(false);
   const [typedText, setTypedText] = useState("");
   const firstRun = useRef(true);
@@ -52,12 +48,7 @@ const CelebrationOverlay: React.FC<CelebrationProps> = ({
   useEffect(() => {
     const onFirstInteraction = () => {
       try {
-        const AudioContextClass =
-          (window.AudioContext ||
-            (window as unknown as { webkitAudioContext?: typeof AudioContext })
-              .webkitAudioContext);
-
-        audioCtxRef.current = AudioContextClass ? new AudioContextClass() : null;
+        audioCtxRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
       } catch {
         audioCtxRef.current = null;
       }
@@ -557,16 +548,28 @@ const CelebrationOverlay: React.FC<CelebrationProps> = ({
             />
 
             <div
-              className="relative overflow-hidden rounded-3xl border border-white/8 p-8 backdrop-blur-3xl shadow-[0_20px_60px_rgba(0,0,0,0.55)]"
+              className="
+        relative overflow-hidden rounded-3xl border border-white/10 
+        p-4 sm:p-6 md:p-8 
+        backdrop-blur-3xl shadow-[0_20px_60px_rgba(0,0,0,0.55)]
+        w-full max-w-[95%] sm:max-w-[650px] md:max-w-[900px] lg:max-w-[1100px]
+        mx-auto
+      "
               style={{
-                background: "linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01))",
+                background:
+                  "linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01))",
               }}
             >
               {/* headline badge */}
               <motion.div
-                className="mb-5 inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-bold uppercase tracking-wide"
+                className="
+          mb-4 sm:mb-5 inline-flex items-center gap-2 
+          rounded-full px-3 sm:px-4 py-1.5 sm:py-2 
+          text-[10px] sm:text-xs md:text-sm font-bold uppercase tracking-wide
+        "
                 style={{
-                  background: "linear-gradient(90deg, rgba(255,236,179,0.95), rgba(255,186,147,0.95))",
+                  background:
+                    "linear-gradient(90deg, rgba(255,236,179,0.95), rgba(255,186,147,0.95))",
                   color: "#08112a",
                   boxShadow: "0 10px 30px rgba(0,0,0,0.28)",
                 }}
@@ -577,9 +580,15 @@ const CelebrationOverlay: React.FC<CelebrationProps> = ({
                 🎊 Celebration Unlocked
               </motion.div>
 
-              {/* headline with typewriter text + shimmer */}
+              {/* headline */}
               <motion.h1
-                className="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight"
+                className="
+          font-extrabold leading-tight 
+          text-[clamp(1.8rem,5vw,3.8rem)] 
+          sm:text-[clamp(2.2rem,5vw,4.5rem)] 
+          md:text-[clamp(2.8rem,5vw,5.5rem)] 
+          break-words
+        "
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.22 }}
@@ -597,27 +606,32 @@ const CelebrationOverlay: React.FC<CelebrationProps> = ({
                     position: "relative",
                   }}
                 >
-                  {/* typed text with glowing caret simulation */}
-                  <span style={{ whiteSpace: "pre" }}>{typedText}</span>
+                  {/* typed text with glowing caret */}
+                  <span style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
+                    {typedText}
+                  </span>
                   <span
                     aria-hidden
                     style={{
                       display: "inline-block",
-                      width: 8,
-                      height: 28,
-                      marginLeft: 6,
-                      background: "linear-gradient(180deg, rgba(255,255,255,0.95), rgba(255,255,255,0.6))",
+                      width: 6,
+                      height: 22,
+                      marginLeft: 4,
+                      background:
+                        "linear-gradient(180deg, rgba(255,255,255,0.95), rgba(255,255,255,0.6))",
                       opacity: typedText ? 1 : 0,
                       transformOrigin: "center",
                       borderRadius: 2,
                       boxShadow: "0 6px 18px rgba(0,0,0,0.25)",
                       verticalAlign: "middle",
-                      animation: typedCompleteRef.current ? "blink 1s steps(2, start) infinite" : "none",
+                      animation: typedCompleteRef.current
+                        ? "blink 1s steps(2, start) infinite"
+                        : "none",
                     }}
                   />
                 </span>
 
-                {/* shimmer sweep when typing completes */}
+                {/* shimmer sweep */}
                 {typedCompleteRef.current && (
                   <motion.div
                     aria-hidden
@@ -641,7 +655,11 @@ const CelebrationOverlay: React.FC<CelebrationProps> = ({
 
               {/* subline */}
               <motion.p
-                className="mt-4 text-lg"
+                className="
+          mt-3 sm:mt-4 
+          text-sm sm:text-base md:text-lg 
+          text-center sm:text-left
+        "
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.45 }}
@@ -652,14 +670,14 @@ const CelebrationOverlay: React.FC<CelebrationProps> = ({
 
               {/* interactive microhint */}
               <motion.div
-                className="mt-6 select-none text-sm"
+                className="mt-4 sm:mt-6 select-none text-xs sm:text-sm text-center sm:text-left"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: allowClickClose.current ? 1 : 0 }}
                 transition={{ duration: 0.28 }}
                 style={{ color: "rgba(255,255,255,0.72)" }}
                 aria-hidden={!allowClickClose.current}
               >
-                Click anywhere to continue
+                AdAstra per Aspera · Step Into the new world
               </motion.div>
             </div>
           </motion.div>
@@ -669,4 +687,4 @@ const CelebrationOverlay: React.FC<CelebrationProps> = ({
   );
 };
 
-export default CelebrationOverlay;
+export default CelebrationOverlay; 
