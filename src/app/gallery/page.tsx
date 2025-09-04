@@ -1,4 +1,3 @@
-import { Suspense } from "react";
 import { Navbar } from "@/components/navbar";
 import PhotoGallery, { GalleryConfig } from "@/components/PhotoGallery";
 
@@ -12,46 +11,41 @@ type ApiResponse = {
   images: ApiImage[];
 };
 
-async function fetchGallery(): Promise<ApiResponse> {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/gallery`, {
-    cache: "no-store",
-  });
-  if (!res.ok) throw new Error("Failed to fetch gallery");
-  return res.json();
+async function fetchGallery(): Promise<ApiResponse | null> {
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL!;
+    const res = await fetch(`${baseUrl}/api/gallery`, {
+      cache: "no-store",
+      next: { revalidate: 0 },
+    });
+    if (!res.ok) return null;
+    return res.json();
+  } catch (err) {
+    console.error("❌ Gallery fetch error:", err);
+    return null;
+  }
 }
 
-async function GalleryContent() {
-  const { categories, images } = await fetchGallery();
+export default async function GalleryPage() {
+  const data = await fetchGallery();
 
-  const formattedGallery: GalleryConfig = {
-    images: images.map((img, i) => ({
-      id: i,
-      src: img.src,
-      category: img.category,
-    })),
-  };
+  const formattedGallery: GalleryConfig | null = data?.images
+    ? {
+        images: data.images.map((img, i) => ({
+          id: i,
+          src: img.src,
+          category: img.category,
+        })),
+      }
+    : null;
 
-  return (
-    <PhotoGallery
-      initialGalleryConfig={formattedGallery}
-      initialCategories={categories}
-    />
-  );
-}
-
-export default function GalleryPage() {
   return (
     <>
       <Navbar />
-      {/* <Suspense */}
-      {/* //   fallback={ */}
-      {/* //     <div className="min-h-screen flex items-center justify-center text-white">
-      //       <p className="animate-pulse text-gray-400">Loading gallery...</p>
-      //     </div>
-      //   }
-      // > */}
-        <GalleryContent />
-      {/* </Suspense> */}
+      <PhotoGallery
+        initialGalleryConfig={formattedGallery}
+        initialCategories={data?.categories || []}
+      />
     </>
   );
 }

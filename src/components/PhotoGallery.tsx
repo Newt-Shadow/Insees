@@ -21,6 +21,9 @@ interface PhotoGalleryProps {
 
 const GalleryGrid = lazy(() => import("./GalleryGrid"));
 
+const BATCH_SIZE = 10;
+const SMALL_THRESHOLD = 12;
+
 const PhotoGallery: React.FC<PhotoGalleryProps> = ({
   initialGalleryConfig,
   initialCategories = [],
@@ -30,9 +33,11 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = ({
   const [imagesByCategory, setImagesByCategory] = useState<
     Record<string, GalleryImage[]>
   >({});
+  const [visibleImages, setVisibleImages] = useState<GalleryImage[]>([]);
 
+  // 🔹 Setup categories & grouping
   useEffect(() => {
-    if (!initialGalleryConfig?.images) return;
+    if (!initialGalleryConfig?.images?.length) return;
 
     const catSet =
       initialCategories.length > 0
@@ -50,7 +55,35 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = ({
     }
     grouped["All"] = initialGalleryConfig.images;
     setImagesByCategory(grouped);
+
+    // ✅ If small, show all at once
+    if (initialGalleryConfig.images.length <= SMALL_THRESHOLD) {
+      setVisibleImages(initialGalleryConfig.images);
+    } else {
+      setVisibleImages(initialGalleryConfig.images.slice(0, BATCH_SIZE));
+    }
   }, [initialGalleryConfig, initialCategories]);
+
+  // 🔹 Load more images in batches
+  const loadMore = () => {
+    const current = imagesByCategory[activeCategory] || [];
+    const nextCount = visibleImages.length + BATCH_SIZE;
+    setVisibleImages(current.slice(0, nextCount));
+  };
+
+  // 🔹 Handle category change
+  const handleCategoryChange = (cat: string) => {
+    setActiveCategory(cat);
+    const selected = imagesByCategory[cat] || [];
+
+    if (selected.length <= SMALL_THRESHOLD) {
+      setVisibleImages(selected);
+    } else {
+      setVisibleImages(selected.slice(0, BATCH_SIZE));
+    }
+  };
+
+  const noImages = !initialGalleryConfig?.images?.length;
 
   return (
     <div className="bg-black min-h-screen text-white">
@@ -80,43 +113,51 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = ({
         </motion.div>
       </div>
 
-      {/* Category Tabs */}
+      {/* Category Tabs + Gallery */}
       <section className="px-4 sm:px-6 py-12">
-        <div className="flex gap-4 sm:gap-6 mt-8 mb-12 flex-wrap justify-center">
-          {categories.map((cat) => (
-            <motion.button
-              key={cat}
-              whileTap={{ scale: 0.9 }}
-              onClick={() => setActiveCategory(cat)}
-              className={`relative px-5 py-2 rounded-full cursor-pointer text-sm md:text-base font-medium transition`}
-            >
-              <span
-                className={
-                  activeCategory === cat
-                    ? "text-white"
-                    : "text-gray-400 hover:text-teal-300"
-                }
-              >
-                {cat}
-              </span>
-              {activeCategory === cat && (
-                <motion.div
-                  layoutId="underline"
-                  className="absolute left-0 right-0 -bottom-1 h-[2px] bg-gradient-to-r from-teal-400 to-blue-400 rounded-full"
-                  transition={{ duration: 0.3 }}
-                />
-              )}
-            </motion.button>
-          ))}
-        </div>
+        {noImages ? (
+          <div className="min-h-[40vh] flex flex-col items-center justify-center text-center text-gray-400">
+            <p className="text-lg sm:text-xl md:text-2xl font-medium">
+              📸 No images available yet
+            </p>
+            <p className="mt-2 text-sm sm:text-base text-gray-500">
+              Check back soon — our gallery is being updated.
+            </p>
+          </div>
+        ) : (
+          <>
+            {/* Category Tabs */}
+            <div className="flex gap-4 sm:gap-6 mt-8 mb-12 flex-wrap justify-center">
+              {categories.map((cat) => (
+                <motion.button
+                  key={cat}
+                  whileTap={{ scale: 0.9 }}
+                  onClick={() => handleCategoryChange(cat)}
+                  className={`relative px-5 py-2 rounded-full cursor-pointer text-sm md:text-base font-medium transition`}
+                >
+                  <span
+                    className={
+                      activeCategory === cat
+                        ? "text-white"
+                        : "text-gray-400 hover:text-teal-300"
+                    }
+                  >
+                    {cat}
+                  </span>
+                  {activeCategory === cat && (
+                    <motion.div
+                      layoutId="underline"
+                      className="absolute left-0 right-0 -bottom-1 h-[2px] bg-gradient-to-r from-teal-400 to-blue-400 rounded-full"
+                      transition={{ duration: 0.3 }}
+                    />
+                  )}
+                </motion.button>
+              ))}
+            </div>
 
-        {/* Suspense per category */}
-        <div className="space-y-16">
-          {categories
-            .filter((cat) => cat === activeCategory)
-            .map((cat) => (
+            {/* Suspense per category */}
+            <div className="space-y-16">
               <Suspense
-                key={cat}
                 fallback={
                   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4 max-w-7xl mx-auto animate-pulse">
                     {Array.from({ length: 10 }).map((_, i) => (
@@ -128,10 +169,26 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = ({
                   </div>
                 }
               >
-                <GalleryGrid category={cat} images={imagesByCategory[cat] || []} />
+                <GalleryGrid category={activeCategory} images={visibleImages} />
               </Suspense>
-            ))}
-        </div>
+
+              {/* Load more button — only for big sets */}
+              {/* {visibleImages.length <
+                (imagesByCategory[activeCategory]?.length || 0) &&
+                (imagesByCategory[activeCategory]?.length || 0) >
+                  SMALL_THRESHOLD && (
+                  <div className="flex justify-center mt-8">
+                    <button
+                      onClick={loadMore}
+                      className="px-6 py-2 rounded-lg bg-gradient-to-r from-teal-500 to-blue-500 text-white font-medium shadow hover:opacity-90"
+                    >
+                      Load More
+                    </button>
+                  </div>
+                )} */}
+            </div>
+          </>
+        )}
       </section>
     </div>
   );

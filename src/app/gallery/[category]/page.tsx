@@ -2,7 +2,8 @@
 
 import { notFound, useParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
+import Image from "next/image";
 
 interface GalleryImage {
   src: string;
@@ -18,41 +19,87 @@ function formatCategory(param?: string): string {
   return param ? param.replace(/-/g, " ") : "all";
 }
 
+const BATCH_SIZE = 12;
+
 export default function GalleryCategoryPage() {
   const { category } = useParams<{ category: string }>();
   const [images, setImages] = useState<GalleryImage[]>([]);
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
+
+  const observerRef = useRef<HTMLDivElement | null>(null);
 
   const formattedCategory = formatCategory(category);
 
-  useEffect(() => {
-    const fetchGallery = async () => {
-      setLoading(true);
+  // 🔹 Fetch images in batches
+  const fetchGallery = useCallback(
+    async (pageNum: number) => {
       try {
-        const res = await fetch(`/api/gallery?category=${category || "all"}`, {
-          cache: "no-store",
-        });
+        const res = await fetch(
+          `/api/gallery?category=${category || "all"}&limit=${BATCH_SIZE}&offset=${
+            pageNum * BATCH_SIZE
+          }`,
+          { cache: "no-store" }
+        );
         if (!res.ok) notFound();
         const data: GalleryApiResponse = await res.json();
-        setImages(data.images);
+
+        setImages((prev) => [...prev, ...data.images]);
+        if (data.images.length < BATCH_SIZE) setHasMore(false);
       } catch (err) {
-        console.error("Failed to fetch gallery:", err);
+        console.error("❌ Failed to fetch gallery:", err);
+        setHasMore(false);
       } finally {
         setLoading(false);
       }
-    };
+    },
+    [category]
+  );
 
-    fetchGallery();
-  }, [category]);
+  // 🔹 First load (reset state on category change)
+  useEffect(() => {
+    setImages([]);
+    setPage(0);
+    setHasMore(true);
+    setLoading(true);
+    fetchGallery(0);
+  }, [category, fetchGallery]);
+
+  // 🔹 Infinite scroll observer
+  useEffect(() => {
+    if (!hasMore) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && !loading) {
+          setPage((prev) => prev + 1);
+        }
+      },
+      { threshold: 1 }
+    );
+
+    if (observerRef.current) observer.observe(observerRef.current);
+    return () => {
+      if (observerRef.current) observer.unobserve(observerRef.current);
+    };
+  }, [loading, hasMore]);
+
+  // 🔹 Fetch new batch when page changes
+  useEffect(() => {
+    if (page > 0) fetchGallery(page);
+  }, [page, fetchGallery]);
 
   return (
     <div className="bg-black min-h-screen text-white">
       {/* Hero Banner */}
       <div className="relative w-full h-[60vh] flex items-center justify-center">
-        <img
+        <Image
           src="/image.png"
           alt="gallery"
-          className="absolute inset-0 w-full h-full object-cover grayscale"
+          fill
+          priority
+          className="object-cover grayscale"
         />
         <div className="absolute inset-0 bg-black/60" />
         <div className="relative bg-black/50 rounded-xl px-8 py-6 text-center">
@@ -68,7 +115,7 @@ export default function GalleryCategoryPage() {
 
       {/* Gallery Section */}
       <section className="px-6 py-12">
-        {loading ? (
+        {loading && images.length === 0 ? (
           <p className="text-center text-gray-400">Loading images...</p>
         ) : images.length === 0 ? (
           <p className="text-center text-gray-400">
@@ -91,16 +138,26 @@ export default function GalleryCategoryPage() {
                   whileHover={{ scale: 1.03 }}
                   transition={{ duration: 0.3 }}
                 >
-                  <img
+                  <Image
                     src={img.src}
                     alt={img.category}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                    loading="lazy"
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-110"
+                    placeholder="blur"
+                    blurDataURL="/placeholder.png" // 🔹 low-quality placeholder
+                    loading={i < BATCH_SIZE ? "eager" : "lazy"} // eager load first batch
                   />
                 </motion.div>
               ))}
             </motion.div>
           </AnimatePresence>
+        )}
+
+        {/* Infinite scroll trigger */}
+        {hasMore && (
+          <div ref={observerRef} className="h-16 flex justify-center items-center">
+            <p className="text-gray-500">Loading more...</p>
+          </div>
         )}
       </section>
     </div>
