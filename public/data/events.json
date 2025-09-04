@@ -2,24 +2,24 @@
   {
     "id": 1,
     "title": "Alpha Crescendo",
-    "highlight": "Supercharge collaboration.",
-    "description": "We provide unlimited repositories, best-in-class version control, and the world's most powerful open source community—so your team can work more efficiently together.",
+    "highlight": "Unleashing creativity, one note at a time.",
+    "description": "A vibrant cultural night where talents shine and music takes center stage. Alpha Crescendo brings together performers from every corner of the campus to celebrate art, rhythm, and passion in an unforgettable evening.",
     "color": "amber",
     "icon": "FaRocket"
   },
   {
     "id": 2,
     "title": "Farewell Party",
-    "highlight": "Accelerate high-quality software development.",
-    "description": "Our platform drives innovation with tools that boost developer velocity.",
+    "highlight": "Bidding goodbye with laughter, memories, and style.",
+    "description": "A heartfelt evening to celebrate the journey of our graduating batch. With speeches, performances, and a trip down memory lane, the Farewell Party is our way of saying thank you and good luck for the road ahead.",
     "color": "green",
     "icon": "FaGraduationCap"
   },
   {
     "id": 3,
     "title": "Freshers Party",
-    "highlight": "Accelerate high-quality software development.",
-    "description": "Our platform drives innovation with tools that boost developer velocity.",
+    "highlight": "Welcoming new faces with energy and excitement.",
+    "description": "The Freshers Party is your grand entry into campus life! A night full of fun, music, and ice-breaking activities designed to help new students mingle, feel at home, and kickstart their college journey in style.",
     "color": "blue",
     "icon": "FaUsers"
   }
