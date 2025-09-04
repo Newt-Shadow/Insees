@@ -2,6 +2,7 @@
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import type { ConfettiFn } from "canvas-confetti";
 
 /**
  * Masterpiece CelebrationOverlay
@@ -28,7 +29,8 @@ const CelebrationOverlay: React.FC<CelebrationProps> = ({
   confettiDuration = 5000,
 }) => {
   // --- state & refs (core logic kept identical where applicable) ---
-  const [confettiFn, setConfettiFn] = useState<any | null>(null);
+
+  const [confettiFn, setConfettiFn] = useState<ConfettiFn | null>(null);
   const [showOverlay, setShowOverlay] = useState(false);
   const [typedText, setTypedText] = useState("");
   const firstRun = useRef(true);
@@ -48,7 +50,11 @@ const CelebrationOverlay: React.FC<CelebrationProps> = ({
   useEffect(() => {
     const onFirstInteraction = () => {
       try {
-        audioCtxRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
+        const AudioContextClass =
+          window.AudioContext ||
+          (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+
+        audioCtxRef.current = new AudioContextClass();
       } catch {
         audioCtxRef.current = null;
       }

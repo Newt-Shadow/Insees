@@ -18,7 +18,7 @@ interface CloudinaryFolder {
 interface CloudinaryResource {
   public_id: string;
   secure_url: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export async function GET(req: Request) {
@@ -82,8 +82,11 @@ export async function GET(req: Request) {
       categories: allImages.length ? categories : [],
       images: allImages,
     });
-  } catch (err) {
+  } catch (err: unknown) {
     console.error("❌ Gallery API error:", err);
-    return NextResponse.json({ error: "Failed to load gallery" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to load gallery" },
+      { status: 500 }
+    );
   }
 }
