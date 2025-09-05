@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { promises as fs } from "fs";
 import path from "path";
 
-export const runtime = "nodejs"; // ✅ Prisma requires Node.js
+
 
 // Path to JSON fallback
 const jsonPath = path.join(process.cwd(), "public", "data", "events.json");
