@@ -102,5 +102,6 @@ export const MemberCard = ({ name, por, img, socials }: MemberProps) => {
              transition-all duration-500"
       />
     </motion.div>
+
   );
 };
