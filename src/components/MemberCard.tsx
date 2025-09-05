@@ -21,7 +21,10 @@ export const MemberCard = ({ name, por, img, socials }: MemberProps) => {
     <motion.div
       whileHover={{ scale: 1.05 }}
       transition={{ type: "spring", stiffness: 200, damping: 15 }}
-      className="relative bg-gradient-to-b from-[#1a1a1a] to-[#0a0a0a] rounded-2xl overflow-hidden w-64 max-w-[90vw] text-center border border-white/10 shadow-lg hover:shadow-white/10 hover:border-white/30 backdrop-blur-md"
+      className="relative group bg-gradient-to-b from-[#1a1a1a] to-[#0a0a0a] 
+                 rounded-2xl overflow-hidden w-64 max-w-[90vw] text-center 
+                 border border-white/10 shadow-lg hover:shadow-white/10 
+                 hover:border-white/30 backdrop-blur-md"
     >
       {/* Image / Placeholder */}
       <div className="w-full h-48 bg-gray-700 relative group">
@@ -35,7 +38,7 @@ export const MemberCard = ({ name, por, img, socials }: MemberProps) => {
           <div className="w-full h-full bg-gray-400 animate-pulse" />
         )}
         {/* Overlay Effect */}
-        <div className="absolute inset-0 bg-gradient-to-t  opacity-0 group-hover:opacity-100 transition duration-500" />
+        <div className="absolute inset-0 bg-gradient-to-t opacity-0 group-hover:opacity-100 transition duration-500" />
       </div>
 
       {/* Content */}
@@ -90,6 +93,13 @@ export const MemberCard = ({ name, por, img, socials }: MemberProps) => {
           )}
         </div>
       </div>
+
+      {/* Bottom Accent Line (same as DevMemberCard) */}
+      <div
+        className="absolute bottom-0 left-1/2 -translate-x-1/2 w-2/3 h-0.5 
+                   bg-gradient-to-r from-purple-500 via-pink-400 to-blue-500 
+                   opacity-0 group-hover:opacity-100 transition-all duration-500"
+      />
     </motion.div>
   );
 };
