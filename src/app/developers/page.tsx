@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Navbar } from "@/components/navbar";
 import { useEffect, useRef, useState } from "react";
 import { Cpu, Smartphone, Globe, Brain, Layers } from "lucide-react";
-import { DevMemberCard } from "@/components/DevMemberCard"; // your custom card
+import { DevMemberCard } from "@/components/DevMemberCard";
 
 // Categories
 const categories = [
@@ -15,16 +15,76 @@ const categories = [
   { title: "IoT", icon: <Cpu className="w-10 h-10 text-orange-400" />, desc: "Connecting hardware and software for smart systems." },
 ];
 
-// Example developers
-const devs = [
-  { name: "Alice Doe", expertise: "UI / UX", img: "/devs/alice.jpg" },
-  { name: "Bob Smith", expertise: "Web Development", img: "/devs/bob.jpg" },
-  { name: "Clara Lee", expertise: "App Development", img: "/devs/clara.jpg" },
-  { name: "David Zhang", expertise: "Machine Learning", img: "/devs/david.jpg" },
-  { name: "Eva Patel", expertise: "IoT", img: "/devs/eva.jpg" },
+const seniorDevs = [
+  {
+    name: "Anmol",
+    expertise: "Web Development",
+    img: "/members/Anmol.jpeg",
+    socials: {
+      linkedin: "https://www.linkedin.com/in/anmol77/",
+      facebook: "https://facebook.com/anmol",
+      instagram: "https://www.instagram.com/anmol_n77/",
+    },
+  },
+  {
+    name: "Devanuj",
+    expertise: "IoT",
+    img: "/members/devanuj.jpg",
+    socials: {
+      linkedin: "https://linkedin.com/in/devanuj",
+      facebook: "https://facebook.com/devanuj",
+      instagram: "https://www.instagram.com/_dvx__rijal_/",
+    },
+  },
 ];
 
-// 🦖 Offline Dino Game Component
+
+const juniorDevs = [
+  {
+    name: "Swapnil",
+    expertise: "Web Development",
+    img: "/members/Swapnil.jpeg",
+    socials: {
+      linkedin: "https://www.linkedin.com/in/swapnil-deka-467975332/",
+      instagram: "https://www.instagram.com/s.w.a.p.n.i.l.d.e.k.a/",
+      facebook: "https://www.facebook.com/profile.php?id=61566987403561",
+    },
+  },
+  {
+    name: "Hafizur",
+    expertise: "App development",
+    img: "/devs/david.jpg",
+    socials: {
+     linkedin: "https://www.linkedin.com/in/hafijurnits?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+      instagram: "https://www.instagram.com/yeah_hafijur/",
+      facebook: "https://www.facebook.com/yeah.hafijur?mibextid=ZbWKwL",
+    },
+  },
+
+    {
+    name: "Darpan ",
+    expertise: "UI/UX",
+    img: "/members/darpan.jpg",
+    socials: {
+     linkedin: "https://www.linkedin.com/mwlite/profile/me?trk=p_mwlite_feed-secondary_nav",
+      instagram: "https://www.instagram.com/darpanjyotigoswami_nits_eie/",
+      facebook: "https://www.facebook.com/profile.php?id=61564938990523",
+    },
+  },
+
+    {
+    name: "Kavish",
+    expertise: "Cloud",
+    img: "/members/Kavish.jpeg",
+    socials: {
+     linkedin: "https://www.linkedin.com/in/kavish-sharma-724168314",
+      instagram: "https://www.instagram.com/kav1sh.s_/",
+      facebook: "https://www.facebook.com/share/1AthPfrExv/?mibextid=wwXIfr",
+    },
+  },
+];
+
+// 🦖 Dino Game Component
 function DinoGame() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [jumping, setJumping] = useState(false);
@@ -44,15 +104,12 @@ function DinoGame() {
     const loop = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Dino
       ctx.fillStyle = "lime";
       ctx.fillRect(50, dinoY, 40, 40);
 
-      // Obstacle
       ctx.fillStyle = "red";
       ctx.fillRect(obstacleX, 170, 30, 30);
 
-      // Jump mechanics
       if (jumping) {
         jumpVelocity = -12;
         setJumping(false);
@@ -60,7 +117,6 @@ function DinoGame() {
       setDinoY((prev) => Math.min(150, prev + jumpVelocity + gravity));
       jumpVelocity += gravity;
 
-      // Move obstacle
       setObstacleX((prev) => (prev <= -30 ? 400 : prev - 6));
 
       animation = requestAnimationFrame(loop);
@@ -70,7 +126,6 @@ function DinoGame() {
     return () => cancelAnimationFrame(animation);
   }, [jumping]);
 
-  // Controls: keyboard + mobile tap
   useEffect(() => {
     const keyHandler = (e: KeyboardEvent) => {
       if (e.code === "Space") setJumping(true);
@@ -101,9 +156,8 @@ export default function DevelopersPage() {
   const [selectedGame, setSelectedGame] = useState<null | "dino" | "mario">(null);
   const [iframeError, setIframeError] = useState(false);
 
-  // Easter Egg trigger (type "dev" only on desktop > 1024px)
   useEffect(() => {
-    if (window.innerWidth <= 1024) return; // disable on mobile/tablet
+    if (window.innerWidth <= 1024) return;
 
     let buffer = "";
     const handler = (e: KeyboardEvent) => {
@@ -120,6 +174,19 @@ export default function DevelopersPage() {
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
   }, []);
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.15 },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 40 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+  };
 
   return (
     <>
@@ -163,113 +230,46 @@ export default function DevelopersPage() {
           ))}
         </section>
 
-        {/* Easter Egg Popup */}
-        <AnimatePresence>
-          {easterEgg && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.6 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.6 }}
-              transition={{ duration: 0.5 }}
-              className="fixed inset-0 flex items-center justify-center z-50"
-            >
-              <div className="bg-black/95 backdrop-blur-xl border border-white/20 rounded-2xl p-8 text-center shadow-2xl w-[95%] h-[85%] flex flex-col">
-                <h2 className="text-2xl font-bold mb-6">🎮 Choose Your Game</h2>
+        {/* Senior Developers */}
+        <section className="bg-black text-white px-6 md:px-12 py-20">
+          <h2 className="text-4xl font-extrabold mb-12 text-center">
+            Senior <span className="text-purple-400">Developers</span>
+          </h2>
+          <motion.div
+            className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 place-items-center"
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+          >
+            {seniorDevs.map((dev, i) => (
+              <motion.div key={i} variants={itemVariants}>
+                <DevMemberCard {...dev} />
+              </motion.div>
+            ))}
+          </motion.div>
+        </section>
 
-                {/* Game Selector */}
-                {!selectedGame ? (
-                  <div className="flex flex-col gap-6 items-center justify-center flex-1">
-                    <button
-                      onClick={() => setSelectedGame("dino")}
-                      className="px-8 py-3 rounded-lg bg-gradient-to-r from-green-400 to-teal-500 text-black font-semibold hover:scale-105 transition"
-                    >
-                      🦖 Play Dino Game
-                    </button>
-                    <button
-                      onClick={() => setSelectedGame("mario")}
-                      className="px-8 py-3 rounded-lg bg-gradient-to-r from-yellow-400 to-red-500 text-black font-semibold hover:scale-105 transition"
-                    >
-                      🍄 Play Mario Game
-                    </button>
-                  </div>
-                ) : (
-                  <div className="flex-1 w-full flex items-center justify-center">
-                    {!iframeError ? (
-                      <iframe
-                        src={
-                          selectedGame === "dino"
-                            ? "https://chromedino.com/"
-                            : "https://supermario-game.com/"
-                        }
-                        className="w-full h-full rounded-xl border border-white/20 shadow-2xl"
-                        onError={() => setIframeError(true)}
-                      />
-                    ) : (
-                      <DinoGame />
-                    )}
-                  </div>
-                )}
-
-                {/* Controls */}
-                <div className="mt-4 flex justify-center gap-4">
-                  {selectedGame && (
-                    <button
-                      onClick={() => {
-                        setSelectedGame(null);
-                        setIframeError(false);
-                      }}
-                      className="px-6 py-2 rounded-full bg-gradient-to-r from-blue-400 to-purple-500 text-black font-semibold"
-                    >
-                      Back
-                    </button>
-                  )}
-                  <button
-                    onClick={() => {
-                      setEasterEgg(false);
-                      setSelectedGame(null);
-                      setIframeError(false);
-                    }}
-                    className="px-6 py-2 rounded-full bg-gradient-to-r from-pink-400 to-red-500 text-black font-semibold"
-                  >
-                    Exit
-                  </button>
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* Floating Easter Egg Button (only for <= 1024px) */}
-        <motion.div
-          className="fixed bottom-6 right-6 lg:hidden bg-gradient-to-r from-purple-600 to-blue-500 text-white px-5 py-3 rounded-full shadow-lg cursor-pointer font-bold text-sm md:text-base z-50"
-          whileHover={{ scale: 1.1, rotate: 2 }}
-          whileTap={{ scale: 0.95 }}
-          animate={{
-            y: [0, -6, 0],
-            boxShadow: [
-              "0 0 20px rgba(168,85,247,0.6)",
-              "0 0 40px rgba(59,130,246,0.6)",
-              "0 0 20px rgba(168,85,247,0.6)",
-            ],
-          }}
-          transition={{ duration: 3, repeat: Infinity }}
-          onClick={() => setEasterEgg(true)}
-        >
-          🎮 Play Games
-        </motion.div>
+        {/* Junior Developers */}
+        <section className="bg-black text-white px-6 md:px-12 py-20">
+          <h2 className="text-4xl font-extrabold mb-12 text-center">
+            Junior <span className="text-purple-400">Developers</span>
+          </h2>
+          <motion.div
+            className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 place-items-center"
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+          >
+            {juniorDevs.map((dev, i) => (
+              <motion.div key={i} variants={itemVariants}>
+                <DevMemberCard {...dev} />
+              </motion.div>
+            ))}
+          </motion.div>
+        </section>
       </main>
-
-      {/* Developers Members Section */}
-      <section className="bg-black text-white px-6 md:px-12 py-20">
-        <h2 className="text-4xl font-extrabold mb-12 text-center">
-          Our <span className="text-purple-400">Developers</span>
-        </h2>
-        <div className="flex flex-wrap justify-center gap-10">
-          {devs.map((dev, i) => (
-            <DevMemberCard key={i} name={dev.name} expertise={dev.expertise} img={dev.img} />
-          ))}
-        </div>
-      </section>
     </>
   );
 }

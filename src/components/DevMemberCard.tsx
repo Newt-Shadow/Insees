@@ -1,14 +1,20 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { Linkedin, Instagram, Facebook } from "lucide-react";
 
 interface DevProps {
   name: string;
   expertise: string;
-  img: string; // new photo field
+  img: string;
+  socials?: {
+    linkedin?: string;
+    instagram?: string;
+    facebook?: string;
+  };
 }
 
-export const DevMemberCard = ({ name, expertise, img }: DevProps) => {
+export const DevMemberCard = ({ name, expertise, img, socials }: DevProps) => {
   return (
     <motion.div
       whileHover={{ scale: 1.07 }}
@@ -17,14 +23,46 @@ export const DevMemberCard = ({ name, expertise, img }: DevProps) => {
     >
       {/* Profile Image */}
       <div className="w-28 h-28 mx-auto rounded-full overflow-hidden border border-white/20 shadow-md mb-4">
-        <img
-          src={img}
-          alt={name}
-          className="w-full h-full object-cover"
-        />
+        <img src={img} alt={name} className="w-full h-full object-cover" />
       </div>
+
+      {/* Name & Expertise */}
       <h3 className="text-xl font-bold mb-2">{name}</h3>
-      <p className="text-gray-400 text-sm">{expertise}</p>
+      <p className="text-gray-400 text-sm mb-4">{expertise}</p>
+
+      {/* Social Links */}
+      <div className="flex justify-center gap-4">
+        {socials?.linkedin && (
+          <a
+            href={socials.linkedin}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-gray-400 hover:text-blue-500 transition"
+          >
+            <Linkedin className="w-5 h-5" />
+          </a>
+        )}
+        {socials?.instagram && (
+          <a
+            href={socials.instagram}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-gray-400 hover:text-pink-500 transition"
+          >
+            <Instagram className="w-5 h-5" />
+          </a>
+        )}
+        {socials?.facebook && (
+          <a
+            href={socials.facebook}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-gray-400 hover:text-blue-600 transition"
+          >
+            <Facebook className="w-5 h-5" />
+          </a>
+        )}
+      </div>
     </motion.div>
   );
 };
