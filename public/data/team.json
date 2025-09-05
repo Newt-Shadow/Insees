@@ -225,10 +225,11 @@
           "linkedin": "https://www.linkedin.com/in/kavish-sharma-724168314"
         }
       },
+
       {
         "name": "Divya",
         "por": "Executive of design team ",
-        "img": "/members/divya.heic",
+        "img": "/members/divya.jpg",
         "socials": {
           "instagram": "https://www.instagram.com/divyaaa.__07",
           "facebook": "https://www.facebook.com/share/15uTMiGRHE/",
@@ -278,11 +279,21 @@
       {
         "name": "Abhishek",
         "por": "Executive- Event and Coordination ",
-        "img": "/members/abhishek.png",
+        "img": "/members/abhisekh.png",
         "socials": {
           "instagram": "https://www.instagram.com/tiwari.abhi15?igsh=bnZpaTh2MWs3cm84",
           "facebook": "https://www.facebook.com/share/1BKu6x5ZYo/",
           "linkedin": "https://www.linkedin.com/in/abhishek015?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"
+        }
+      },
+      {
+        "name": "Parth",
+        "por": "Executive- Event and Coordination ",
+        "img": "/members/parth.jpg",
+        "socials": {
+          "instagram": "",
+          "facebook": "",
+          "linkedin": ""
         }
       },
       {
