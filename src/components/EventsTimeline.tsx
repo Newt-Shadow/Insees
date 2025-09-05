@@ -6,7 +6,6 @@ import {
   FaUsers,
   FaRegCalendarAlt,
 } from "react-icons/fa";
-import { useEffect, useState } from "react";
 
 interface EventType {
   id: number;
@@ -17,27 +16,11 @@ interface EventType {
   icon: "FaRocket" | "FaGraduationCap" | "FaUsers" | "default";
 }
 
-export const EventsTimeline: React.FC = () => {
-  const [events, setEvents] = useState<EventType[]>([]);
-  const [loading, setLoading] = useState(true);
+interface EventsTimelineProps {
+  events: EventType[];
+}
 
-  // Fetch events from API
-  useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        const res = await fetch("/api/events", { cache: "no-store" });
-        if (!res.ok) throw new Error("Failed to fetch events");
-        const data = await res.json();
-        setEvents(data);
-      } catch (err) {
-        console.error("Error fetching events:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchEvents();
-  }, []);
-
+export const EventsTimeline: React.FC<EventsTimelineProps> = ({ events }) => {
   const icons: Record<string, React.ReactNode> = {
     FaRocket: <FaRocket className="text-white text-sm" />,
     FaGraduationCap: <FaGraduationCap className="text-white text-sm" />,
@@ -52,13 +35,13 @@ export const EventsTimeline: React.FC = () => {
     orange: "bg-orange-500 shadow-glowOrange",
   };
 
-  if (loading) {
+  if (!events || events.length === 0) {
     return (
       <section
         id="events"
         className="w-full min-h-screen flex items-center justify-center text-gray-400"
       >
-        Loading events...
+        No events found.
       </section>
     );
   }

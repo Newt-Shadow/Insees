@@ -3,73 +3,88 @@ import { prisma } from "@/lib/prisma";
 import { promises as fs } from "fs";
 import path from "path";
 
-export const runtime = "nodejs"; // ✅ Prisma needs Node runtime
+export const runtime = "nodejs"; // ✅ Prisma requires Node.js
 
+// Path to JSON fallback
 const jsonPath = path.join(process.cwd(), "public", "data", "events.json");
 
-// --- Helper: Read from JSON ---
-async function readFromJson() {
+// Type matches Prisma schema
+export type Event = {
+  id: number;
+  title: string;
+  highlight: string;
+  description: string;
+  color: string; // not strict union, since stored as plain string
+  icon: string;  // same
+};
+
+/**
+ * Read events.json from /public
+ */
+async function readFromJson(): Promise<Event[]> {
   try {
-    const file = await fs.readFile(jsonPath, "utf-8");
-    return JSON.parse(file);
+    const raw = await fs.readFile(jsonPath, "utf-8");
+    return JSON.parse(raw) as Event[];
   } catch (err) {
-    console.error("Failed to read events.json:", err);
-    return null;
+    console.error("❌ Error reading events.json:", err);
+    return [];
   }
 }
 
-// --- Helper: Write to JSON ---
-async function writeToJson(data: any) {
+/**
+ * Write updated events to events.json
+ */
+async function writeToJson(data: Event[]) {
   try {
     await fs.writeFile(jsonPath, JSON.stringify(data, null, 2), "utf-8");
   } catch (err) {
-    console.error("Failed to write events.json:", err);
+    console.error("❌ Error writing events.json:", err);
   }
 }
 
-// --- GET: Prefer JSON, fallback to Prisma ---
 export async function GET() {
   try {
-    const jsonData = await readFromJson();
-    if (jsonData && Array.isArray(jsonData)) {
-      return NextResponse.json(jsonData);
-    }
+    // ✅ Always serve from JSON first (fast)
+    const fileData = await readFromJson();
 
-    // fallback: fetch from prisma
-    const dbEvents = await prisma.event.findMany();
-    return NextResponse.json(dbEvents);
+    // Fire Prisma in background (non-blocking) to sync latest
+    (async () => {
+      try {
+        const dbEvents = await prisma.event.findMany();
+        if (dbEvents.length > 0) {
+          await writeToJson(dbEvents); // keep JSON fresh
+        }
+      } catch (err) {
+        console.warn("⚠️ Prisma fallback failed:", err);
+      }
+    })();
+
+    return NextResponse.json(fileData);
   } catch (err) {
-    console.error("Error fetching events:", err);
+    console.error("❌ GET /events error:", err);
     return NextResponse.json({ error: "Failed to fetch events" }, { status: 500 });
   }
 }
 
-// --- POST: Update JSON + Prisma ---
 export async function POST(req: Request) {
   try {
-    const body = await req.json();
+    const body = (await req.json()) as Omit<Event, "id">[]; // id auto from DB
 
-    if (!Array.isArray(body)) {
-      return NextResponse.json({ error: "Invalid data format" }, { status: 400 });
-    }
+    // ✅ Insert into DB
+    const created = await prisma.event.createMany({
+      data: body,
+      skipDuplicates: true,
+    });
 
-    // ✅ Update JSON first (fast + source of truth)
-    await writeToJson(body);
+    // ✅ Fetch updated list
+    const updatedEvents = await prisma.event.findMany();
 
-    // ✅ Sync to Prisma (non-blocking but awaited to ensure consistency)
-    await prisma.$transaction(
-      body.map((event: any) =>
-        prisma.event.upsert({
-          where: { id: event.id },
-          update: event,
-          create: event,
-        })
-      )
-    );
+    // ✅ Sync JSON
+    await writeToJson(updatedEvents);
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json(updatedEvents);
   } catch (err) {
-    console.error("Error updating events:", err);
-    return NextResponse.json({ error: "Failed to update events" }, { status: 500 });
+    console.error("❌ POST /events error:", err);
+    return NextResponse.json({ error: "Failed to save events" }, { status: 500 });
   }
 }
