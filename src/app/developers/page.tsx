@@ -75,11 +75,33 @@ const juniorDevs = [
     {
     name: "Kavish",
     expertise: "Cloud",
-    img: "/members/Kavish.jpeg",
+    img: "/members/kavish.jpeg",
     socials: {
      linkedin: "https://www.linkedin.com/in/kavish-sharma-724168314",
       instagram: "https://www.instagram.com/kav1sh.s_/",
       facebook: "https://www.facebook.com/share/1AthPfrExv/?mibextid=wwXIfr",
+    },
+  },
+
+      {
+    name: "Param",
+    expertise: "Web",
+    img: "/members/Dhrubo.jpeg",
+    socials: {
+     linkedin: "https://www.linkedin.com/in/param-nagar-786586244?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app",
+      instagram: "https://www.instagram.com/_paramaroraa_?igsh=MWE4dDN5ZW16ZXphcQ%3D%3D&utm_source=qr",
+      facebook: "https://www.facebook.com/share/19z8G4CysD/?mibextid=wwXIfr",
+    },
+  },
+
+      {
+    name: "Dhrubojyoti",
+    expertise: "Cloud",
+    img: "/members/param.jpeg",
+    socials: {
+     linkedin: "https://www.linkedin.com/in/dhrubajyoti-sarma-355488334?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+      instagram: "https://www.instagram.com/_dhruba_0713?igsh=MTU1cDM5MHh0ODJoaA==",
+      facebook: "-https://www.facebook.com/himangshu.sarma.92123",
     },
   },
 ];
