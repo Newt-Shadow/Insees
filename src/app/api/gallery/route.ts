@@ -2,6 +2,22 @@ import { NextResponse } from "next/server";
 import { cloudinary } from "@/lib/cloudinary";
 
 export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
+
+// 🔹 Define a type for the cached response
+interface GalleryResponse {
+  categories: string[];
+  images: { src: string; category: string }[];
+}
+
+// 🔹 Simple in-memory cache
+let cache: {
+  data: GalleryResponse;
+  timestamp: number;
+} | null = null;
+
+const CACHE_TTL = 1000 * 60 * 10; // 10 minutes
 
 function normalizeCategory(name: string) {
   return name
@@ -26,6 +42,11 @@ export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
     const category = searchParams.get("category");
 
+    // ✅ Check cache
+    if (cache && Date.now() - cache.timestamp < CACHE_TTL) {
+      return NextResponse.json(cache.data);
+    }
+
     // 🔹 Specific category
     if (category && category.toLowerCase() !== "all") {
       const normalized = normalizeCategory(category);
@@ -43,10 +64,13 @@ export async function GET(req: Request) {
         category: normalized,
       }));
 
-      return NextResponse.json({
+      const payload: GalleryResponse = {
         categories: images.length > 0 ? [normalized] : [],
         images,
-      });
+      };
+
+      cache = { data: payload, timestamp: Date.now() };
+      return NextResponse.json(payload);
     }
 
     // 🔹 All folders
@@ -54,7 +78,9 @@ export async function GET(req: Request) {
     const folders = (folderRes?.folders || []) as CloudinaryFolder[];
 
     if (!folders.length) {
-      return NextResponse.json({ categories: [], images: [] });
+      const payload: GalleryResponse = { categories: [], images: [] };
+      cache = { data: payload, timestamp: Date.now() };
+      return NextResponse.json(payload);
     }
 
     const categories = folders.map((f) => normalizeCategory(f.name));
@@ -78,10 +104,13 @@ export async function GET(req: Request) {
 
     const allImages = results.flat();
 
-    return NextResponse.json({
+    const payload: GalleryResponse = {
       categories: allImages.length ? categories : [],
       images: allImages,
-    });
+    };
+
+    cache = { data: payload, timestamp: Date.now() };
+    return NextResponse.json(payload);
   } catch (err: unknown) {
     console.error("❌ Gallery API error:", err);
     return NextResponse.json(

@@ -72,7 +72,7 @@ export const DevMemberCard = ({ name, expertise, img, socials }: DevProps) => {
         )}
       </div>
 
-      {/* Bottom Accent Line (animated from center outward) */}
+      {/* Bottom Accent Line */}
       <div
         className="absolute bottom-0 left-1/2 -translate-x-1/2 h-0.5 
                    bg-gradient-to-r from-purple-500 via-pink-400 to-blue-500

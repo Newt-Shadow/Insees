@@ -15,8 +15,8 @@ async function fetchGallery(): Promise<ApiResponse | null> {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL!;
     const res = await fetch(`${baseUrl}/api/gallery`, {
-      cache: "no-store",
-      next: { revalidate: 0 },
+      
+      next: { revalidate: 900 },
     });
     if (!res.ok) return null;
     return res.json();
