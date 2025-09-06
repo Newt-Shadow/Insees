@@ -70,7 +70,7 @@ const juniorDevs = [
   {
     name: "Kavish",
     expertise: "Cloud",
-    img: "/members/Kavish.jpeg",
+    img: "/members/kavish.jpeg",
     socials: {
       linkedin: "https://www.linkedin.com/in/kavish-sharma-724168314",
       instagram: "https://www.instagram.com/kav1sh.s_/",
