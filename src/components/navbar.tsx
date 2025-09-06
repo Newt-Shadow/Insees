@@ -22,7 +22,7 @@ export const Navbar = () => {
     { name: "About", path: "/#about" },
     { name: "Events", path: "/#events" },
     { name: "Team Members", path: "/team" },
-    { name: "Resources", path: "/resources" },
+    // { name: "Resources", path: "/resources" },
     { name: "Gallery", path: "/gallery" },
     { name: "Contact", path: "/#contact" },
   ];

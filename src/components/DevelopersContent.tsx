@@ -67,6 +67,7 @@ const juniorDevs = [
       facebook: "https://www.facebook.com/profile.php?id=61564938990523",
     },
   },
+  
   {
     name: "Kavish",
     expertise: "Cloud",
