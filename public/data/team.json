@@ -96,6 +96,17 @@
           "linkedin": ""
         }
       },
+
+       {
+        "name": "Aditya",
+        "por": "Executive",
+        "img": "/members/aditya.jpg",
+        "socials": {
+          "instagram": "https://www.instagram.com/aditya_singh_ig ",
+          "facebook": "https://www.facebook.com/share/1BCUwS3oMf/",
+          "linkedin": "https://www.linkedin.com/in/aditya-singh-a31aa2217?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"
+        }
+      },
       
       {
         "name": "Tanvi",
