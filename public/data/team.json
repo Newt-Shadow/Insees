@@ -162,6 +162,17 @@
           "linkedin": ""
         }
       },
+
+         {
+        "name": "Champakjyoti Konwar",
+        "por": "Tech Head - ML",
+        "img": "/members/champak.jpeg",
+        "socials": {
+          "instagram": "",
+          "facebook": "",
+          "linkedin": "https://www.linkedin.com/in/champakjyoti-konwar-b94240292/"
+        }
+      },
     
       {
         "name": "Aditya",
@@ -173,11 +184,13 @@
           "linkedin": "https://www.linkedin.com/in/aditya-singh-a31aa2217?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"
         }
       }
+
+   
     ],
     "executive": [
       {
         "name": "Srayashi",
-        "por": "Event Management Team",
+        "por": "Executive",
         "img": "/members/srayashi.jpg",
         "socials": {
           "instagram": "https://www.instagram.com/shrey_is_shee",
@@ -187,7 +200,7 @@
       },
       {
         "name": "Ankita",
-        "por": "Executive member",
+        "por": "Executive",
         "img": "/members/ankita.jpg",
         "socials": {
           "instagram": "https://www.instagram.com/ank1taaaaaa ",
@@ -197,7 +210,7 @@
       },
       {
         "name": "Harsha Deep",
-        "por": "Junior Executive Content",
+        "por": "Executive",
         "img": "/members/harsha.webp",
         "socials": {
           "instagram": "https://www.instagram.com/_.sadaameesevalo._",
@@ -207,7 +220,7 @@
       },
       {
         "name": "Darpan",
-        "por": "Executive-Technical Team",
+        "por": "Executive",
         "img": "/members/darpan.jpg",
         "socials": {
           "instagram": "https://www.instagram.com/darpanjyotigoswami_nits_eie",
@@ -217,7 +230,7 @@
       },
       {
         "name": "Kavish",
-        "por": "Junior Executive(tech)",
+        "por": "Executive",
         "img": "/members/kavish.jpeg",
         "socials": {
           "instagram": "https://www.instagram.com/kav1sh.s_",
@@ -228,7 +241,7 @@
 
       {
         "name": "Divya",
-        "por": "Executive of design team ",
+        "por": "Executive",
         "img": "/members/divya.jpg",
         "socials": {
           "instagram": "https://www.instagram.com/divyaaa.__07",
@@ -238,7 +251,7 @@
       },
       {
         "name": "Param",
-        "por": "Executive member ",
+        "por": "Executive",
         "img": "/members/param.jpeg",
         "socials": {
           "instagram": "https://www.instagram.com/@_paramaroraa_",
@@ -248,7 +261,7 @@
       },
       {
         "name": "Swapnil",
-        "por": "Technical Executive",
+        "por": "Executive",
         "img": "/members/Swapnil.jpeg",
         "socials": {
           "instagram": "https://www.instagram.com/s.w.a.p.n.i.l.d.e.k.a",
@@ -258,7 +271,7 @@
       },
       {
         "name": "Rhytham",
-        "por": "Executive- Event Coordination and Planning",
+        "por": "Executive",
         "img": "/members/rythm.jpg",
         "socials": {
           "instagram": "https://www.instagram.com/rhythm4936",
@@ -268,7 +281,7 @@
       },
       {
         "name": "Krish",
-        "por": "Executive- Event and Coordination Team",
+        "por": "Executive",
         "img": "/members/krish.jpg",
         "socials": {
           "instagram": "https://www.instagram.com/krish_jaiiin",
@@ -278,7 +291,7 @@
       },
       {
         "name": "Abhishek",
-        "por": "Executive- Event and Coordination ",
+        "por": "Executive",
         "img": "/members/abhisekh.png",
         "socials": {
           "instagram": "https://www.instagram.com/tiwari.abhi15?igsh=bnZpaTh2MWs3cm84",
@@ -288,7 +301,7 @@
       },
       {
         "name": "Parth",
-        "por": "Executive- Event and Coordination ",
+        "por": "Executive",
         "img": "/members/parth.jpg",
         "socials": {
           "instagram": "",
@@ -308,7 +321,7 @@
       },
       {
         "name": "Nihar",
-        "por": "Design Executive",
+        "por": "Executive",
         "img": "/members/nihar.jpeg",
         "socials": {
           "instagram": "https://www.instagram.com/nihar_ranjan_konch",
@@ -318,7 +331,7 @@
       },
       {
         "name": "Yeah Hafizur",
-        "por": "Tech team",
+        "por": "Executive",
         "img": "/members/yeah.jpg",
         "socials": {
           "instagram": "https://www.instagram.com/yeah_hafijur",
