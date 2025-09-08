@@ -81,7 +81,7 @@ const juniorDevs = [
   {
     name: "Param",
     expertise: "Web",
-    img: "/members/Dhrubo.jpeg",
+    img: "/members/param.jpeg",
     socials: {
       linkedin: "https://www.linkedin.com/in/param-nagar-786586244",
       instagram: "https://www.instagram.com/_paramaroraa_",
@@ -91,7 +91,7 @@ const juniorDevs = [
   {
     name: "Dhrubojyoti",
     expertise: "Cloud",
-    img: "/members/param.jpeg",
+    img: "/members/Dhrubo.jpeg",
     socials: {
       linkedin: "https://www.linkedin.com/in/dhrubajyoti-sarma-355488334",
       instagram: "https://www.instagram.com/_dhruba_0713",
