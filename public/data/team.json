@@ -33,7 +33,7 @@
       }
     ],
     "executive": [
-       {
+      {
         "name": "Ritik",
         "por": "Executive",
         "img": "/members/ritik.jpg",
@@ -43,7 +43,6 @@
           "linkedin": "https://www.linkedin.com/in/ritik-barnwal-41a3b4276?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"
         }
       },
-            
       {
         "name": "Shubham",
         "por": "Executive",
@@ -74,7 +73,6 @@
           "linkedin": "https://www.linkedin.com/in/priya-kumari-1560b228a?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"
         }
       },
-
       {
         "name": "Agrima",
         "por": "Executive",
@@ -85,7 +83,6 @@
           "linkedin": "https://www.linkedin.com/in/agrima-goel-8bb180281?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"
         }
       },
-
       {
         "name": "Devanuj",
         "por": "Executive",
@@ -96,8 +93,7 @@
           "linkedin": ""
         }
       },
-
-       {
+      {
         "name": "Aditya",
         "por": "Executive",
         "img": "/members/aditya.jpg",
@@ -107,7 +103,6 @@
           "linkedin": "https://www.linkedin.com/in/aditya-singh-a31aa2217?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"
         }
       },
-      
       {
         "name": "Tanvi",
         "por": "Executive",
@@ -118,7 +113,6 @@
           "linkedin": "https://www.linkedin.com/in/tanvi-sarma-8b0a622a7?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"
         }
       }
-           
     ]
   },
   "2025-26": {
@@ -133,7 +127,7 @@
           "linkedin": "https://www.linkedin.com/in/bhawna-bharti-213070257?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"
         }
       },
-        {
+      {
         "name": "Ankit Kumar",
         "por": "Mentor",
         "img": "/members/ankit.jpeg",
@@ -173,8 +167,7 @@
           "linkedin": ""
         }
       },
-
-         {
+      {
         "name": "Champakjyoti Konwar",
         "por": "Tech Head - ML",
         "img": "/members/champak.jpeg",
@@ -184,7 +177,17 @@
           "linkedin": "https://www.linkedin.com/in/champakjyoti-konwar-b94240292/"
         }
       },
-    
+
+      {
+        "name": "Vivek Sharma",
+        "por": "Tech Head - web",
+        "img": "/members/vivek.jpg",
+        "socials": {
+          "instagram": "",
+          "facebook": "",
+          "linkedin": ""
+        }
+      },
       {
         "name": "Aditya",
         "por": "Cultural Head",
@@ -195,8 +198,6 @@
           "linkedin": "https://www.linkedin.com/in/aditya-singh-a31aa2217?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"
         }
       }
-
-   
     ],
     "executive": [
       {
@@ -249,7 +250,6 @@
           "linkedin": "https://www.linkedin.com/in/kavish-sharma-724168314"
         }
       },
-
       {
         "name": "Divya",
         "por": "Executive",
