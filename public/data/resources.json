@@ -1,0 +1,399 @@
+{
+  "semesters": [
+    {
+      "title": "1st Semester Study Material",
+      "subjects": [
+        {
+          "name": "Engineering Mathematics",
+          "driveLink": "https://drive.google.com/drive/folders/1A2B3C_MATH",
+          "files": []
+        },
+        {
+          "name": "Basic Electronics",
+          "driveLink": null,
+          "files": [
+            {
+              "name": "Basic Electronics Notes.pdf",
+              "url": "/files/1st/electronics_notes.pdf"
+            },
+            {
+              "name": "Basic Electronics Lab Manual.docx",
+              "url": "/files/1st/electronics_lab.docx"
+            }
+          ]
+        },
+        {
+          "name": "Engineering Drawing",
+          "driveLink": "https://drive.google.com/drive/folders/1A2B3C_DRAW",
+          "files": [
+            {
+              "name": "Drawing Sheets.zip",
+              "url": "/files/1st/drawing_sheets.zip"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "2nd Semester Study Material",
+      "subjects": [
+        {
+          "name": "Physics",
+          "driveLink": "https://drive.google.com/drive/folders/2X3Y_PHYSICS",
+          "files": []
+        },
+        {
+          "name": "Chemistry",
+          "driveLink": null,
+          "files": [
+            { "name": "Chemistry Notes.pdf", "url": "/files/2nd/chemistry.pdf" }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "3rd Semester Study Material",
+      "subjects": [
+        {
+          "name": "EI202(AE)",
+          "driveLink": "https://drive.google.com/drive/folders/1kx9uY-hdyprtuvAF0y9WF1AuDjNi92-d",
+          "files": [
+            {
+              "name": "Books",
+              "url": "https://drive.google.com/drive/folders/1_rm-IQ-UE4s2G-IodwmXILDpzf4KaBTI"
+            },
+            {
+              "name": "End Sem Mini Project",
+              "url": "https://drive.google.com/drive/folders/1ARsCQSaondaiHrd3g6QCHiRaHbHyVRx2"
+            },
+            {
+              "name": "Lab",
+              "url": "https://drive.google.com/drive/folders/1N2AGpcdjrM5w8Nw7XnZ0wzsSSE7Na0nW"
+            },
+            {
+              "name": "Mid - Sem Exam",
+              "url": "https://drive.google.com/drive/folders/1TKuZjT0y7-0G3qCKaq9g_5swP7R3ma7E"
+            },
+            {
+              "name": "Minor Test",
+              "url": "https://drive.google.com/drive/folders/1HjJkNwnl_AV2RFcGbIxSF1i2u4KAgUz7"
+            },
+            {
+              "name": "Notes",
+              "url": "https://drive.google.com/drive/folders/1OgkCq-yI_f-VvbUlyMdjm41-c1OX6DvN"
+            },
+            {
+              "name": "Syllabus - Analog Electronics.pdf",
+              "url": "https://drive.google.com/drive/folders/1kx9uY-hdyprtuvAF0y9WF1AuDjNi92-d"
+            }
+          ]
+        },
+        {
+          "name": "EI203(CN)",
+          "driveLink": "https://drive.google.com/drive/folders/1seH_bwUS35WJdvQlHUyjaJi0xDFcr40R",
+          "files": [
+            {
+              "name": "Assignment",
+              "url": "https://drive.google.com/drive/folders/1gjgowuh3zH2kqyzHJldjOKeSr-L0dB1F"
+            },
+            {
+              "name": "Books",
+              "url": "https://drive.google.com/drive/folders/1kj1E3oP-KwM74BILsWU5jRT0lgD16uig"
+            },
+            {
+              "name": "End Sem Mini Project",
+              "url": "https://drive.google.com/drive/folders/1_MGw4E0XELpks2FKuEaJcwLEGj8C-A4e"
+            },
+            {
+              "name": "Lab",
+              "url": "https://drive.google.com/drive/folders/1KIvaeXH298a7yM4nuJkV0YHnxBOwOlz9"
+            },
+            {
+              "name": "Mid - Sem Exam",
+              "url": "https://drive.google.com/drive/folders/1GCZrPKskHr_xLHgTmvZ6mGjN6OkeJCgv"
+            },
+            {
+              "name": "Minor Test",
+              "url": "https://drive.google.com/drive/folders/1KW1R1SsjPfCshEb-rkBN_vUK8VqNbtWz"
+            },
+            {
+              "name": "Notes",
+              "url": "https://drive.google.com/drive/folders/141gqmZjbS2AUD8_u56aoZLz__NZlf1e6"
+            }
+          ]
+        },
+        {
+          "name": "EI201(EEMI)",
+          "driveLink": "https://drive.google.com/drive/folders/1rQEFgooVoV6FCrBo5DfLngOFgTErBmG7",
+          "files": [
+            {
+              "name": "Assignment",
+              "url": "https://drive.google.com/drive/folders/1pPLClZjvROxqu4fwaHnqcvo-ADtspeL2"
+            },
+            {
+              "name": "Books",
+              "url": "https://drive.google.com/drive/folders/1unCnah316xjvDlp1LnPCHK3qaOjfuYCN"
+            },
+            {
+              "name": "End Sem Mini Project",
+              "url": "https://drive.google.com/drive/folders/1Ro6-EbAMAVfoDZEHrCnPfD4n1A6T8pEZ"
+            },
+            {
+              "name": "Lab",
+              "url": "https://drive.google.com/drive/folders/1zOzSJb5PQrkg2PNS7Qoe0dVktVl6GReW"
+            },
+            {
+              "name": "Mid - Sem Exam",
+              "url": "https://drive.google.com/drive/folders/1TCzsh2vGjpkuQ4wpVZtpV0K3KwfHkOUo"
+            },
+            {
+              "name": "Notes",
+              "url": "https://drive.google.com/drive/folders/19OErCf-_TzlsdDm6UgUWm3-lOkozgdYP"
+            },
+            {
+              "name": "PPT",
+              "url": "https://drive.google.com/drive/folders/1KY0Q3ZpjbYkNLSJ4BO0-wR-XrxrHOUeA"
+            },
+            {
+              "name": "Tutorial",
+              "url": "https://drive.google.com/drive/folders/1PMDqbz08lBfbg6vw4gssEbxLnsQsa2ij"
+            }
+          ]
+        },
+        {
+          "name":"CS201(DSA)",
+          "driveLink":"https://drive.google.com/drive/folders/1-tC7_rDsIpNc49SwY-P-MGkhyjBA8mwz",
+         "files": [
+  
+  { "name": "End Sem Mini Project", "url": "https://drive.google.com/drive/folders/113Ej5_4PtGYbEG1yaO70uNcq8-ZwRBqY" },
+  { "name": "Lab", "url": "https://drive.google.com/drive/folders/1ua4CIbn8Hex9VRmvYBK4ibJgZDeltIkW" },
+  { "name": "Mid - Sem Exam", "url": "https://drive.google.com/drive/folders/1Ukq9BQnkIXO6lb02qCigEMa16X32yPMs" },
+  { "name": "Notes", "url": "https://drive.google.com/drive/folders/18hsneiPa_G6NLQm5lEoA1Tr722xwrltU" },
+  { "name": "Tutorial", "url": "https://drive.google.com/drive/folders/1ATdrDoEcRvKWjkwM3e0qFExE3pH73NGl" }
+]
+        },
+        {
+          "name":"MA201",
+          "driveLink":"https://drive.google.com/drive/folders/1jmWOcAB3AfayIA4JuRo79hAgqvH2Pkbr",
+          "files": [
+            {
+              "name": "Assignment",
+              "url": "https://drive.google.com/drive/folders/1CGZdOblNgM7f2PbTX8Gw2IOynhErsCZz"
+            },
+            {
+              "name": "Books",
+              "url": "https://drive.google.com/drive/folders/1aZMbY7Gsr0Oz_gxmryDdSpOrmu_K5ptm"
+            },
+            {
+              "name": "End Sem Mini Project",
+              "url": "https://drive.google.com/drive/folders/1HYN-iJsK5XCLbWPY0ZVGOPEyNSNJftyq"
+            },
+            
+            {
+              "name": "Mid - Sem Exam",
+              "url": "https://drive.google.com/drive/folders/1T6D8PkOcom5Ulx_Q0NE5NH5y5JAufEhm"
+            },
+            {
+              "name": "Notes",
+              "url": "https://drive.google.com/drive/folders/19yFY8-H6gkZtw25hCU6S4p_08cvmeExN"
+            }
+            
+            
+          ]
+        }
+      ]
+    },
+    {
+     "title":"4th Semester Study Material",
+     "subjects":[
+      {
+        "name":"EI205",
+        "driveLink":"https://drive.google.com/drive/folders/1LCBreCY3FPZLRStnkPpp7gHRahXhzUNP",
+        "files": [
+            {
+              "name": "Assignment",
+              "url": "https://drive.google.com/drive/folders/1--t89ue6COah95o1hdp2WI6vyLAHxxSZ"
+            },
+            {
+              "name": "Books",
+              "url": "https://drive.google.com/drive/folders/1-wi-GCsEcyKYicUvPfv5QfclWw0pv1no"
+            },
+            {
+              "name": "Minor 1",
+              "url": "https://drive.google.com/drive/folders/1mbjDwXJyYHVChwTBN8IxWiqG6aDlS5_x"
+            },{
+              "name": "Minor 2",
+              "url": "https://drive.google.com/drive/folders/1kMsFBF6_1anY37pJ19KTg1_GvPUZ8L6L"
+            },
+            
+            {
+              "name": "Mid - Sem Exam",
+              "url": "https://drive.google.com/drive/folders/1_ngtexHSmOqMrKmRC02wR_FVAEePFaDR"
+            },
+            {
+              "name": "Notes",
+              "url": "https://drive.google.com/drive/folders/1ZdF3D4fKqfcSdSVK5YB4l-AqF4VKwnQW"
+            },{
+              "name":"End-sem Exam",
+              "url":"https://drive.google.com/drive/folders/1hH8SGy0w4KSJs5xxuUkA2pWpvNlGLcB0"
+            }
+            
+            
+          ]
+      },
+      {
+        "name":"EI204",
+        "driveLink":"https://drive.google.com/drive/folders/1iTehzH4d6G4sqcw3g0Bz_jNO8dtim_eu",
+        "files": [
+            {
+              "name": "Lab",
+              "url": "https://drive.google.com/drive/folders/1c9Kl81CJW_OkFDZN_rMtMnOBVp9gRUoT"
+            },
+            {
+              "name": "Books",
+              "url": "https://drive.google.com/drive/folders/11EwGO5S1lttIUjBM6C8-ZASMs2FKMhsL"
+            },
+            {
+              "name": "Minor 1",
+              "url": "https://drive.google.com/drive/folders/1iiaTQLTRy0K2Iq_WntidQF8IDC_2I9fr"
+            },{
+              "name": "Minor 2",
+              "url": "https://drive.google.com/drive/folders/1ZvbCQbxsukr-mIy8NLyux0h8JxBAXOtt"
+            },
+            
+            {
+              "name": "Mid - Sem Exam",
+              "url": "https://drive.google.com/drive/folders/1bUdU3F-WW7edc93V6FUxsYsKK2TP-wOD"
+            },
+            {
+              "name": "Notes",
+              "url": "https://drive.google.com/drive/folders/15mjIYoSqY8XGix9ENbsB2PJFY80r-d_c"
+            },{
+              "name":"End-sem Exam",
+              "url":"https://drive.google.com/drive/folders/1NEgP3CQgo09Px9LuIBoWDoivT3AqxRaX"
+            }
+            
+            
+          ]
+      },
+      {
+        "name":"EI208",
+        "driveLink":"https://drive.google.com/drive/folders/1111_eWQ-tIeCtbyGYnQHhYiAACx4956S",
+        "files": [
+            {
+              "name": "Lab",
+              "url": "https://drive.google.com/drive/folders/11BGEJ7K3VH68q6jszxaGe_vPqSIles4f"
+            },
+            {
+              "name": "Books",
+              "url": "https://drive.google.com/drive/folders/1H5zWI36KoDW1ID18zq9Ya3tT7tQuQGbk"
+            },
+            {
+              "name": "Minor 1",
+              "url": "https://drive.google.com/drive/folders/1BK3eVdBk4cL5l-SERBLh1dSHdcq47zYP"
+            },{
+              "name": "Minor 2",
+              "url": "https://drive.google.com/drive/folders/1HGc2w4nfhobFexRjiu4mhGnlX6Kd9IVV"
+            },
+            
+            {
+              "name": "Mid - Sem Exam",
+              "url": "https://drive.google.com/drive/folders/1jIhiY0XHOGu7ptHfsQ9adZ9QuOQnFCuu"
+            },
+            {
+              "name": "Notes",
+              "url": "https://drive.google.com/drive/folders/1-Tl6ZsnXiDBoXKOjQh6NzGQlrZtI2c6R"
+            },{
+              "name":"End-sem Exam",
+              "url":"https://drive.google.com/drive/folders/14FW915c3FFUqrD7o25VD1d3Y0mtXRSZF"
+            }
+            
+            
+          ]
+      },
+      {
+        "name":"EI207",
+        "driveLink":"https://drive.google.com/drive/folders/1IbYkz5uTOsg8vVnaYRHIhELsAHiDa45T",
+        "files": [
+          {
+            "name" :"Lab",
+            "url":"https://drive.google.com/drive/folders/15DmGIsXYR0nyNB9Oj8QhSX_rXStktDWI"
+          },
+            {
+              "name": "Assignment",
+              "url": "https://drive.google.com/drive/folders/1JTM5sBrnAwsFc5pDFzu8XmZw9aAewcKd"
+            },
+            {
+              "name": "Books",
+              "url": "https://drive.google.com/drive/folders/1ghouTDEdzAvaK0aTEWF5kA4qyeOLSxyh"
+            },
+            {
+              "name": "Minor 1",
+              "url": "https://drive.google.com/drive/folders/11xzVmP0ENK-3mZ_GVie2icjfpHassnNJ"
+            },{
+              "name": "Minor 2",
+              "url": "https://drive.google.com/drive/folders/1rRVPDL7-oaSRl_qu-eaIQgx4K2CMBDH8"
+            },
+            
+            {
+              "name": "Mid - Sem Exam",
+              "url": "https://drive.google.com/drive/folders/1sQKCSBa8JshMFruXxYgsHLkdF3EXKKNi"
+            },
+            {
+              "name": "Notes",
+              "url": "https://drive.google.com/drive/folders/1IKt-8oz9ffkd6ZO81YZXJ3rVNKcYYlq5"
+            },{
+              "name":"End-sem Exam",
+              "url":"https://drive.google.com/drive/folders/1ImfY5pn7uO6G2D_fmRJ6UBCs-92f-DIp"
+            }
+            
+            
+          ]
+      },
+      {
+        "name":"EI206",
+        "driveLink":"https://drive.google.com/drive/folders/1qlEohRw8kPI9CuDQnS-I9cgAgaGj2wvB",
+        "files": [
+            {
+              "name": "Assignment",
+              "url": "https://drive.google.com/drive/folders/1f7bLGw0g-ofreNZnC1-XsllGqXFGCaKN"
+            },
+            {
+              "name": "Books",
+              "url": "https://drive.google.com/drive/folders/1cP34MxL_hNpgFpaWTETnbrFDaDV01wuc"
+            },
+            {
+              "name": "Minor 1",
+              "url": "https://drive.google.com/drive/folders/1yEgUaWPY0u3-glx14oHEVEn7jNUZkk_a"
+            },{
+              "name": "Minor 2",
+              "url": "https://drive.google.com/drive/folders/16u9CpVWPvmMgd5OnYUwrU9OpWWDyk0lF"
+            },
+            
+            {
+              "name": "Mid - Sem Exam",
+              "url": "https://drive.google.com/drive/folders/1cdMCXk1eK9ESHNCRXOeIc3PBL5ejy2Tb"
+            },
+            {
+              "name": "Notes",
+              "url": "https://drive.google.com/drive/folders/1VH2UVMBDYVXYvcWuEuJAntNgESqhfyEH"
+            },{
+              "name":"End-sem Exam",
+              "url":"https://drive.google.com/drive/folders/1X1NDtRbfHPQ5N-Trn2LnI-rw2Afykx9o"
+            },{
+              "name":"Lab",
+              "url":"https://drive.google.com/drive/folders/1-BYxrsPD_cdQWT_N307_OjlKG2Mf4RTX"
+            },{
+              "name":"Tutorial",
+              "url":"https://drive.google.com/drive/folders/1KSTYIJUd-jj8PRVfMEdqMZZSULfWcSKp"
+            }
+            
+            
+          ]
+      }  
+     ]
+
+     
+    }
+  ]
+}

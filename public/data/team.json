@@ -1,0 +1,355 @@
+{
+  "2024-25": {
+    "core": [
+      {
+        "name": "Bhawna Bharti",
+        "por": "Vice - President",
+        "img": "/members/bhawna.jpg",
+        "socials": {
+          "instagram": "https://instagram.com/",
+          "facebook": "",
+          "linkedin": "https://linkedin.com/"
+        }
+      },
+      {
+        "name": "Sayanrup",
+        "por": "Treasurer",
+        "img": "/members/sayanrup.jpg",
+        "socials": {
+          "instagram": "https://www.instagram.com/__.excuse._.me.__/ ",
+          "facebook": "",
+          "linkedin": ""
+        }
+      },
+      {
+        "name": "Ankit Kumar",
+        "por": "General Secretary",
+        "img": "/members/ankit.jpeg",
+        "socials": {
+          "instagram": "https://www.instagram.com/ankit_2k3/ ",
+          "facebook": "https://www.facebook.com/profile.php?id=100010729830424",
+          "linkedin": "www.linkedin.com/in/ankit-kumar-barnwal-138a5a257"
+        }
+      }
+    ],
+    "executive": [
+      {
+        "name": "Ritik",
+        "por": "Executive",
+        "img": "/members/ritik.jpg",
+        "socials": {
+          "instagram": "https://www.instagram.com/ritik_barnwal?igsh=MW5wZ3kydG1xaDJ1Ng== ",
+          "facebook": "https://www.facebook.com/share/1FPoxa6Wpq/",
+          "linkedin": "https://www.linkedin.com/in/ritik-barnwal-41a3b4276?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"
+        }
+      },
+      {
+        "name": "Shubham",
+        "por": "Executive",
+        "img": "/members/subham.jpg",
+        "socials": {
+          "instagram": "https://www.instagram.com/smj_0063?igsh=enRodGd2bHoyamZi",
+          "facebook": "",
+          "linkedin": "https://www.linkedin.com/in/subham-jha-30a6b6289"
+        }
+      },
+      {
+        "name": "Anmol",
+        "por": "Executive",
+        "img": "/members/Anmol.jpeg",
+        "socials": {
+          "linkedin": "https://www.linkedin.com/in/anmol77/",
+          "facebook": "",
+          "instagram": "https://www.instagram.com/anmol_n77/"
+        }
+      },
+      {
+        "name": "Priya",
+        "por": "Executive",
+        "img": "/members/priya.jpg",
+        "socials": {
+          "instagram": "https://www.instagram.com/Crystal.Clear0_0 ",
+          "facebook": "https://www.facebook.com/share/1EoJ1srGjU/",
+          "linkedin": "https://www.linkedin.com/in/priya-kumari-1560b228a?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"
+        }
+      },
+      {
+        "name": "Agrima",
+        "por": "Executive",
+        "img": "/members/agrima.jpg",
+        "socials": {
+          "instagram": "https://www.instagram.com/agrimagoel30",
+          "facebook": "https://www.facebook.com/share/19gksbgUUw/",
+          "linkedin": "https://www.linkedin.com/in/agrima-goel-8bb180281?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"
+        }
+      },
+      {
+        "name": "Devanuj",
+        "por": "Executive",
+        "img": "/members/devanuj.jpg",
+        "socials": {
+          "instagram": "",
+          "facebook": "",
+          "linkedin": ""
+        }
+      },
+      {
+        "name": "Aditya",
+        "por": "Executive",
+        "img": "/members/aditya.jpg",
+        "socials": {
+          "instagram": "https://www.instagram.com/aditya_singh_ig ",
+          "facebook": "https://www.facebook.com/share/1BCUwS3oMf/",
+          "linkedin": "https://www.linkedin.com/in/aditya-singh-a31aa2217?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"
+        }
+      },
+      {
+        "name": "Tanvi",
+        "por": "Executive",
+        "img": "/members/tanvi.jpg",
+        "socials": {
+          "instagram": "https://www.instagram.com/@meoww_mayhem ",
+          "facebook": "https://www.facebook.com/share/1f76URASBd/",
+          "linkedin": "https://www.linkedin.com/in/tanvi-sarma-8b0a622a7?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"
+        }
+      }
+    ]
+  },
+  "2025-26": {
+    "core": [
+      {
+        "name": "Bhawna Bharti",
+        "por": "President",
+        "img": "/members/bhawna.jpg",
+        "socials": {
+          "instagram": "https://www.instagram.com/bhawnabharti_",
+          "facebook": "https://www.facebook.com/share/1L8ynSPtv5/",
+          "linkedin": "https://www.linkedin.com/in/bhawna-bharti-213070257?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"
+        }
+      },
+      {
+        "name": "Ankit Kumar",
+        "por": "Mentor",
+        "img": "/members/ankit.jpeg",
+        "socials": {
+          "instagram": "https://www.instagram.com/ankit_2k3/ ",
+          "facebook": "https://www.facebook.com/profile.php?id=100010729830424",
+          "linkedin": "www.linkedin.com/in/ankit-kumar-barnwal-138a5a257"
+        }
+      },
+      {
+        "name": "Agrima",
+        "por": "Vice-President",
+        "img": "/members/agrima.jpg",
+        "socials": {
+          "instagram": "https://www.instagram.com/agrimagoel30",
+          "facebook": "https://www.facebook.com/share/19gksbgUUw/",
+          "linkedin": "https://www.linkedin.com/in/agrima-goel-8bb180281?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"
+        }
+      },
+      {
+        "name": "Anmol",
+        "por": "General Secretary",
+        "img": "/members/Anmol.jpeg",
+        "socials": {
+          "linkedin": "https://www.linkedin.com/in/anmol77/",
+          "facebook": "",
+          "instagram": "https://www.instagram.com/anmol_n77/"
+        }
+      },
+      {
+        "name": "Devanuj",
+        "por": "Techincal Head - IoT",
+        "img": "/members/devanuj.jpg",
+        "socials": {
+          "instagram": "https://instagram.com/",
+          "facebook": "",
+          "linkedin": ""
+        }
+      },
+      {
+        "name": "Champakjyoti Konwar",
+        "por": "Tech Head - ML",
+        "img": "/members/champak.jpeg",
+        "socials": {
+          "instagram": "",
+          "facebook": "",
+          "linkedin": "https://www.linkedin.com/in/champakjyoti-konwar-b94240292/"
+        }
+      },
+
+      {
+        "name": "Vivek Sharma",
+        "por": "Tech Head - web",
+        "img": "/members/vivek.jpg",
+        "socials": {
+          "instagram": "",
+          "facebook": "",
+          "linkedin": ""
+        }
+      },
+      {
+        "name": "Aditya",
+        "por": "Cultural Head",
+        "img": "/members/aditya.jpg",
+        "socials": {
+          "instagram": "https://www.instagram.com/aditya_singh_ig ",
+          "facebook": "https://www.facebook.com/share/1BCUwS3oMf/",
+          "linkedin": "https://www.linkedin.com/in/aditya-singh-a31aa2217?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"
+        }
+      }
+    ],
+    "executive": [
+      {
+        "name": "Srayashi",
+        "por": "Executive",
+        "img": "/members/srayashi.jpg",
+        "socials": {
+          "instagram": "https://www.instagram.com/shrey_is_shee",
+          "facebook": " https://www.facebook.com/share/14F562hWQWt/",
+          "linkedin": "https://www.linkedin.com/in/srayashi-das-1aab17325?lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base_contact_details%3B7ACg51MVSpKvH52wswFO6Q%3D%3D"
+        }
+      },
+      {
+        "name": "Ankita",
+        "por": "Executive",
+        "img": "/members/ankita.jpg",
+        "socials": {
+          "instagram": "https://www.instagram.com/ank1taaaaaa ",
+          "facebook": "https://www.facebook.com/share/1BEucS9Pag/",
+          "linkedin": "https://www.linkedin.com/in/ankita-chanda-ba2a9b319?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"
+        }
+      },
+      {
+        "name": "Harsha Deep",
+        "por": "Executive",
+        "img": "/members/harsha.webp",
+        "socials": {
+          "instagram": "https://www.instagram.com/_.sadaameesevalo._",
+          "facebook": "https://www.facebook.com/share/19d95D4CNC/",
+          "linkedin": "https://www.linkedin.com/in/harshadeep-bothipi-488a91377?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"
+        }
+      },
+      {
+        "name": "Darpan",
+        "por": "Executive",
+        "img": "/members/darpan.jpg",
+        "socials": {
+          "instagram": "https://www.instagram.com/darpanjyotigoswami_nits_eie",
+          "facebook": "https://www.facebook.com/profile.php?id=61564938990523",
+          "linkedin": "https://www.linkedin.com/in/darpan-jyoti-goswami-b4409030b/"
+        }
+      },
+      {
+        "name": "Kavish",
+        "por": "Executive",
+        "img": "/members/kavish.jpeg",
+        "socials": {
+          "instagram": "https://www.instagram.com/kav1sh.s_",
+          "facebook": "https://www.facebook.com/share/1AthPfrExv/?mibextid=wwXIfr",
+          "linkedin": "https://www.linkedin.com/in/kavish-sharma-724168314"
+        }
+      },
+      {
+        "name": "Divya",
+        "por": "Executive",
+        "img": "/members/divya.jpg",
+        "socials": {
+          "instagram": "https://www.instagram.com/divyaaa.__07",
+          "facebook": "https://www.facebook.com/share/15uTMiGRHE/",
+          "linkedin": "https://www.linkedin.com/in/divya-sri-46576b321?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"
+        }
+      },
+      {
+        "name": "Param",
+        "por": "Executive",
+        "img": "/members/param.jpeg",
+        "socials": {
+          "instagram": "https://www.instagram.com/@_paramaroraa_",
+          "facebook": "https://www.facebook.com/share/1MADqkNuGm/?mibextid=wwXIfr",
+          "linkedin": "https://www.linkedin.com/in/param-nagar-786586244?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app"
+        }
+      },
+      {
+        "name": "Swapnil",
+        "por": "Executive",
+        "img": "/members/Swapnil.jpeg",
+        "socials": {
+          "instagram": "https://www.instagram.com/s.w.a.p.n.i.l.d.e.k.a",
+          "facebook": "https://www.facebook.com/profile.php?id=61566987403561",
+          "linkedin": "https://www.linkedin.com/in/swapnil-deka-467975332/"
+        }
+      },
+      {
+        "name": "Rhytham",
+        "por": "Executive",
+        "img": "/members/rythm.jpg",
+        "socials": {
+          "instagram": "https://www.instagram.com/rhythm4936",
+          "facebook": "https://www.facebook.com/share/1BQcEnDdcE/",
+          "linkedin": "https://www.linkedin.com/in/rytham-dhamala-6247a9190?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"
+        }
+      },
+      {
+        "name": "Krish",
+        "por": "Executive",
+        "img": "/members/krish.jpg",
+        "socials": {
+          "instagram": "https://www.instagram.com/krish_jaiiin",
+          "facebook": "https://www.facebook.com/share/1FRALacQvJ/",
+          "linkedin": "https://www.linkedin.com/in/krish-jain-470837317?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"
+        }
+      },
+      {
+        "name": "Abhishek",
+        "por": "Executive",
+        "img": "/members/abhisekh.png",
+        "socials": {
+          "instagram": "https://www.instagram.com/tiwari.abhi15?igsh=bnZpaTh2MWs3cm84",
+          "facebook": "https://www.facebook.com/share/1BKu6x5ZYo/",
+          "linkedin": "https://www.linkedin.com/in/abhishek015?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"
+        }
+      },
+      {
+        "name": "Parth",
+        "por": "Executive",
+        "img": "/members/parth.jpg",
+        "socials": {
+          "instagram": "",
+          "facebook": "",
+          "linkedin": ""
+        }
+      },
+      {
+        "name": "Irfan",
+        "por": "Executive",
+        "img": "/members/irfan.jpg",
+        "socials": {
+          "instagram": "https://www.instagram.com/_irfan_zaman_",
+          "facebook": "https://www.facebook.com/share/1D7qxyrA4e/",
+          "linkedin": "https://www.linkedin.com/in/irfan-zaman-360854280?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"
+        }
+      },
+      {
+        "name": "Nihar",
+        "por": "Executive",
+        "img": "/members/nihar.jpeg",
+        "socials": {
+          "instagram": "https://www.instagram.com/nihar_ranjan_konch",
+          "facebook": "https://www.facebook.com/share/19jJCiH2Rz/",
+          "linkedin": "https://www.linkedin.com/in/nihar-ranjan-konch-751ba8318/"
+        }
+      },
+      {
+        "name": "Yeah Hafizur",
+        "por": "Executive",
+        "img": "/members/yeah.jpg",
+        "socials": {
+          "instagram": "https://www.instagram.com/yeah_hafijur",
+          "facebook": "https://www.facebook.com/yeah.hafijur?mibextid=ZbWKwL",
+          "linkedin": "https://www.linkedin.com/in/hafijurnits?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"
+        }
+      }
+    ]
+  }
+}

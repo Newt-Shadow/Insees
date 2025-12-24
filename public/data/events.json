@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "title": "Alpha Crescendo",
+    "highlight": "The flagship celebration of INSEES.",
+    "description": "A multi-day extravaganza featuring technology showcases, machine learning workshops, coding marathons, sports tournaments, cultural programs, treasure hunts, and much more. It’s the stage where innovation, talent, and fun converge, making it the most awaited event of the year.",
+    "color": "amber",
+    "icon": "FaRocket"
+  },
+  {
+    "id": 2,
+    "title": "Farewell Party",
+    "highlight": "A heartfelt send-off to the graduating batch.",
+    "description": "An evening filled with nostalgia, laughter, and memories as we celebrate the journey of our fourth-year students. With speeches, cultural performances, and parting wishes, this event honors the achievements of the graduating batch before they embark on new adventures.",
+    "color": "green",
+    "icon": "FaGraduationCap"
+  },
+  {
+    "id": 3,
+    "title": "Freshers Party",
+    "highlight": "Welcoming the newest members of our family.",
+    "description": "A vibrant night to celebrate the arrival of first - year students, packed with music, dance, games, and ice-breaking sessions. It’s where bonds are formed, friendships begin, and the campus spirit comes alive with joy and energy.",
+    "color": "blue",
+    "icon": "FaUsers"
+  }
+]
