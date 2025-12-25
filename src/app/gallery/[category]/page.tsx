@@ -3,11 +3,12 @@ import { Metadata } from 'next';
 import GalleryClient from './GalleryClient';
 
 type Props = {
-  params: { category: string }
+  params: Promise<{ category: string }>
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const categoryName = params.category.replace(/-/g, " ");
+  const { category } = await params; // 👈 Await params here
+  const categoryName = category.replace(/-/g, " ");
   const capitalized = categoryName.charAt(0).toUpperCase() + categoryName.slice(1);
 
   return {
@@ -19,6 +20,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default function GalleryCategoryPage({ params }: Props) {
-  return <GalleryClient category={params.category} />;
+export default async function GalleryCategoryPage({ params }: Props) {
+  const { category } = await params; // 👈 Await params here
+  return <GalleryClient category={category} />;
 }
