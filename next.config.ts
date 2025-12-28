@@ -15,6 +15,15 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "*.public.blob.vercel-storage.com",
       },
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+      },
+      // FIX: Allow Clearbit for Automatic Sponsor Logos
+      {
+        protocol: "https",
+        hostname: "logo.clearbit.com",
+      },
     ],
   },
 };

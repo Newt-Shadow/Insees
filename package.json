@@ -18,7 +18,7 @@
     "@emotion/styled": "^11.14.1",
     "@mui/icons-material": "^7.3.1",
     "@mui/material": "^7.3.1",
-    "@prisma/client": "^6.15.0",
+    "@prisma/client": "6.15.0",
     "@prisma/extension-accelerate": "^2.0.2",
     "@supabase/supabase-js": "^2.56.1",
     "@tsparticles/react": "^3.0.0",
@@ -32,7 +32,7 @@
     "framer-motion": "^12.23.12",
     "lucide-react": "^0.542.0",
     "next": "^15.5.1-canary.28",
-    "prisma": "^6.15.0",
+    "prisma": "6.15.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-icons": "^5.5.0",
@@ -56,6 +56,7 @@
     "jiti": "^2.6.1",
     "tailwindcss": "^4.1.12",
     "ts-node": "^10.9.2",
+    "tsx": "^4.21.0",
     "typescript": "^5.9.2"
   }
 }
