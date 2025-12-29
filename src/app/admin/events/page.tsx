@@ -21,12 +21,21 @@ type EventForm = {
     registrationEnabled?: boolean;
 };
 
+type AdminEvent = EventForm & {
+    id: number ;
+    registrationEnabled?: boolean;
+};
+
+
 export default function AdminEventsPage() {
     const [authorized, setAuthorized] = useState(false);
     const [password, setPassword] = useState("");
-    const [events, setEvents] = useState<any[]>([]);
+    // const [events, setEvents] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);
-    const [editingEvent, setEditingEvent] = useState<any | null>(null);
+    //const [editingEvent, setEditingEvent] = useState<any | null>(null);
+    const [events, setEvents] = useState<AdminEvent[]>([]);
+    const [editingEvent, setEditingEvent] = useState<AdminEvent | null>(null);
+
 
 
     // Form State
@@ -63,8 +72,9 @@ export default function AdminEventsPage() {
         try {
             const res = await fetch("/api/events");
             if (res.ok) {
-                const data = await res.json();
+                const data: AdminEvent[] = await res.json();
                 setEvents(data);
+                ;
             }
         } catch (error) {
             console.error("Failed to load events");
@@ -337,7 +347,7 @@ export default function AdminEventsPage() {
                                 <label className="text-xs text-gray-500 mb-1 block">System Status</label>
                                 <select
                                     value={formData.status}
-                                    onChange={e => setFormData({ ...formData, status: e.target.value as any })}
+                                    onChange={e => setFormData({ ...formData, status: e.target.value as EventForm["status"], })}
                                     className="w-full bg-black border border-white/20 rounded p-3 text-sm"
                                 >
                                     <option value="upcoming">INCOMING</option>
@@ -464,9 +474,9 @@ export default function AdminEventsPage() {
                     <div className="lg:col-span-5 space-y-4">
                         <h2 className="text-xl font-bold mb-6">Existing Modules ({events.length})</h2>
                         <div className="space-y-3 h-[85vh] overflow-y-auto pr-2 custom-scrollbar">
-                            {events.map((event: any) => (
+                            {events.map((event: AdminEvent) => (
                                 <div key={event.id} className="flex gap-4 bg-white/5 border border-white/10 rounded-xl p-4 hover:border-oz-emerald/30 transition">
-                                    <img src={event.image || "/placeholder.jpg"} className="w-24 h-24 object-cover rounded bg-black" />
+                                    <img src={event.image || "/placeholder.jpg"}  alt="" className="w-24 h-24 object-cover rounded bg-black" />
                                     <div className="flex-grow min-w-0">
                                         <div className="flex justify-between items-start">
                                             <h3 className="font-bold text-sm truncate text-white">{event.title}</h3>

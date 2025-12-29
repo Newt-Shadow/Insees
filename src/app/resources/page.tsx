@@ -48,7 +48,7 @@ export default function ResourcesPage() {
             transition={{ delay: 0.2 }}
             className="text-gray-400 font-mono text-sm uppercase tracking-widest"
           >
-            // Centralized Academic Database
+            {"// Centralized Academic Database"}
           </motion.p>
         </div>
 
