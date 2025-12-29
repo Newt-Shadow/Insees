@@ -21,7 +21,7 @@ export const Navbar = () => {
   const navLinks = [
     { name: "About", path: "/#about" },
     { name: "Events", path: "/#events" },
-    { name: "Alpha Crescendo", path: "/alpha-crescendo" },
+    // { name: "Alpha Crescendo", path: "/alpha-crescendo" },
     { name: "Team Members", path: "/team" },
     // { name: "Resources", path: "/resources" },
     { name: "Gallery", path: "/gallery" },
