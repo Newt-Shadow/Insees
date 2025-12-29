@@ -13,7 +13,7 @@ import ScrollToTop from "@/components/ScrollToTop";
 // ✅ Try API first, fallback to build-time JSON
 async function getEvents() {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/events`, {
+    const res = await fetch("/api/events", {
       // For SSR on every request:
       // cache: "no-store"
 

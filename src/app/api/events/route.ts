@@ -72,3 +72,4 @@ export async function PATCH(req: Request) {
     return NextResponse.json({ error: "Update failed" }, { status: 500 });
   }
 }
+console.log("DATABASE_URL:", process.env.DATABASE_URL);
