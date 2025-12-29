@@ -1,15 +1,18 @@
 "use client";
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Loader2, Mail, CheckCircle2, AlertCircle } from "lucide-react";
 
 export const EmailForm: React.FC = () => {
   const [email, setEmail] = useState("");
-  const [success, setSuccess] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [submitted, setSubmitted] = useState(false);
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!email) return;
+    
+    setStatus("loading");
 
     try {
       const res = await fetch("/api/subscribe", {
@@ -19,80 +22,102 @@ export const EmailForm: React.FC = () => {
       });
 
       if (res.ok) {
-        setSuccess(true);
-        setError(null);
+        setStatus("success");
         setEmail("");
-        setSubmitted(true);
-        setTimeout(() => setSuccess(false), 3000);
+        setTimeout(() => setStatus("idle"), 4000);
       } else {
         const { error } = await res.json();
-        setError(error || "Something went wrong.");
-        setSuccess(false);
-        setTimeout(() => setError(null), 3000);
+        setErrorMessage(error || "Transmission failed.");
+        setStatus("error");
+        setTimeout(() => setStatus("idle"), 4000);
       }
-    } catch (err) {
-      setError("Network error. Please try again.");
-      setSuccess(false);
-      setTimeout(() => setError(null), 3000);
+    } catch {
+      setErrorMessage("Network uplink failed.");
+      setStatus("error");
+      setTimeout(() => setStatus("idle"), 4000);
     }
   };
 
   return (
-    <>
+    <div className="w-full py-4 flex flex-col items-center">
       <motion.form
         onSubmit={handleSubmit}
-        initial={{ opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.6, duration: 0.6 }}
-        className="input-stroke mt-8 w-full sm:w-[95vw] md:w-[90vw] lg:w-[80vw] xl:w-[70vw] max-w-[640px] rounded-full px-2 py-1.5 sm:px-3 sm:py-2 md:px-4 md:py-2.5 lg:px-5 lg:py-3 flex items-center gap-1 sm:gap-2 bg-black/20"
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 0.5 }}
+        className="relative group w-full max-w-lg"
       >
-        <input
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          type="email"
-          placeholder="enter your email address"
-          className="flex-1 bg-transparent text-gray-200 placeholder-gray-500 px-2 py-1 sm:px-3 sm:py-1.5 md:px-4 md:py-2 focus:outline-none text-xs sm:text-sm md:text-base lg:text-lg"
-        />
-        <button
-          type="submit"
-          className="relative isolate rounded-full px-3 py-1 sm:px-4 sm:py-1.5 md:px-5 md:py-2 lg:px-6 lg:py-2.5 font-semibold text-black text-xs sm:text-sm md:text-base lg:text-lg transition-transform active:scale-[.98] cursor-pointer"
-        >
-          <span className="absolute inset-0 -z-10 rounded-full bg-gradient-to-r from-emerald-400 to-sky-500" />
-          {submitted ? "Thanks!" : "Let's Talk"}
-        </button>
+        {/* Glowing Background Blur */}
+        <div className="absolute -inset-1 bg-gradient-to-r from-oz-emerald via-teal-500 to-cyan-500 rounded-full opacity-20 group-focus-within:opacity-70 blur transition duration-500" />
+        
+        <div className="relative flex items-center  bg-black/80 backdrop-blur-xl border border-white/10 rounded-full p-1.5 shadow-2xl ring-1 ring-white/5 group-focus-within:ring-oz-emerald/50 transition-all">
+          
+          <div className="pl-4 pr-2 text-gray-500 group-focus-within:text-oz-emerald transition-colors">
+            <Mail size={18} />
+          </div>
+
+          <input
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            disabled={status === "loading" || status === "success"}
+            type="email"
+            placeholder="Initialize contact protocol..."
+            className="flex-1 bg-transparent text-white placeholder-gray-600 px-2 py-3 focus:outline-none font-mono text-sm disabled:opacity-50"
+          />
+
+          <button
+            type="submit"
+            disabled={status === "loading" || status === "success"}
+            className="relative overflow-hidden  rounded-full px-6 py-2.5 font-bold text-sm text-zinc-500 transition-all hover:scale-105 active:scale-95 disabled:opacity-80 disabled:cursor-not-allowed"
+          >
+            {/* Animated Button Background */}
+            <div className={`absolute inset-0 transition-colors duration-300 ${
+               status === "success" ? "bg-green-500" :
+               status === "error" ? "bg-red-500" :
+               "bg-oz-emerald"
+            }`} />
+            
+            <div className="relative flex items-center gap-2">
+              {status === "loading" ? (
+                <Loader2 size={16} className="animate-spin" />
+              ) : status === "success" ? (
+                <>SENT <CheckCircle2 size={16} /></>
+              ) : status === "error" ? (
+                <>RETRY <AlertCircle size={16} /></>
+              ) : (
+                <>CONNECT <span className="hidden sm:inline">→</span></>
+              )}
+            </div>
+          </button>
+        </div>
       </motion.form>
 
-      {/* ✅ Success Toast */}
+      {/* --- STATUS TOASTS --- */}
       <AnimatePresence>
-        {success && (
+        {status === "success" && (
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 30 }}
-            transition={{ duration: 0.4 }}
-            className="fixed bottom-8 right-8 px-6 py-4 rounded-2xl bg-white/10 backdrop-blur-xl border border-emerald-400/50 text-white shadow-[0_8px_30px_rgb(0,0,0,0.12)] flex items-center gap-2"
+            exit={{ opacity: 0, y: -10 }}
+            className="mt-4 px-4 py-2 rounded-lg bg-green-500/10 border border-green-500/30 text-green-400 text-xs font-mono flex items-center gap-2"
           >
-            <span className="text-2xl">🎉</span>
-            <span className="font-medium">Yoohoo !</span>
+            <CheckCircle2 size={14} />
+            <span>TRANSMISSION RECEIVED. WELCOME TO THE NETWORK.</span>
+          </motion.div>
+        )}
+        
+        {status === "error" && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="mt-4 px-4 py-2 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-mono flex items-center gap-2"
+          >
+            <AlertCircle size={14} />
+            <span>ERROR: {errorMessage.toUpperCase()}</span>
           </motion.div>
         )}
       </AnimatePresence>
-
-      {/* ❌ Failure Toast */}
-      <AnimatePresence>
-        {error && (
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 30 }}
-            transition={{ duration: 0.4 }}
-            className="fixed bottom-8 right-8 px-6 py-4 rounded-2xl bg-white/10 backdrop-blur-xl border border-red-500/50 text-red-200 shadow-[0_8px_30px_rgb(0,0,0,0.12)] flex items-center gap-2"
-          >
-            <span className="text-2xl">⚠️</span>
-            <span className="font-medium">{error}</span>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </>
+    </div>
   );
 };
