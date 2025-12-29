@@ -1,35 +1,34 @@
 "use client";
-import { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState } from "react";
 
-type PreloaderState = {
-  show: boolean;
-  messages: string[];
-  start: (messages: string[]) => void;
-  stop: () => void;
-};
+interface PreloaderContextType {
+  hasLoaded: boolean;
+  setHasLoaded: (value: boolean) => void;
+  targetLabel: string;
+  triggerBoot: (label?: string) => void; // Accepts a label now
+}
 
-const PreloaderContext = createContext<PreloaderState | null>(null);
+const PreloaderContext = createContext<PreloaderContextType>({
+  hasLoaded: false,
+  setHasLoaded: () => {},
+  targetLabel: "SYSTEM",
+  triggerBoot: () => {},
+});
 
-export function PreloaderProvider({ children }: { children: React.ReactNode }) {
-  const [show, setShow] = useState(false);
-  const [messages, setMessages] = useState<string[]>([]);
+export const PreloaderProvider = ({ children }: { children: React.ReactNode }) => {
+  const [hasLoaded, setHasLoaded] = useState(false);
+  const [targetLabel, setTargetLabel] = useState("SYSTEM");
 
-  const start = (msgs: string[]) => {
-    setMessages(msgs);
-    setShow(true);
+  const triggerBoot = (label: string = "SYSTEM") => {
+    setTargetLabel(label);
+    setHasLoaded(false);
   };
 
-  const stop = () => setShow(false);
-
   return (
-    <PreloaderContext.Provider value={{ show, messages, start, stop }}>
+    <PreloaderContext.Provider value={{ hasLoaded, setHasLoaded, targetLabel, triggerBoot }}>
       {children}
     </PreloaderContext.Provider>
   );
-}
+};
 
-export function usePreloader() {
-  const ctx = useContext(PreloaderContext);
-  if (!ctx) throw new Error("usePreloader must be used inside provider");
-  return ctx;
-}
+export const usePreloader = () => useContext(PreloaderContext);

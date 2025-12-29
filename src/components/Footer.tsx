@@ -1,14 +1,20 @@
 "use client";
 import Link from 'next/link';
-import { Mail, Twitter, Instagram, Linkedin, MapPin, Globe, Code,  Terminal, ShieldCheck, Cpu } from 'lucide-react';
+import { Mail, Twitter, Instagram, Linkedin, MapPin, Globe, Terminal, ShieldCheck, Cpu, ArrowUpRight } from 'lucide-react';
+import { usePreloader } from '@/app/context/PreloaderContext';
 
 export const Footer = () => {
+
+   const { triggerBoot } = usePreloader();
+
   return (
-    <footer className="bg-black border-t border-white/10 pt-20 pb-2 font-sans relative overflow-hidden">
-      {/* Background Glow */}
-      <div className="absolute top-0 left-1/2  -translate-x-1/2 w-full h-[1px] bg-gradient-to-r from-transparent via-oz-emerald to-transparent opacity-50" />
+    <footer className="bg-black border-t border-white/10 pt-20 font-sans relative overflow-hidden z-40">
       
-      <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12 relative z-10">
+      {/* Background Glow */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[1px] bg-gradient-to-r from-transparent via-oz-emerald to-transparent opacity-50" />
+
+      {/* Upper Footer Content */}
+      <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12 relative z-10 pb-12">
         {/* Brand Column */}
         <div className="space-y-6">
           <h2 className="text-3xl font-extrabold tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-blue-500 font-orbitron">
@@ -16,7 +22,7 @@ export const Footer = () => {
           </h2>
           <p className="text-gray-400 text-sm leading-relaxed">
             Instrumentation & Electronics Engineering Society.<br/>
-            Fostering innovation and technical excellence at NIT Silchar since inception.
+            NIT Silchar, Assam, India.
           </p>
           <div className="flex items-center gap-2 text-oz-emerald text-sm border border-oz-emerald/20 bg-oz-emerald/5 px-3 py-1 rounded-full w-fit">
             <Globe className="w-3 h-3" />
@@ -24,64 +30,80 @@ export const Footer = () => {
           </div>
         </div>
 
-        {/* Quick Links */}
+        {/* Navigation Links */}
         <div>
-          <h3 className="text-white font-bold mb-6 tracking-wide">EXPLORE</h3>
-          <ul className="space-y-3 text-gray-500 text-sm font-medium">
-            <li><Link href="/alpha-crescendo" className="hover:text-oz-gold transition-colors duration-300">Alpha Crescendo</Link></li>
-            <li><Link href="/gallery" className="hover:text-oz-gold transition-colors duration-300">Gallery</Link></li>
-            <li><Link href="/team" className="hover:text-oz-gold transition-colors duration-300">Our Team</Link></li>
-            <li><Link href="/sponsors" className="hover:text-oz-gold transition-colors duration-300">Partners</Link></li>
+          <h3 className="text-white font-bold mb-6 tracking-wide text-sm text-oz-emerald font-orbitron">EXPLORE</h3>
+          <ul className="space-y-3 text-gray-500 text-sm font-medium font-mono">
+            <li>
+              <Link href="/alpha-crescendo" onClick={() => triggerBoot("ALPHA CRESCENDO")} className="hover:text-white transition flex items-center gap-2 group">
+                Alpha Crescendo <ArrowUpRight size={12} className="opacity-0 group-hover:opacity-100 transition-opacity" />
+              </Link>
+            </li>
+            <li><Link href="/team"   onClick={() => triggerBoot("TEAM")} className="hover:text-white transition">Our Team</Link></li>
+            <li><Link href="/gallery"  onClick={() => triggerBoot("GALLERY")} className="hover:text-white transition">Gallery</Link></li>
+            <li>
+              {/* Directs to the ID on the Alpha Page */}
+              <Link href="/alpha-crescendo#sponsors"  onClick={() => triggerBoot("SPONSORS")} className="hover:text-white transition">
+                Partners & Sponsors
+              </Link>
+            </li>
           </ul>
         </div>
-
-        {/* Resources */}
+        
+        {/* Resources & Deck */}
         <div>
-          <h3 className="text-white font-bold mb-6 tracking-wide">RESOURCES</h3>
-          <ul className="space-y-3 text-gray-500 text-sm font-medium">
-            <li><Link href="/resources" className="hover:text-white transition-colors">Student Library</Link></li>
-            <li><a href="#" className="hover:text-white transition-colors">Sponsorship Deck</a></li>
-            <li><a href="#" className="hover:text-white transition-colors">Alumni Network</a></li>
-          </ul>
+           <h3 className="text-white font-bold mb-6 tracking-wide text-sm text-oz-emerald font-orbitron">RESOURCES</h3>
+           <ul className="space-y-3 text-gray-500 text-sm font-medium font-mono">
+            <li><Link href="/resources" className="hover:text-white transition">Student Library</Link></li>
+            <li>
+              {/* Direct PDF Download - Standard <a> tag avoids router preloader */}
+              <a 
+                href="/ALPHA CRESCENDO (1).pdf" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="hover:text-white transition flex items-center gap-2 hover:text-oz-gold"
+              >
+                Sponsorship Deck <ArrowUpRight size={12} />
+              </a>
+            </li>
+            <li><Link href="/team" className="hover:text-white transition">Alumni Network</Link></li>
+           </ul>
         </div>
 
-        {/* Contact */}
+        {/* Socials */}
         <div>
-          <h3 className="text-white font-bold mb-6 tracking-wide">CONTACT</h3>
-          <div className="space-y-4 text-gray-500 text-sm">
-            <div className="flex items-start gap-3">
-              <MapPin className="w-5 h-5 text-oz-emerald shrink-0" />
-              <span>NIT Silchar, Assam,<br/>India - 788010</span>
-            </div>
-            <div className="flex items-center gap-3">
-              <Mail className="w-5 h-5 text-oz-emerald shrink-0" />
-              <a href="mailto:insees@nits.ac.in" className="hover:text-white transition">insees@nits.ac.in</a>
-            </div>
-            {/* Social Icons */}
-            <div className="flex gap-4 mt-4">
-              {[Linkedin, Instagram, Twitter].map((Icon, i) => (
-                <a key={i} href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-oz-emerald hover:text-black transition-all duration-300 border border-white/10 group">
-                  <Icon className="w-5 h-5 group-hover:scale-110 transition-transform" />
-                </a>
-              ))}
-            </div>
+          <h3 className="text-white font-bold mb-6 tracking-wide text-sm text-oz-emerald font-orbitron">CONNECT</h3>
+          <div className="flex gap-4">
+             <a href="https://www.linkedin.com/company/insees-nits/" target="_blank" className="p-2 bg-white/5 rounded-full hover:bg-[#0077b5] hover:text-white transition-all group border border-white/10">
+               <Linkedin size={18} />
+             </a>
+             <a href="https://www.instagram.com/insees_nits/" target="_blank" className="p-2 bg-white/5 rounded-full hover:bg-pink-600 hover:text-white transition-all group border border-white/10">
+               <Instagram size={18} />
+             </a>
+             <a href="mailto:insees@nits.ac.in" className="p-2 bg-white/5 rounded-full hover:bg-oz-emerald hover:text-black transition-all group border border-white/10">
+               <Mail size={18} />
+             </a>
+          </div>
+          <div className="mt-6">
+             <Link href="/#contact" className="text-xs text-gray-500 hover:text-oz-emerald transition-colors flex items-center gap-2">
+               <MapPin size={14} /> NIT Silchar, 788010
+             </Link>
           </div>
         </div>
       </div>
 
-      {/* Bottom Bar */}
-      {/* --- NEW SYSTEM STATUS BAR (Replaces Floating Button) --- */}
-      <div className="border-t mt-2 border-white/10 pt-1 bg-[#050505]">
+      {/* --- SYSTEM STATUS BAR --- */}
+      <div className="border-t border-white/10 bg-[#050505]">
         <div className="max-w-7xl mx-auto px-6 py-3 flex flex-col md:flex-row justify-between items-center gap-4">
           
-          {/* Copyright */}
           <div className="text-[10px] text-gray-600 font-mono uppercase tracking-wider">
-            © {new Date().getFullYear()} INSEES NITS. All Systems Normal.
+            © {new Date().getFullYear()} INSEES NITS.
           </div>
 
-          {/* The Integrated Developer Link */}
+          {/* Integrated Developer Link */}
           <Link 
             href="/developers" 
+            onClick={() => triggerBoot("DEVELOPERS")}
             className="group flex items-center gap-3 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 hover:border-oz-emerald/50 hover:bg-oz-emerald/10 transition-all"
           >
             <div className="relative flex h-2 w-2">
@@ -95,7 +117,6 @@ export const Footer = () => {
             <Terminal size={12} className="text-gray-500 group-hover:text-oz-emerald" />
           </Link>
           
-          {/* Version Info */}
           <div className="hidden md:flex items-center gap-4 text-[10px] text-gray-700 font-mono">
              <span className="flex items-center gap-1"><ShieldCheck size={10}/> SECURE</span>
              <span className="flex items-center gap-1"><Cpu size={10}/> v2.4.0</span>

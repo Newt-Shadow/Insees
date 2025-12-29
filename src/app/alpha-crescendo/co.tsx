@@ -44,13 +44,6 @@ const Countdown = () => {
   );
 };
 
-// ... Rest of your existing imports (Events data, etc.)
-const EVENTS = [
-  { title: "Binary Brick Road", category: "Treasure Hunt", description: "Decode signals and navigate hidden paths." },
-  { title: "The Logic Pull", category: "Tug of War", description: "Physical power meets mental focus." },
-  { title: "Game of OZ", category: "Flagship", description: "Push technical boundaries and problem solving." },
-  // ... add more from your previous file
-];
 
 export default function AlphaCrescendoPage() {
   return (
@@ -106,30 +99,8 @@ export default function AlphaCrescendoPage() {
         </div>
       </section>
 
-      {/* --- EVENTS GRID --- */}
-      <section id="events" className="py-32 px-4 relative">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex items-end justify-between mb-16 border-b border-white/10 pb-6">
-            <div>
-              <h2 className="text-4xl md:text-5xl font-bold font-orbitron mb-2">THE REALMS</h2>
-              <p className="text-gray-400">Navigate the modules of Oz</p>
-            </div>
-            {/* Decorative decorative binary */}
-            <div className="hidden md:block font-mono text-oz-emerald text-xs opacity-50">
-              01001001 01001110 01010011 01000101 01000101 01010011
-            </div>
-          </div>
+      
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {EVENTS.map((event, index) => (
-              <GlitchEventCard key={index} {...event} index={index} />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <SponsorshipTiers />
-      <SponsorsMarquee />
     </div>
   );
 }

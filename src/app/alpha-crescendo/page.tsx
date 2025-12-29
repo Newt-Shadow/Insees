@@ -29,12 +29,12 @@ const AboutSection = () => (
         </p>
         <div className="grid grid-cols-2 gap-4">
           <div className="p-4 bg-white/5 rounded-xl border border-white/10">
-             <div className="text-2xl font-bold text-white">40K+</div>
-             <div className="text-sm text-gray-500">Footfall</div>
+            <div className="text-2xl font-bold text-white">40K+</div>
+            <div className="text-sm text-gray-500">Footfall</div>
           </div>
           <div className="p-4 bg-white/5 rounded-xl border border-white/10">
-             <div className="text-2xl font-bold text-white">10+</div>
-             <div className="text-sm text-gray-500">Major Events</div>
+            <div className="text-2xl font-bold text-white">10+</div>
+            <div className="text-sm text-gray-500">Major Events</div>
           </div>
         </div>
       </div>
@@ -43,7 +43,7 @@ const AboutSection = () => (
 );
 
 export default function AlphaCrescendoPage() {
-    const scrollToEvents = () => {
+  const scrollToEvents = () => {
     const eventsSection = document.getElementById('events');
     if (eventsSection) {
       eventsSection.scrollIntoView({ behavior: 'smooth' });
@@ -51,13 +51,13 @@ export default function AlphaCrescendoPage() {
   };
   return (
     <div className="bg-black min-h-screen text-white selection:bg-oz-emerald selection:text-black font-sans">
-      <Navbar />
       <YellowBrickRoad />
+      <Navbar />
 
       {/* HERO */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-oz-dark via-black to-black">
         <div className="absolute inset-0 opacity-20 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]" />
-        
+
         <div className="z-10 text-center px-4 max-w-5xl mx-auto">
           <motion.div
             initial={{ opacity: 0, scale: 0.5 }}
@@ -69,23 +69,23 @@ export default function AlphaCrescendoPage() {
               {alphaContent.hero.dates} EDITION
             </span>
           </motion.div>
-          
+
           <motion.h1
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.2 }}
             className="text-6xl md:text-9xl font-extrabold tracking-tighter mb-6 bg-clip-text text-transparent bg-gradient-to-b from-white to-gray-600"
           >
-            THE WIZARD  <br /> 
-             {/* <span className="text-transparent bg-clip-text bg-gradient-to-r from-oz-emerald via-green-300 to-oz-emerald ]">
+            THE WIZARD  <br />
+            {/* <span className="text-transparent bg-clip-text bg-gradient-to-r from-oz-emerald via-green-300 to-oz-emerald ]">
            
             </span> <br /> */}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-oz-emerald via-green-300 to-oz-emerald ]">
-               Of Oz 
+              Of Oz
             </span>
           </motion.h1>
 
-          <motion.p 
+          <motion.p
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.4 }}
@@ -100,9 +100,9 @@ export default function AlphaCrescendoPage() {
             transition={{ delay: 0.6 }}
             className="flex flex-col sm:flex-row gap-4 justify-center"
           >
-            <button 
-            onClick={scrollToEvents}
-            className="px-8 py-4 bg-oz-emerald hover:cursor-pointer text-amber-50 font-bold rounded-full hover:bg-oz-emerald/90 hover:scale-105 transition-all shadow-[0_0_20px_rgba(16,185,129,0.4)]">
+            <button
+              onClick={scrollToEvents}
+              className="px-8 py-4 bg-oz-emerald hover:cursor-pointer text-amber-50 font-bold rounded-full hover:bg-oz-emerald/90 hover:scale-105 transition-all shadow-[0_0_20px_rgba(16,185,129,0.4)]">
               Register for Events
             </button>
             <button className="px-8 py-4 bg-transparent border hover:cursor-pointer border-white/20 text-white font-bold rounded-full hover:bg-white/10 transition-all">
@@ -116,30 +116,30 @@ export default function AlphaCrescendoPage() {
       <AboutSection />
       <WhatsNew />
       <EventsGrid />
-      
+
       {/* Magazine Teaser */}
       <section className="py-20 px-4 border-y border-white/5">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-12">
           <div className="flex-1">
-             <h2 className="text-4xl text-white font-bold mb-4">The Instrumind</h2>
-             <p className="text-gray-400 text-lg mb-6">
-               The annual magazine of INSEES. [cite_start]A platform that celebrates innovation and technical excellence. [cite: 164]
-             </p>
-             <button className="text-oz-gold font-bold underline hover:text-white transition-colors">
-               Read the 1st Edition
-             </button> 
+            <h2 className="text-4xl text-white font-bold mb-4">The Instrumind</h2>
+            <p className="text-gray-400 text-lg mb-6">
+              The annual magazine of INSEES. [cite_start]A platform that celebrates innovation and technical excellence. [cite: 164]
+            </p>
+            <button className="text-oz-gold font-bold underline hover:text-white transition-colors">
+              Read the 1st Edition
+            </button>
           </div>
           <div className="flex-1 h-64 bg-gradient-to-br from-gray-800 to-black rounded-2xl flex items-center justify-center border border-white/10">
-             <span className="text-gray-500 font-mono">Magazine Cover Placeholder</span>
+            <span className="text-gray-500 font-mono">Magazine Cover Placeholder</span>
           </div>
         </div>
       </section>
 
       <Sponsors />
-     
-      
 
-    
+
+
+
 
       {/* Footer
       <footer className="py-12 text-center text-gray-600 border-t border-white/5 bg-black">

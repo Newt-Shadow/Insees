@@ -4,8 +4,10 @@ import { Poppins, Orbitron } from "next/font/google";
 import GlobalLoader from "@/components/GlobalLoader";
 import { Footer } from "@/components/Footer";
 import CyberOverlay from "@/components/CyberOverlay";
-import CommandPalette from "@/components/CommandPalette"; // NEW
+import CommandPalette from "@/components/CommandPalette";
 import ScrollToTop from "@/components/ScrollToTop";
+import PreLoader from "@/components/PreLoader";
+import { PreloaderProvider } from "@/app/context/PreloaderContext"; // Import Provider
 
 const poppins = Poppins({ 
   subsets: ["latin"], 
@@ -30,20 +32,25 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className={`${poppins.className} ${orbitron.variable} bg-black text-white overflow-x-hidden`}>
-        <GlobalLoader>
-          {/* 1. Global Effects */}
-          <CyberOverlay />
-          
-          {/* 2. Global Utilities (Cmd+K) */}
-          <CommandPalette />
-          
-          {/* 3. Main Content */}
-          {children}
-          
-          {/* 4. Footer & Scroll */}
-          <Footer />
-          <ScrollToTop />
-        </GlobalLoader>
+        <PreloaderProvider>
+          <GlobalLoader>
+            {/* Global Effects */}
+            <CyberOverlay />
+            
+            {/* The Boot Sequence */}
+            <PreLoader />
+            
+            {/* Utilities */}
+            <CommandPalette />
+            
+            {/* Main Content */}
+            {children}
+            
+            {/* Footer - Note: Links inside Footer do NOT have onClick={triggerBoot}, so no animation */}
+            <Footer />
+            <ScrollToTop />
+          </GlobalLoader>
+        </PreloaderProvider>
       </body>
     </html>
   );
