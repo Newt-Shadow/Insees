@@ -41,7 +41,7 @@ export default async function Home() {
 
   return (
     <>
-      <Navbar />
+      {/* <Navbar /> */}
       <CelebrationWrapper />
 
       {/* Hero Section */}
