@@ -120,7 +120,7 @@ export const Navbar = () => {
             </div>
             
             <div className="p-8 text-center text-xs font-mono text-gray-600 border-t border-white/10">
-              // SYSTEM READY
+              {"// SYSTEM READY"}
             </div>
           </motion.div>
         )}

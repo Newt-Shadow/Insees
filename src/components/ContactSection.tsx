@@ -9,7 +9,7 @@ export default function ContactSection() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setStatus("sending");
-    // Simulate API call
+   
     setTimeout(() => setStatus("sent"), 2000);
   };
 
@@ -20,7 +20,7 @@ export default function ContactSection() {
         <div className="space-y-8">
           <div>
             <h2 className="text-4xl font-bold font-orbitron text-white mb-2">ESTABLISH UPLINK</h2>
-            <p className="text-oz-emerald font-mono text-sm">// SECURE CONNECTION</p>
+            <p className="text-oz-emerald font-mono text-sm">  {"// SECURE CONNECTION"}</p>
           </div>
           
           <p className="text-gray-400 leading-relaxed">

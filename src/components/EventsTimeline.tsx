@@ -58,7 +58,7 @@ const EventNode = ({ event, index }: { event: EventType; index: number }) => {
                  event.color === "green" ? "border-green-500/30 bg-green-500/10 text-green-400" :
                  "border-blue-500/30 bg-blue-500/10 text-blue-400"
              }`}>
-                // SEQ_{event.id < 10 ? `0${event.id}` : event.id}
+                {"// SEQ_{event.id < 10 ? `0${event.id}` : event.id}"}
              </span>
              <h3 className="text-xl font-bold font-orbitron text-white">{event.title}</h3>
           </div>

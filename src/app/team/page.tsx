@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { Navbar } from "@/components/navbar";
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { Github, Linkedin, Instagram, Search, Terminal as TerminalIcon, Shield, Zap } from "lucide-react";
@@ -25,65 +25,88 @@ interface TeamData {
   };
 }
 
-// --- 3D TILT WRAPPER ---
+// --- OPTIMIZED 3D TILT WRAPPER ---
 const TiltCard = ({ children }: { children: React.ReactNode }) => {
-  const ref = useRef<HTMLDivElement>(null);
+  const rectRef = useRef<DOMRect | null>(null);
+  const hoveringRef = useRef(false);
+
   const x = useMotionValue(0);
   const y = useMotionValue(0);
 
-  const mouseX = useSpring(x, { stiffness: 500, damping: 100 });
-  const mouseY = useSpring(y, { stiffness: 500, damping: 100 });
+  const mouseX = useSpring(x, { stiffness: 300, damping: 30 });
+  const mouseY = useSpring(y, { stiffness: 300, damping: 30 });
 
-  const rotateX = useTransform(mouseY, [-0.5, 0.5], ["15deg", "-15deg"]);
-  const rotateY = useTransform(mouseX, [-0.5, 0.5], ["-15deg", "15deg"]);
+  const rotateX = useTransform(mouseY, [-0.5, 0.5], ["12deg", "-12deg"]);
+  const rotateY = useTransform(mouseX, [-0.5, 0.5], ["-12deg", "12deg"]);
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!ref.current) return;
-    const rect = ref.current.getBoundingClientRect();
-    const width = rect.width;
-    const height = rect.height;
-    const mouseX = e.clientX - rect.left;
-    const mouseY = e.clientY - rect.top;
-    const xPct = mouseX / width - 0.5;
-    const yPct = mouseY / height - 0.5;
-    x.set(xPct);
-    y.set(yPct);
-  };
+  const handleMouseEnter = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    rectRef.current = e.currentTarget.getBoundingClientRect();
+    hoveringRef.current = true;
+  }, []);
 
-  const handleMouseLeave = () => {
+  const handleMouseMove = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      if (!hoveringRef.current || !rectRef.current) return;
+
+      const { width, height, left, top } = rectRef.current;
+      const px = e.clientX - left;
+      const py = e.clientY - top;
+
+      x.set(px / width - 0.5);
+      y.set(py / height - 0.5);
+    },
+    [x, y]
+  );
+
+  const handleMouseLeave = useCallback(() => {
+    hoveringRef.current = false;
+    rectRef.current = null;
     x.set(0);
     y.set(0);
-  };
+  }, [x, y]);
 
   return (
-    <motion.div
-      ref={ref}
-      style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
+    <div
+      onMouseEnter={handleMouseEnter}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="relative w-full h-full perspective-1000"
+      className="relative w-full h-full perspective-1000 z-10"
+      style={{ transformStyle: "preserve-3d" }}
     >
-      <div style={{ transform: "translateZ(20px)" }} className="h-full">
-        {children}
-      </div>
-    </motion.div>
+      <motion.div
+        style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
+        className="w-full h-full will-change-transform"
+      >
+        <div style={{ transform: "translateZ(20px)" }} className="h-full">
+          {children}
+        </div>
+      </motion.div>
+    </div>
   );
 };
 
+
+
+
 // --- HOLO CARD COMPONENT ---
-const HoloCard = ({ member, rank }: { member: Member, rank: "CORE" | "EXEC" }) => (
+const HoloCard = ({ member, rank }: { member: Member, rank: "CORE" | "EXEC" }) => {
+  const idRef = useRef(
+  Math.random().toString(36).substr(2, 6).toUpperCase()
+);
+return (
   <motion.div
     layout
     initial={{ opacity: 0, scale: 0.9 }}
     animate={{ opacity: 1, scale: 1 }}
     exit={{ opacity: 0, scale: 0.9 }}
+    transition={{ duration: 0.3 }}
     className="group relative w-full h-full min-h-[400px]"
   >
     <TiltCard>
       {/* Holographic Border Glow */}
       <div className={`absolute -inset-0.5 opacity-30 group-hover:opacity-100 blur transition duration-500 rounded-xl bg-gradient-to-b ${rank === "CORE" ? "from-oz-emerald via-teal-400 to-cyan-500" : "from-oz-gold via-orange-400 to-yellow-200"}`} />
       
-      <div className="relative h-full bg-black/90 backdrop-blur-xl border border-white/10 p-6 rounded-xl flex flex-col items-center overflow-hidden shadow-2xl">
+      <div className="relative h-full bg-black/90  border border-white/10 p-6 rounded-xl flex flex-col items-center overflow-hidden shadow-2xl backface-hidden">
         
         {/* Animated Background Grid */}
         <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10 group-hover:opacity-20 transition-opacity" />
@@ -101,7 +124,7 @@ const HoloCard = ({ member, rank }: { member: Member, rank: "CORE" | "EXEC" }) =
         </div>
 
         {/* Image Container with Ring */}
-        <div className="relative w-40 h-40 mb-6 mt-4">
+        <div className="relative w-40 h-40 mb-6 mt-4 shrink-0">
           <div className="absolute inset-0 rounded-full border border-white/10" />
           {/* Rotating Rings */}
           <div className={`absolute inset-[-4px] border-2 border-dashed rounded-full animate-spin-slow ${rank === "CORE" ? "border-oz-emerald/40" : "border-oz-gold/40"}`} />
@@ -112,13 +135,14 @@ const HoloCard = ({ member, rank }: { member: Member, rank: "CORE" | "EXEC" }) =
                src={member.img || "/members/avatar-placeholder.png"} 
                alt={member.name}
                fill
-               className="object-cover transition-all duration-500 grayscale group-hover:grayscale-0 group-hover:scale-110"
+               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+               className="object-cover transition-all duration-500 grayscale-0 group-hover:grayscale-0 group-hover:scale-110"
              />
           </div>
         </div>
 
         {/* Text Content */}
-        <div className="text-center z-10 w-full">
+        <div className="text-center z-10 w-full flex-grow flex flex-col">
           <h3 className="text-2xl font-bold font-orbitron text-white mb-1 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-gray-400 transition-all">
             {member.name}
           </h3>
@@ -126,36 +150,38 @@ const HoloCard = ({ member, rank }: { member: Member, rank: "CORE" | "EXEC" }) =
           <p className={`font-mono text-xs uppercase tracking-[0.2em] mb-6 ${rank === "CORE" ? "text-oz-emerald" : "text-oz-gold"}`}>
             {member.por}
           </p>
-        </div>
-
-        {/* Social Nodes */}
-        <div className="flex gap-4 mt-auto relative z-20">
-          {member.socials.linkedin && (
-            <a href={member.socials.linkedin} target="_blank" className="p-2 rounded-full bg-white/5 hover:bg-[#0077b5] hover:text-white transition-all duration-300 hover:scale-110 group/icon">
-              <Linkedin size={18} />
-            </a>
-          )}
-          {member.socials.instagram && (
-            <a href={member.socials.instagram} target="_blank" className="p-2 rounded-full bg-white/5 hover:bg-pink-600 hover:text-white transition-all duration-300 hover:scale-110">
-              <Instagram size={18} />
-            </a>
-          )}
-          {member.socials.github && (
-             <a href={member.socials.github} target="_blank" className="p-2 rounded-full bg-white/5 hover:bg-white hover:text-black transition-all duration-300 hover:scale-110">
-               <Github size={18} />
-             </a>
-          )}
+          
+          {/* Social Nodes */}
+          <div className="flex gap-4 justify-center mt-auto relative z-20">
+            {member.socials.linkedin && (
+              <a href={member.socials.linkedin} target="_blank" rel="noreferrer" className="p-2 rounded-full bg-white/5 hover:bg-[#0077b5] hover:text-white transition-all duration-300 hover:scale-110 group/icon">
+                <Linkedin size={18} />
+              </a>
+            )}
+            {member.socials.instagram && (
+              <a href={member.socials.instagram} target="_blank" rel="noreferrer" className="p-2 rounded-full bg-white/5 hover:bg-pink-600 hover:text-white transition-all duration-300 hover:scale-110">
+                <Instagram size={18} />
+              </a>
+            )}
+            {member.socials.github && (
+               <a href={member.socials.github} target="_blank" rel="noreferrer" className="p-2 rounded-full bg-white/5 hover:bg-white hover:text-black transition-all duration-300 hover:scale-110">
+                 <Github size={18} />
+               </a>
+            )}
+          </div>
         </div>
         
         {/* Decorative Data Footer */}
         <div className="w-full flex justify-between items-center mt-6 pt-4 border-t border-white/5 text-[9px] text-gray-600 font-mono">
-           <span>ID: {Math.random().toString(36).substr(2, 6).toUpperCase()}</span>
+           <span>ID: {idRef.current}</span>
+
            <span>STATUS: <span className="text-green-500 animate-pulse">ONLINE</span></span>
         </div>
       </div>
     </TiltCard>
   </motion.div>
 );
+}
 
 // --- SKELETON LOADER ---
 const TeamSkeleton = () => (
@@ -183,8 +209,12 @@ export default function TeamPage() {
         setTeamData(data);
         const years = Object.keys(data).sort();
         if (years.length > 0) setSelectedYear(years[years.length - 1]);
-        // Artificial delay for effect
-        setTimeout(() => setIsLoading(false), 800);
+        // Reduced artificial delay for snappier load
+        setTimeout(() => setIsLoading(false), 500);
+      })
+      .catch(err => {
+         console.error("Failed to fetch team data", err);
+         setIsLoading(false);
       });
   }, []);
 
@@ -242,7 +272,7 @@ export default function TeamPage() {
       </section>
 
       {/* Control Deck */}
-      <div className="sticky top-20 z-40 bg-black/80 backdrop-blur-xl border-y border-white/10 py-4 mb-12 shadow-2xl">
+      <div className="sticky top-20 z-40 bg-black/80  border-y border-white/10 py-4 mb-12 shadow-2xl">
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
           
           {/* Status Indicator */}
@@ -293,7 +323,7 @@ export default function TeamPage() {
         <section>
           <div className="flex items-end gap-4 mb-12 border-b border-white/10 pb-4">
             <h2 className="text-4xl font-bold font-orbitron text-white">CORE <span className="text-oz-emerald">UNIT</span></h2>
-            <span className="font-mono text-xs text-gray-500 mb-2">// LEVEL 1 CLEARANCE</span>
+            <span className="font-mono text-xs text-gray-500 mb-2">{"// LEVEL 1 CLEARANCE"}</span>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
@@ -315,7 +345,7 @@ export default function TeamPage() {
         <section>
           <div className="flex items-end gap-4 mb-12 border-b border-white/10 pb-4">
             <h2 className="text-4xl font-bold font-orbitron text-white">EXECUTIVE <span className="text-oz-gold">UNIT</span></h2>
-            <span className="font-mono text-xs text-gray-500 mb-2">// LEVEL 2 CLEARANCE</span>
+            <span className="font-mono text-xs text-gray-500 mb-2">{"// LEVEL 2 CLEARANCE"}</span>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
@@ -336,4 +366,5 @@ export default function TeamPage() {
       </main>
     </div>
   );
+
 }

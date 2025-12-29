@@ -108,7 +108,7 @@ export default function PhotoGallery({ initialGalleryConfig, initialCategories }
            animate={{ opacity: 1, y: 0 }}
            className="inline-block px-3 py-1 border border-oz-emerald/30 rounded-full bg-oz-emerald/5 text-oz-emerald text-xs font-mono tracking-widest mb-4"
         >
-           // SECURE ARCHIVE ACCESS
+           {"// SECURE ARCHIVE ACCESS"}
         </motion.div>
         <h1 className="text-5xl md:text-7xl font-orbitron font-bold text-transparent bg-clip-text bg-gradient-to-b from-white via-gray-200 to-gray-600">
           MEMORY <span className="text-oz-emerald">BANKS</span>
@@ -225,7 +225,7 @@ export default function PhotoGallery({ initialGalleryConfig, initialCategories }
                         <p className="font-orbitron text-lg font-bold text-white">IMG_SEQ_00{selectedImage.id}</p>
                       </div>
                       <p className="font-mono text-xs text-oz-emerald/70 uppercase tracking-wider">
-                        // CLASSIFICATION: {selectedImage.category}
+                        {"// CLASSIFICATION:"} {selectedImage.category}
                       </p>
                     </div>
 

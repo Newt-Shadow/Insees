@@ -25,7 +25,7 @@ export const AboutSection = () => {
         className="relative z-10 text-center mb-20"
       >
         <span className="text-oz-emerald font-mono text-sm tracking-widest uppercase mb-4 block">
-          // Who We Are
+          {"// Who We Are"}
         </span>
         <h2 className="text-4xl md:text-6xl font-extrabold text-white font-orbitron">
           About{" "}

@@ -18,6 +18,15 @@ import {
 import Image from "next/image";
 
 /* ================== CATEGORIES ================== */
+type Dev = {
+  id: number;
+  name: string;
+  role: string;
+  img: string;
+  github: string;
+  linkedin: string;
+};
+
 const categories = [
   {
     title: "UI / UX",
@@ -184,7 +193,7 @@ export default function DevelopersContent() {
                 <span className="text-pink-400">import</span>{" "}
                 <span className="text-blue-300">Team</span>{" "}
                 <span className="text-pink-400">from</span>{" "}
-                <span className="text-orange-300">"@/insees/tech"</span>;
+                <span className="text-orange-300">&quot;@/insees/tech&quot;</span>;
                 <br />
                 <span className="text-pink-400">const</span>{" "}
                 <span className="text-yellow-300">CurrentYear</span> ={" "}
@@ -208,19 +217,19 @@ export default function DevelopersContent() {
               </div>
 
               {/* Senior Developers */}
-              <div className="text-gray-500 text-sm">// Senior Developers</div>
+              <div className="text-gray-500 text-sm">{"// Senior Developers"}</div>
               <DevGrid devs={seniorDevs} />
 
               {/* Junior Developers */}
-              <div className="text-gray-500 text-sm">// Junior Developers</div>
+              <div className="text-gray-500 text-sm">{"// Junior Developers"}</div>
               <DevGrid devs={juniorDevs} />
 
-              <div className="text-gray-500 text-sm">// End of Module</div>
+              <div className="text-gray-500 text-sm">{"// End of Module"}</div>
             </div>
           ) : (
             <div className="h-64 flex flex-col items-center justify-center text-gray-600">
               <Terminal size={48} className="mb-4 opacity-50" />
-              <p>// {activeTab} is read-only in this view.</p>
+              <p>{"//"} {activeTab} is read-only in this view.</p>
             </div>
           )}
         </div>
@@ -230,7 +239,7 @@ export default function DevelopersContent() {
 }
 
 /* ================== DEV GRID COMPONENT ================== */
-function DevGrid({ devs }: { devs: any[] }) {
+function DevGrid({ devs }: { devs: Dev[] }) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {devs.map((dev, i) => (
@@ -263,7 +272,7 @@ function DevGrid({ devs }: { devs: any[] }) {
                   const {dev.name}
                 </h3>
                 <p className="text-green-400 text-xs">
-                  = "{dev.role}";
+                  = &quot;{dev.role}&quot;;
                 </p>
               </div>
             </div>
