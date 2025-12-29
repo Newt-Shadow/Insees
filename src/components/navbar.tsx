@@ -66,12 +66,10 @@ export const Navbar = () => {
             className="flex items-center gap-2 group"
             onClick={() => triggerBoot("HOME")}
           >
-            <div className="relative flex items-center justify-center w-10 h-10 bg-oz-emerald/10 rounded-lg border border-oz-emerald/50 group-hover:bg-oz-emerald transition-all duration-300">
-              <Zap size={20} className="text-oz-emerald group-hover:text-black transition-colors" />
+            <div className="relative flex items-center justify-center w-10 h-10 bg-oz-emerald/10 rounded-lg border  group-hover:bg-oz-emerald transition-all duration-300">
+              <Zap size={20} className="text-oz-emerald group-hover:text-emerald-100 transition-colors" />
             </div>
-            <span className="text-xl font-orbitron font-bold text-white tracking-wider group-hover:text-oz-emerald transition-colors">
-              INSEES
-            </span>
+            
           </Link>
 
           {/* Desktop Navigation */}
@@ -100,7 +98,7 @@ export const Navbar = () => {
             <Link
               href="/alpha-crescendo"
               onClick={() => triggerBoot("ALPHA CRESCENDO")}
-              className="px-3 py-2 text-xs font-bold text-blue-100 bg-oz-emerald hover:bg-white transition-colors rounded-sm uppercase tracking-widest"
+              className="px-3 py-2 text-xs font-bold text-blue-100 hover:text-black bg-oz-emerald hover:bg-white transition-colors rounded-sm uppercase tracking-widest"
             >
               Fest 2026
             </Link>

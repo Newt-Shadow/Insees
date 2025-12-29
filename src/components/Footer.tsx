@@ -39,12 +39,12 @@ export const Footer = () => {
                 Alpha Crescendo <ArrowUpRight size={12} className="opacity-0 group-hover:opacity-100 transition-opacity" />
               </Link>
             </li>
-            <li><Link href="/team"   onClick={() => triggerBoot("TEAM")} className="hover:text-white transition">Our Team</Link></li>
-            <li><Link href="/gallery"  onClick={() => triggerBoot("GALLERY")} className="hover:text-white transition">Gallery</Link></li>
+            <li><Link href="/team"   onClick={() => triggerBoot("TEAM")} className="hover:text-white transition flex items-center gap-2 group">Our Team <ArrowUpRight size={12} className="opacity-0 group-hover:opacity-100 transition-opacity" /></Link></li>
+            <li><Link href="/gallery"  onClick={() => triggerBoot("GALLERY")} className="hover:text-white transition flex items-center gap-2 group">Gallery <ArrowUpRight size={12} className="opacity-0 group-hover:opacity-100 transition-opacity" /></Link></li>
             <li>
               {/* Directs to the ID on the Alpha Page */}
-              <Link href="/alpha-crescendo#sponsors"  onClick={() => triggerBoot("SPONSORS")} className="hover:text-white transition">
-                Partners & Sponsors
+              <Link href="/alpha-crescendo#sponsors"  onClick={() => triggerBoot("SPONSORS")} className="hover:text-white transition flex items-center gap-2 group">
+                Partners & Sponsors <ArrowUpRight size={12} className="opacity-0 group-hover:opacity-100 transition-opacity" />
               </Link>
             </li>
           </ul>
@@ -54,19 +54,9 @@ export const Footer = () => {
         <div>
            <h3 className="text-white font-bold mb-6 tracking-wide text-sm text-oz-emerald font-orbitron">RESOURCES</h3>
            <ul className="space-y-3 text-gray-500 text-sm font-medium font-mono">
-            <li><Link href="/resources" className="hover:text-white transition">Student Library</Link></li>
-            <li>
-              {/* Direct PDF Download - Standard <a> tag avoids router preloader */}
-              <a 
-                href="/ALPHA CRESCENDO (1).pdf" 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="hover:text-white transition flex items-center gap-2 hover:text-oz-gold"
-              >
-                Sponsorship Deck <ArrowUpRight size={12} />
-              </a>
-            </li>
-            <li><Link href="/team" className="hover:text-white transition">Alumni Network</Link></li>
+            <li><Link href="/resources" className="hover:text-white transition flex items-center gap-2 group">Student Library <ArrowUpRight size={12} className="opacity-0 group-hover:opacity-100 transition-opacity" /></Link></li>
+       
+            <li><Link href="/team" className="hover:text-white transition flex items-center gap-2 group">Alumni Network <ArrowUpRight size={12} className="opacity-0 group-hover:opacity-100 transition-opacity" /> </Link></li>
            </ul>
         </div>
 
@@ -77,10 +67,10 @@ export const Footer = () => {
              <a href="https://www.linkedin.com/company/insees-nits/" target="_blank" className="p-2 bg-white/5 rounded-full hover:bg-[#0077b5] hover:text-white transition-all group border border-white/10">
                <Linkedin size={18} />
              </a>
-             <a href="https://www.instagram.com/insees_nits/" target="_blank" className="p-2 bg-white/5 rounded-full hover:bg-pink-600 hover:text-white transition-all group border border-white/10">
+             <a href="https://www.instagram.com/insees_nits_/" target="_blank" className="p-2 bg-white/5 rounded-full hover:bg-pink-600 hover:text-white transition-all group border border-white/10">
                <Instagram size={18} />
              </a>
-             <a href="mailto:insees@nits.ac.in" className="p-2 bg-white/5 rounded-full hover:bg-oz-emerald hover:text-black transition-all group border border-white/10">
+             <a href="mailto:inseessociety.nits@gmail.com" className="p-2 bg-white/5 rounded-full hover:bg-oz-emerald hover:text-black transition-all group border border-white/10">
                <Mail size={18} />
              </a>
           </div>

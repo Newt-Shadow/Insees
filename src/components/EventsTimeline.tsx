@@ -25,52 +25,77 @@ const EventNode = ({ event, index }: { event: EventType; index: number }) => {
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true, margin: "-100px" }}
       transition={{ duration: 0.6, type: "spring" }}
-      className={`relative flex items-center justify-between mb-24 w-full ${
-        isEven ? "flex-row-reverse" : "flex-row"
-      }`}
+      className={`
+        relative flex w-full mb-20
+        flex-col md:flex-row
+        md:items-center md:justify-between
+        ${isEven ? "md:flex-row-reverse" : "md:flex-row"}
+      `}
     >
-      {/* Spacer for the other side */}
-      <div className="w-5/12" />
+      {/* Spacer (desktop only) */}
+      <div className="hidden md:block w-5/12" />
 
-      {/* The Central Node */}
-      <div className="absolute left-1/2 -translate-x-1/2 z-20">
-        <div className={`w-12 h-12 rounded-full border-2 bg-black flex items-center justify-center shadow-[0_0_20px_currentColor] transition-transform duration-500 hover:scale-125 ${
-             event.color === "amber" ? "border-amber-400 text-amber-400" :
-             event.color === "green" ? "border-oz-emerald text-oz-emerald" :
-             "border-blue-400 text-blue-400"
-        }`}>
-           {event.icon === "FaRocket" && <FaRocket />}
-           {event.icon === "FaUsers" && <FaUsers />}
-           {event.icon === "FaGraduationCap" && <FaGraduationCap />}
-           {event.icon === "default" && <FaMicrochip />}
+      {/* Central / Mobile Node */}
+      <div
+        className="
+          relative md:absolute
+          md:left-1/2 md:-translate-x-1/2
+          z-20
+          mb-6 md:mb-0
+          flex justify-center md:block
+        "
+      >
+        <div
+          className={`w-10 h-10 md:w-12 md:h-12 rounded-full border-2 bg-black flex items-center justify-center
+            shadow-[0_0_20px_currentColor] transition-transform duration-500 hover:scale-125
+            ${event.color === "amber"
+              ? "border-amber-400 text-amber-400"
+              : event.color === "green"
+                ? "border-oz-emerald text-oz-emerald"
+                : "border-blue-400 text-blue-400"
+            }
+          `}
+        >
+          {event.icon === "FaRocket" && <FaRocket />}
+          {event.icon === "FaUsers" && <FaUsers />}
+          {event.icon === "FaGraduationCap" && <FaGraduationCap />}
+          {event.icon === "default" && <FaMicrochip />}
         </div>
       </div>
 
-      {/* The Data Card */}
-      <div className="w-5/12 group">
-        <div className="relative p-6 bg-zinc-900/80 backdrop-blur-md border border-white/10 rounded-xl overflow-hidden hover:border-oz-emerald/50 transition-colors duration-300">
-          {/* Scanning Scanline */}
+      {/* Data Card */}
+      <div className="w-full md:w-5/12 group">
+        <div className="relative p-5 md:p-6 bg-zinc-900/80 backdrop-blur-md border border-white/10 rounded-xl overflow-hidden hover:border-oz-emerald/50 transition-colors duration-300">
+          {/* Scanline */}
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-oz-emerald to-transparent opacity-0 group-hover:opacity-100 animate-scan pointer-events-none" />
-          
+
           <div className="flex items-center gap-2 mb-3">
-             <span className={`text-xs font-mono px-2 py-0.5 rounded border ${
-                 event.color === "amber" ? "border-amber-500/30 bg-amber-500/10 text-amber-400" :
-                 event.color === "green" ? "border-green-500/30 bg-green-500/10 text-green-400" :
-                 "border-blue-500/30 bg-blue-500/10 text-blue-400"
-             }`}>
-                {"// SEQ_"}{event.id < 10 ? `0${event.id}` : event.id}
-             </span>
-             <h3 className="text-xl font-bold font-orbitron text-white">{event.title}</h3>
+            <span
+              className={`text-[10px] md:text-xs font-mono px-2 py-0.5 rounded border ${event.color === "amber"
+                ? "border-amber-500/30 bg-amber-500/10 text-amber-400"
+                : event.color === "green"
+                  ? "border-green-500/30 bg-green-500/10 text-green-400"
+                  : "border-blue-500/30 bg-blue-500/10 text-blue-400"
+                }`}
+            >
+              {"// SEQ_"}
+              {event.id < 10 ? `0${event.id}` : event.id}
+            </span>
+            <h3 className="text-lg md:text-xl font-bold font-orbitron text-white">
+              {event.title}
+            </h3>
           </div>
 
           <p className="text-gray-400 text-sm leading-relaxed">
-            <span className="text-white font-bold">{event.highlight}</span> {event.description}
+            <span className="text-white font-bold">{event.highlight}</span>{" "}
+            {event.description}
           </p>
         </div>
       </div>
     </motion.div>
   );
 };
+
 
 export const EventsTimeline: React.FC<EventsTimelineProps> = ({ events }) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -95,12 +120,32 @@ export const EventsTimeline: React.FC<EventsTimelineProps> = ({ events }) => {
 
       <div className="relative max-w-6xl mx-auto px-4">
         {/* The Center Line (Background) */}
-        <div className="absolute left-1/2 top-0 bottom-0 w-1 bg-white/5 -translate-x-1/2 rounded-full" />
-        
+        <div
+          className="
+            absolute
+            left-6 md:left-1/2
+            top-0 bottom-0
+            w-1
+            bg-white/5
+            md:-translate-x-1/2
+            rounded-full
+          "
+        />
+
         {/* The Glowing Line (Foreground - Animated) */}
-        <motion.div 
+        <motion.div
           style={{ scaleY, originY: 0 }}
-          className="absolute left-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-oz-gold via-oz-emerald to-blue-500 -translate-x-1/2 rounded-full shadow-[0_0_15px_rgba(80,200,120,0.5)] z-10"
+          className="
+            absolute
+            left-6 md:left-1/2
+            top-0 bottom-0
+            w-1
+            bg-gradient-to-b from-oz-gold via-oz-emerald to-blue-500
+            md:-translate-x-1/2
+            rounded-full
+            shadow-[0_0_15px_rgba(80,200,120,0.5)]
+            z-10
+          "
         />
 
         {/* Events */}

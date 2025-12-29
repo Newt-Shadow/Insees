@@ -41,8 +41,8 @@ export default async function Home() {
 
   return (
     <>
-      {/* <Navbar /> */}
-      <CelebrationWrapper />
+      <Navbar />
+      {/* <CelebrationWrapper /> */}
 
       {/* Hero Section */}
       <main className="relative min-h-screen flex flex-col items-center justify-center text-white font-[Poppins,sans-serif] overflow-hidden">
@@ -96,7 +96,7 @@ export default async function Home() {
       {/* Sections */}
       <AboutSection />
       <EventsTimeline events={events} /> {/* ✅ Events with fallback */}
-      <div id="contact"  className="bg-black/70 py-20 mt-20">
+      <div id="contact"  className="bg-black/70 py-2 mt-1">
         <ContactSection />
       </div>
    
