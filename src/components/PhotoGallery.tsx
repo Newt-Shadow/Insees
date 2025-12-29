@@ -126,7 +126,7 @@ export default function PhotoGallery({ initialGalleryConfig, initialCategories }
             onClick={() => setSelectedCategory(cat)}
             className={`relative px-6 py-2 text-sm font-mono uppercase tracking-wider transition-all clip-path-slant ${
               selectedCategory === cat
-                ? "text-black font-bold"
+                ? "text-blue-300 font-bold"
                 : "text-gray-400 hover:text-white"
             }`}
           >
