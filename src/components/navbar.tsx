@@ -11,6 +11,7 @@ import { usePreloader } from "@/app/context/PreloaderContext";
 const NAV_ITEMS = [
   { name: "HOME", href: "/", label: "HOME" },
   { name: "ALPHA CRESCENDO", href: "/alpha-crescendo", label: "ALPHA CRESCENDO" },
+  { name: "EVENTS", href: "/events", label: "EVENTS" },
   { name: "TEAM", href: "/team", label: "TEAM" },
   { name: "GALLERY", href: "/gallery", label: "GALLERY" },
   { name: "RESOURCES", href: "/resources", label: "RESOURCES" },

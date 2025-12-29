@@ -89,15 +89,7 @@ model Gallery {
 
 // ----------------------------------------------------
 // Events
-// ----------------------------------------------------
-model Event {
-  id          Int    @id @default(autoincrement())
-  title       String
-  highlight   String
-  description String
-  color       String  // e.g. "amber", "green", "blue"
-  icon        String  // e.g. "FaRocket", "FaUsers"
-}
+
 
 // ----------------------------------------------------
 // Contact Messages
@@ -118,3 +110,34 @@ model NewsletterEmail {
   createdAt DateTime @default(now())
 }
 
+// ... (Existing models for Year, Member, Semester, Subject, File, GalleryConfig, Gallery)
+
+// ----------------------------------------------------
+// Events (Revised)
+// ... existing models (Year, Member, etc.)
+
+model Event {
+  id               Int       @id @default(autoincrement())
+  title            String
+  description      String
+  fullDescription  String    // For the modal details
+  category         String    // "Technical", "Flagship", etc.
+  
+  // Date & Scheduling
+  date             DateTime  // Actual Event Date
+  year             String    // e.g., "2026"
+  registrationOpen DateTime? // Date/Time when registration link becomes active
+  
+  // Visuals & Links
+  image            String    // URL for the banner
+  location         String
+  sponsor          String?
+  registrationLink String?
+  
+  // Status
+  status           String    // "upcoming", "live", "completed"
+  
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  registrationEnabled Boolean @default(true)
+}

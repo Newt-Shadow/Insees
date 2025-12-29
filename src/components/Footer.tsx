@@ -39,6 +39,11 @@ export const Footer = () => {
                 Alpha Crescendo <ArrowUpRight size={12} className="opacity-0 group-hover:opacity-100 transition-opacity" />
               </Link>
             </li>
+            <li>
+              <Link href="/events" onClick={() => triggerBoot("EVENTS")} className="hover:text-white transition flex items-center gap-2 group">
+                Events <ArrowUpRight size={12} className="opacity-0 group-hover:opacity-100 transition-opacity" />
+              </Link>
+            </li>
             <li><Link href="/team"   onClick={() => triggerBoot("TEAM")} className="hover:text-white transition flex items-center gap-2 group">Our Team <ArrowUpRight size={12} className="opacity-0 group-hover:opacity-100 transition-opacity" /></Link></li>
             <li><Link href="/gallery"  onClick={() => triggerBoot("GALLERY")} className="hover:text-white transition flex items-center gap-2 group">Gallery <ArrowUpRight size={12} className="opacity-0 group-hover:opacity-100 transition-opacity" /></Link></li>
             <li>
