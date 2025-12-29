@@ -37,8 +37,8 @@ interface Event {
   registrationOpen?: string;
 }
 
-const categories = ["Flagship", "Technical", "Cultural", "Managerial", "Gaming", "Social"];
-const years = ["2026", "2025", "2024", "Archives"];
+const categories = ["Flagship", "Technical", "Cultural"];
+const years = ["2026", "2025",  "Archives"];
 
 // --- STATUS BADGE COMPONENT ---
 const StatusBadge = ({ status }: { status: EventStatus }) => {

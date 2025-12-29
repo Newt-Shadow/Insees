@@ -159,7 +159,7 @@ export default function Resources({ semesters, searchQuery }: ResourcesProps) {
          )
        ) && (
          <div className="text-center py-12 border border-dashed border-white/10 rounded-xl">
-           <p className="text-gray-500">No resources found for "{searchQuery}"</p>
+           <p className="text-gray-500">No resources found for &quot;{searchQuery}&quot</p>
          </div>
        )}
     </div>
