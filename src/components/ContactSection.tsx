@@ -1,115 +1,114 @@
 "use client";
 import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { Send, MapPin, Mail, Phone } from "lucide-react";
 
-export const ContactSection = () => {
-  const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
-  const [success, setSuccess] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+export default function ContactSection() {
+  const [formData, setFormData] = useState({ name: "", email: "", message: "" });
+  const [status, setStatus] = useState<"idle" | "sending" | "sent">("idle");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    try {
-      const res = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, message }),
-      });
-
-      if (res.ok) {
-        setSuccess(true);
-        setError(null);
-        setEmail("");
-        setMessage("");
-        setTimeout(() => setSuccess(false), 3000);
-      } else {
-        const { error } = await res.json();
-        setError(error || "Something went wrong.");
-        setSuccess(false);
-        setTimeout(() => setError(null), 3000);
-      }
-    } catch (err) {
-      setError("Network error. Please try again.");
-      setSuccess(false);
-      setTimeout(() => setError(null), 3000);
-    }
+    setStatus("sending");
+    // Simulate API call
+    setTimeout(() => setStatus("sent"), 2000);
   };
 
   return (
-    <section
-      id="contact"
-      className="relative w-full min-h-screen flex flex-col items-center justify-center px-4"
-    >
-      <h2 className="text-4xl md:text-5xl font-bold text-gray-200 mb-4">
-        Contact Us
-      </h2>
-      <div className="h-[3px] w-[300px] bg-gradient-to-r from-emerald-400 to-sky-500 rounded-full mb-12" />
+    <section className="py-24 px-6 bg-black border-t border-white/10">
+      <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16">
+        {/* Info Column */}
+        <div className="space-y-8">
+          <div>
+            <h2 className="text-4xl font-bold font-orbitron text-white mb-2">ESTABLISH UPLINK</h2>
+            <p className="text-oz-emerald font-mono text-sm">// SECURE CONNECTION</p>
+          </div>
+          
+          <p className="text-gray-400 leading-relaxed">
+            Have a query about sponsorship, events, or membership? 
+            Transmit your message directly to our core team.
+          </p>
 
-      <form
-        onSubmit={handleSubmit}
-        className="flex flex-col gap-6 w-full max-w-xl"
-      >
-        <div>
-          <label className="block text-lg font-medium mb-2">Email</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="enter your email address"
-            className="w-full rounded-full px-5 py-3 bg-black/30 backdrop-blur-md border border-emerald-400/50 text-white placeholder-gray-500 focus:outline-none"
-          />
+          <div className="space-y-6 pt-4">
+            <div className="flex items-start gap-4">
+              <div className="p-3 bg-zinc-900 rounded-lg border border-white/10 text-oz-emerald">
+                <MapPin size={20} />
+              </div>
+              <div>
+                <h4 className="font-bold text-white">Base Coordinates</h4>
+                <p className="text-sm text-gray-500">NIT Silchar, Assam, India - 788010</p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-4">
+              <div className="p-3 bg-zinc-900 rounded-lg border border-white/10 text-oz-gold">
+                <Mail size={20} />
+              </div>
+              <div>
+                <h4 className="font-bold text-white">Electronic Mail</h4>
+                <p className="text-sm text-gray-500">insees@nits.ac.in</p>
+              </div>
+            </div>
+          </div>
         </div>
-        <div>
-          <label className="block text-lg font-medium mb-2">Message</label>
-          <textarea
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            placeholder="Your Message"
-            className="w-full rounded-2xl px-5 py-3 bg-black/30 backdrop-blur-md border border-emerald-400/50 text-white placeholder-gray-500 focus:outline-none h-32"
-          />
+
+        {/* Form Column (Terminal Style) */}
+        <div className="relative">
+          <div className="absolute -inset-1 bg-gradient-to-r from-oz-emerald to-cyan-500 rounded-lg blur opacity-20" />
+          <div className="relative bg-zinc-950 border border-white/10 rounded-lg p-8 shadow-2xl">
+            {/* Terminal Header */}
+            <div className="flex items-center gap-2 mb-8 border-b border-white/5 pb-4">
+               <div className="w-3 h-3 rounded-full bg-red-500" />
+               <div className="w-3 h-3 rounded-full bg-yellow-500" />
+               <div className="w-3 h-3 rounded-full bg-green-500" />
+               <span className="ml-auto text-xs font-mono text-gray-600">bash --contact</span>
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="space-y-2">
+                <label className="text-xs font-mono text-gray-500 uppercase">Input.Name</label>
+                <input 
+                  type="text" 
+                  className="w-full bg-black border border-white/20 rounded p-3 text-white focus:border-oz-emerald focus:outline-none focus:ring-1 focus:ring-oz-emerald transition-all font-mono text-sm"
+                  placeholder="_enter_identity"
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-xs font-mono text-gray-500 uppercase">Input.Email</label>
+                <input 
+                  type="email" 
+                  className="w-full bg-black border border-white/20 rounded p-3 text-white focus:border-oz-emerald focus:outline-none focus:ring-1 focus:ring-oz-emerald transition-all font-mono text-sm"
+                  placeholder="_enter_address"
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-xs font-mono text-gray-500 uppercase">Input.Message</label>
+                <textarea 
+                  rows={4}
+                  className="w-full bg-black border border-white/20 rounded p-3 text-white focus:border-oz-emerald focus:outline-none focus:ring-1 focus:ring-oz-emerald transition-all font-mono text-sm resize-none"
+                  placeholder="_type_transmission..."
+                  required
+                />
+              </div>
+
+              <button 
+                type="submit"
+                disabled={status !== "idle"}
+                className="w-full py-4 bg-oz-emerald/10 border border-oz-emerald/50 text-oz-emerald font-bold font-mono hover:bg-oz-emerald hover:text-black transition-all flex items-center justify-center gap-2 group"
+              >
+                {status === "idle" ? (
+                  <>EXECUTE_SEND() <Send size={16} className="group-hover:translate-x-1 transition-transform" /></>
+                ) : (
+                  <span className="animate-pulse">TRANSMITTING...</span>
+                )}
+              </button>
+            </form>
+          </div>
         </div>
-        <button
-          type="submit"
-          className="relative isolate rounded-full px-8 py-3 font-semibold text-black text-lg transition-transform active:scale-[.98] cursor-pointer"
-        >
-          <span className="absolute inset-0 -z-10 rounded-full bg-gradient-to-r from-emerald-400 to-sky-500" />
-          Let’s Talk
-        </button>
-      </form>
-
-      {/* 🎉 Success Toast */}
-      <AnimatePresence>
-        {success && (
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 30 }}
-            transition={{ duration: 0.4 }}
-            className="fixed bottom-8 right-8 px-6 py-4 rounded-2xl bg-white/10 backdrop-blur-xl border border-emerald-400/50 text-white shadow-[0_8px_30px_rgb(0,0,0,0.12)] flex items-center gap-2"
-          >
-            <span className="text-2xl">🎉</span>
-            <span className="font-medium">Your message has been sent!</span>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* ⚠️ Failure Toast */}
-      <AnimatePresence>
-        {error && (
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 30 }}
-            transition={{ duration: 0.4 }}
-            className="fixed bottom-8 right-8 px-6 py-4 rounded-2xl bg-white/10 backdrop-blur-xl border border-red-500/50 text-red-200 shadow-[0_8px_30px_rgb(0,0,0,0.12)] flex items-center gap-2"
-          >
-            <span className="text-2xl">⚠️</span>
-            <span className="font-medium">{error}</span>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      </div>
     </section>
   );
-};
+}

@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Poppins, Orbitron } from "next/font/google"; // Import Orbitron
+import { Poppins, Orbitron } from "next/font/google";
 import GlobalLoader from "@/components/GlobalLoader";
 import { Footer } from "@/components/Footer";
+import CyberOverlay from "@/components/CyberOverlay";
+import CommandPalette from "@/components/CommandPalette"; // NEW
+import ScrollToTop from "@/components/ScrollToTop";
 
 const poppins = Poppins({ 
   subsets: ["latin"], 
@@ -11,7 +14,6 @@ const poppins = Poppins({
   display: "swap" 
 });
 
-// The "Wizard of Oz" font
 const orbitron = Orbitron({ 
   subsets: ["latin"], 
   weight: ["400", "700", "900"], 
@@ -22,18 +24,25 @@ const orbitron = Orbitron({
 export const metadata: Metadata = {
   title: "INSEES — NIT Silchar",
   description: "Instrumentation and Electronics Engineering Society, NIT Silchar",
-  icons: {
-    icon: "/favicon.ico",
-  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className={`${poppins.className} ${orbitron.variable} bg-heroRadial`}>
+      <body className={`${poppins.className} ${orbitron.variable} bg-black text-white overflow-x-hidden`}>
         <GlobalLoader>
+          {/* 1. Global Effects */}
+          <CyberOverlay />
+          
+          {/* 2. Global Utilities (Cmd+K) */}
+          <CommandPalette />
+          
+          {/* 3. Main Content */}
           {children}
+          
+          {/* 4. Footer & Scroll */}
           <Footer />
+          <ScrollToTop />
         </GlobalLoader>
       </body>
     </html>

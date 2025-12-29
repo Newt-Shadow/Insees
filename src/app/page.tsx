@@ -2,12 +2,13 @@ import { Navbar } from "../components/navbar";
 import { FloatingIcon } from "../components/FloatingIcon";
 import { EmailForm } from "../components/EmailForm";
 import { ScrollHint } from "../components/ScrollHint";
-import { ContactSection } from "../components/ContactSection";
+import ContactSection  from "../components/ContactSection";
 import { EventsTimeline } from "../components/EventsTimeline";
 import { AboutSection } from "../components/AboutSection";
 import MeetDevelopersButton from "@/components/MeetDevelopersButton";
 import CelebrationWrapper from "@/components/CelebrationWrapper";
 import eventsData from "./../../public/data/events.json"; // ✅ build-time fallback
+import ScrollToTop from "@/components/ScrollToTop";
 
 // ✅ Try API first, fallback to build-time JSON
 async function getEvents() {
@@ -79,10 +80,10 @@ export default async function Home() {
 
         {/* Center Title + Form */}
         <div className="relative z-10 flex flex-col items-center text-center px-4">
-          <h1 className="text-6xl md:text-7xl font-extrabold tracking-wide bg-gradient-to-t from-gray-300 to-white text-transparent bg-clip-text">
+          <h1 className="text-6xl md:text-7xl font-extrabold  tracking-wide bg-gradient-to-t from-gray-300 to-white text-transparent bg-clip-text">
             INSEES
           </h1>
-          <p className="mt-6 text-base md:text-lg text-gray-300 max-w-2xl">
+          <p className="mt-6 font-orbitron text-base md:text-lg text-gray-300 max-w-2xl">
             Instrumentation and Electronics Engineering Society. <br />
             National Institute of Technology, Silchar.
           </p>
@@ -95,8 +96,11 @@ export default async function Home() {
       {/* Sections */}
       <AboutSection />
       <EventsTimeline events={events} /> {/* ✅ Events with fallback */}
-      <ContactSection />
-      <MeetDevelopersButton />
+      <div id="contact"  className="bg-black/70 py-20 mt-20">
+        <ContactSection />
+      </div>
+   
+      
     </>
   );
 }

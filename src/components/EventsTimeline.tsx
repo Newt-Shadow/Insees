@@ -1,11 +1,7 @@
 "use client";
-
-import {
-  FaRocket,
-  FaGraduationCap,
-  FaUsers,
-  FaRegCalendarAlt,
-} from "react-icons/fa";
+import { useRef } from "react";
+import { motion, useScroll, useTransform, useSpring } from "framer-motion";
+import { FaRocket, FaGraduationCap, FaUsers, FaRegCalendarAlt, FaMicrochip } from "react-icons/fa";
 
 interface EventType {
   id: number;
@@ -20,89 +16,99 @@ interface EventsTimelineProps {
   events: EventType[];
 }
 
-export const EventsTimeline: React.FC<EventsTimelineProps> = ({ events }) => {
-  const icons: Record<string, React.ReactNode> = {
-    FaRocket: <FaRocket className="text-white text-sm" />,
-    FaGraduationCap: <FaGraduationCap className="text-white text-sm" />,
-    FaUsers: <FaUsers className="text-white text-sm" />,
-    default: <FaRegCalendarAlt className="text-white text-sm" />,
-  };
-
-  const glowColors: Record<string, string> = {
-    amber: "bg-amber-500 shadow-glowAmber",
-    green: "bg-green-600 shadow-glowGreen",
-    blue: "bg-blue-600 shadow-glowBlue",
-    orange: "bg-orange-500 shadow-glowOrange",
-  };
-
-  if (!events || events.length === 0) {
-    return (
-      <section
-        id="events"
-        className="w-full min-h-screen flex items-center justify-center text-gray-400"
-      >
-        No events found.
-      </section>
-    );
-  }
+const EventNode = ({ event, index }: { event: EventType; index: number }) => {
+  const isEven = index % 2 === 0;
 
   return (
-    <section
-      id="events"
-      className="relative w-full min-h-screen flex flex-col items-center justify-center px-6 font-sans"
+    <motion.div
+      initial={{ opacity: 0, x: isEven ? -50 : 50 }}
+      whileInView={{ opacity: 1, x: 0 }}
+      viewport={{ once: true, margin: "-100px" }}
+      transition={{ duration: 0.6, type: "spring" }}
+      className={`relative flex items-center justify-between mb-24 w-full ${
+        isEven ? "flex-row-reverse" : "flex-row"
+      }`}
     >
-      <h2 className="text-4xl md:text-5xl font-bold text-gray-300 mb-16 relative z-10">
-        Events <span className="text-gray-400 font-medium">Timeline</span>
-      </h2>
+      {/* Spacer for the other side */}
+      <div className="w-5/12" />
 
-      <div className="flex flex-col gap-16 w-full max-w-3xl relative z-10">
-        <div className="absolute left-[22px] top-0 bottom-0 w-[2px] bg-gradient-to-b from-white/20 to-transparent" />
+      {/* The Central Node */}
+      <div className="absolute left-1/2 -translate-x-1/2 z-20">
+        <div className={`w-12 h-12 rounded-full border-2 bg-black flex items-center justify-center shadow-[0_0_20px_currentColor] transition-transform duration-500 hover:scale-125 ${
+             event.color === "amber" ? "border-amber-400 text-amber-400" :
+             event.color === "green" ? "border-oz-emerald text-oz-emerald" :
+             "border-blue-400 text-blue-400"
+        }`}>
+           {event.icon === "FaRocket" && <FaRocket />}
+           {event.icon === "FaUsers" && <FaUsers />}
+           {event.icon === "FaGraduationCap" && <FaGraduationCap />}
+           {event.icon === "default" && <FaMicrochip />}
+        </div>
+      </div>
 
-        {events.map((event) => (
-          <div key={event.id} className="relative pl-16">
-            {/* Icon with glow */}
-            <div
-              className={`absolute left-0 top-1 flex items-center justify-center w-10 h-10 rounded-full ${
-                glowColors[event.color] || glowColors.amber
-              }`}
-            >
-              {icons[event.icon] || icons.default}
-            </div>
-
-            {/* Title */}
-            <h3
-              className={`text-sm mb-2 ${
-                event.color === "amber"
-                  ? "text-amber-400"
-                  : event.color === "green"
-                  ? "text-green-400"
-                  : event.color === "blue"
-                  ? "text-blue-400"
-                  : "text-orange-400"
-              }`}
-            >
-              {event.title}
-            </h3>
-
-            {/* Highlight + Description */}
-            <p className="text-lg text-gray-200 leading-relaxed">
-              <span
-                className={`font-semibold ${
-                  event.color === "amber"
-                    ? "text-amber-300"
-                    : event.color === "green"
-                    ? "text-green-300"
-                    : event.color === "blue"
-                    ? "text-blue-300"
-                    : "text-orange-300"
-                }`}
-              >
-                {event.highlight}
-              </span>{" "}
-              {event.description}
-            </p>
+      {/* The Data Card */}
+      <div className="w-5/12 group">
+        <div className="relative p-6 bg-zinc-900/80 backdrop-blur-md border border-white/10 rounded-xl overflow-hidden hover:border-oz-emerald/50 transition-colors duration-300">
+          {/* Scanning Scanline */}
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-oz-emerald to-transparent opacity-0 group-hover:opacity-100 animate-scan pointer-events-none" />
+          
+          <div className="flex items-center gap-2 mb-3">
+             <span className={`text-xs font-mono px-2 py-0.5 rounded border ${
+                 event.color === "amber" ? "border-amber-500/30 bg-amber-500/10 text-amber-400" :
+                 event.color === "green" ? "border-green-500/30 bg-green-500/10 text-green-400" :
+                 "border-blue-500/30 bg-blue-500/10 text-blue-400"
+             }`}>
+                // SEQ_{event.id < 10 ? `0${event.id}` : event.id}
+             </span>
+             <h3 className="text-xl font-bold font-orbitron text-white">{event.title}</h3>
           </div>
-        ))}
+
+          <p className="text-gray-400 text-sm leading-relaxed">
+            <span className="text-white font-bold">{event.highlight}</span> {event.description}
+          </p>
+        </div>
+      </div>
+    </motion.div>
+  );
+};
+
+export const EventsTimeline: React.FC<EventsTimelineProps> = ({ events }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"],
+  });
+
+  const scaleY = useSpring(scrollYProgress, { stiffness: 100, damping: 30 });
+
+  if (!events || events.length === 0) return null;
+
+  return (
+    <section ref={containerRef} className="relative py-32 overflow-hidden bg-black">
+      {/* Header */}
+      <div className="text-center mb-24 relative z-10">
+        <h2 className="text-4xl md:text-6xl font-bold font-orbitron text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-600">
+          CHRONO <span className="text-oz-emerald">CIRCUIT</span>
+        </h2>
+        <p className="text-gray-500 font-mono mt-2">Historical Event Log & Future Trajectories</p>
+      </div>
+
+      <div className="relative max-w-6xl mx-auto px-4">
+        {/* The Center Line (Background) */}
+        <div className="absolute left-1/2 top-0 bottom-0 w-1 bg-white/5 -translate-x-1/2 rounded-full" />
+        
+        {/* The Glowing Line (Foreground - Animated) */}
+        <motion.div 
+          style={{ scaleY, originY: 0 }}
+          className="absolute left-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-oz-gold via-oz-emerald to-blue-500 -translate-x-1/2 rounded-full shadow-[0_0_15px_rgba(80,200,120,0.5)] z-10"
+        />
+
+        {/* Events */}
+        <div className="relative z-20">
+          {events.map((event, index) => (
+            <EventNode key={event.id} event={event} index={index} />
+          ))}
+        </div>
       </div>
     </section>
   );

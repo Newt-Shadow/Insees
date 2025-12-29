@@ -1,6 +1,7 @@
 import { Navbar } from "@/components/navbar";
 import PhotoGallery, { GalleryConfig } from "@/components/PhotoGallery";
 
+// --- Types (Ensure these match your API response) ---
 type ApiImage = {
   src: string;
   category: string;
@@ -11,12 +12,13 @@ type ApiResponse = {
   images: ApiImage[];
 };
 
+// --- Fetch Function ---
 async function fetchGallery(): Promise<ApiResponse | null> {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL!;
+    // Fallback to empty string if env var is missing to prevent crash during build
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || ""; 
     const res = await fetch(`${baseUrl}/api/gallery`, {
-      
-      next: { revalidate: 900 },
+      next: { revalidate: 900 }, // Revalidate every 15 mins
     });
     if (!res.ok) return null;
     return res.json();

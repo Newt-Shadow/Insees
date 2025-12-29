@@ -1,89 +1,65 @@
 "use client";
-
-import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
-import {
-  SiGithub,
-  SiVercel,
-  SiApple,
-  SiGooglechrome,
-  SiFigma,
-  SiReact,
-} from "react-icons/si";
+import { motion } from "framer-motion";
 
-const ICONS = [SiApple, SiGithub, SiVercel, SiFigma, SiReact, SiGooglechrome];
+const BOOT_SEQUENCE = [
+  "INITIALIZING KERNEL...",
+  "LOADING MODULES: [OZ_CORE, GLITCH_UI, NEURAL_NET]",
+  "ESTABLISHING UPLINK TO NIT SILCHAR...",
+  "DECRYPTING SECURE DATA...",
+  "SYSTEM READY."
+];
 
 export default function PreLoader() {
-  const pathname = usePathname();
-  const [iconIndex, setIconIndex] = useState(0);
+  const [currentLine, setCurrentLine] = useState(0);
 
-  // Cycle favicons
   useEffect(() => {
-    const interval = setInterval(() => {
-      setIconIndex((i) => (i + 1) % ICONS.length);
-    }, 900);
-    return () => clearInterval(interval);
-  }, []);
-
-  const ActiveIcon = ICONS[iconIndex];
+    if (currentLine < BOOT_SEQUENCE.length - 1) {
+      const timeout = setTimeout(() => {
+        setCurrentLine((prev) => prev + 1);
+      }, 400 + Math.random() * 400); // Random typing delay
+      return () => clearTimeout(timeout);
+    }
+  }, [currentLine]);
 
   return (
-    <div className="fixed inset-0 z-[9999] bg-black flex items-center justify-center pointer-events-none">
-      <motion.div
-        initial={{ scale: 0.95, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 1.1, opacity: 0 }}
-        transition={{ duration: 0.4, ease: "easeOut" }}
-        className="flex flex-col items-center gap-12"
-      >
-        {/* Dynamic Island Core */}
+    <div className="fixed inset-0 z-[9999] bg-black text-oz-emerald font-mono flex flex-col items-center justify-center p-8">
+      <div className="w-full max-w-md space-y-2">
+        {BOOT_SEQUENCE.slice(0, currentLine + 1).map((line, idx) => (
+          <motion.div
+            key={idx}
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="text-sm md:text-base border-l-2 border-oz-emerald pl-4"
+          >
+            <span className="text-gray-500 mr-2">{`>`}</span>
+            {line}
+          </motion.div>
+        ))}
+        
+        {/* Blinking Cursor */}
         <motion.div
-          animate={{ width: ["90px", "148px", "90px"] }}
-          transition={{
-            duration: 2.4,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-          className="
-            relative h-9 rounded-full
-            vision-glass
-            shadow-[0_0_50px_rgba(255,255,255,0.1)]
-            flex items-center justify-center
-          "
-        >
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={iconIndex}
-              initial={{ opacity: 0, y: 6, scale: 0.9 }}
-              animate={{ opacity: 0.9, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -6, scale: 0.9 }}
-              transition={{ duration: 0.35, ease: "easeOut" }}
-              className="text-white/80 text-sm"
-            >
-              <ActiveIcon />
-            </motion.div>
-          </AnimatePresence>
-        </motion.div>
-
-        {/* Semantic Text */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="text-white/70 text-sm tracking-wide font-light"
-        >
-          {getSemanticLabel(pathname)}
-        </motion.div>
-      </motion.div>
+           animate={{ opacity: [0, 1, 0] }}
+           transition={{ duration: 0.8, repeat: Infinity }}
+           className="w-3 h-5 bg-oz-emerald mt-2 ml-6"
+        />
+      </div>
+      
+      {/* Loading Bar */}
+      <div className="absolute bottom-10 left-10 right-10 max-w-xl mx-auto">
+        <div className="h-1 bg-gray-800 w-full overflow-hidden">
+          <motion.div 
+            initial={{ width: "0%" }}
+            animate={{ width: "100%" }}
+            transition={{ duration: 3, ease: "easeInOut" }}
+            className="h-full bg-oz-emerald shadow-[0_0_10px_#50C878]"
+          />
+        </div>
+        <div className="flex justify-between text-xs text-gray-500 mt-2 font-mono">
+           <span>MEM: 64TB OK</span>
+           <span>CPU: QUANTUM CORE</span>
+        </div>
+      </div>
     </div>
   );
-}
-
-function getSemanticLabel(path: string) {
-  if (path.includes("team")) return "Gathering the team...";
-  if (path.includes("gallery")) return "Developing photos...";
-  if (path.includes("resources")) return "Organizing archives...";
-  if (path.includes("developers")) return "Compiling code...";
-  if (path === "/" || path === "") return "Initializing system...";
-  return "Loading...";
 }

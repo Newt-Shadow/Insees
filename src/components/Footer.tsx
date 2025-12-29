@@ -1,11 +1,12 @@
+"use client";
 import Link from 'next/link';
-import { Mail, Twitter, Instagram, Linkedin, MapPin, Globe } from 'lucide-react';
+import { Mail, Twitter, Instagram, Linkedin, MapPin, Globe, Code,  Terminal, ShieldCheck, Cpu } from 'lucide-react';
 
 export const Footer = () => {
   return (
-    <footer className="bg-black border-t border-white/10 pt-20 pb-10 font-sans relative overflow-hidden">
+    <footer className="bg-black border-t border-white/10 pt-20 pb-2 font-sans relative overflow-hidden">
       {/* Background Glow */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[1px] bg-gradient-to-r from-transparent via-oz-emerald to-transparent opacity-50" />
+      <div className="absolute top-0 left-1/2  -translate-x-1/2 w-full h-[1px] bg-gradient-to-r from-transparent via-oz-emerald to-transparent opacity-50" />
       
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12 relative z-10">
         {/* Brand Column */}
@@ -34,14 +35,13 @@ export const Footer = () => {
           </ul>
         </div>
 
-        {/* Legal / Intl */}
+        {/* Resources */}
         <div>
           <h3 className="text-white font-bold mb-6 tracking-wide">RESOURCES</h3>
           <ul className="space-y-3 text-gray-500 text-sm font-medium">
-            <li><a href="#" className="hover:text-white transition-colors">Brochure (Global)</a></li>
+            <li><Link href="/resources" className="hover:text-white transition-colors">Student Library</Link></li>
             <li><a href="#" className="hover:text-white transition-colors">Sponsorship Deck</a></li>
             <li><a href="#" className="hover:text-white transition-colors">Alumni Network</a></li>
-            <li><a href="#" className="hover:text-white transition-colors">Privacy Policy</a></li>
           </ul>
         </div>
 
@@ -69,8 +69,39 @@ export const Footer = () => {
         </div>
       </div>
 
-      <div className="mt-20 border-t border-white/5 pt-8 text-center text-gray-600 text-xs tracking-widest uppercase">
-        © {new Date().getFullYear()} INSEES NIT Silchar. Crafted with <span className="text-red-500">♥</span> & Code.
+      {/* Bottom Bar */}
+      {/* --- NEW SYSTEM STATUS BAR (Replaces Floating Button) --- */}
+      <div className="border-t mt-2 border-white/10 pt-1 bg-[#050505]">
+        <div className="max-w-7xl mx-auto px-6 py-3 flex flex-col md:flex-row justify-between items-center gap-4">
+          
+          {/* Copyright */}
+          <div className="text-[10px] text-gray-600 font-mono uppercase tracking-wider">
+            © {new Date().getFullYear()} INSEES NITS. All Systems Normal.
+          </div>
+
+          {/* The Integrated Developer Link */}
+          <Link 
+            href="/developers" 
+            className="group flex items-center gap-3 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 hover:border-oz-emerald/50 hover:bg-oz-emerald/10 transition-all"
+          >
+            <div className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-oz-emerald opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-oz-emerald"></span>
+            </div>
+            <span className="text-xs font-mono text-gray-400 group-hover:text-oz-emerald transition-colors">
+              <span className="hidden sm:inline">SYSTEM ARCHITECTS: </span> 
+              <span className="font-bold text-gray-300 group-hover:text-white">MEET THE DEVS</span>
+            </span>
+            <Terminal size={12} className="text-gray-500 group-hover:text-oz-emerald" />
+          </Link>
+          
+          {/* Version Info */}
+          <div className="hidden md:flex items-center gap-4 text-[10px] text-gray-700 font-mono">
+             <span className="flex items-center gap-1"><ShieldCheck size={10}/> SECURE</span>
+             <span className="flex items-center gap-1"><Cpu size={10}/> v2.4.0</span>
+          </div>
+
+        </div>
       </div>
     </footer>
   );
