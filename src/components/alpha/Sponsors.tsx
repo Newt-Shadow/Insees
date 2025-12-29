@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { alphaContent } from "@/data/alphaCrescendoData";
 import { motion } from "framer-motion";
+import { SponsorshipTiers } from "./SponsorshipTiers";
 
 // --- The Robust Sponsor Card ---
 const SponsorCard = ({ name, domain }: { name: string; domain: string }) => {
@@ -85,6 +86,8 @@ export const Sponsors = () => {
             ))}
           </motion.div>
         </div>
+
+        <SponsorshipTiers />
 
         {/* --- CTA CARD --- */}
         <div className="px-4">

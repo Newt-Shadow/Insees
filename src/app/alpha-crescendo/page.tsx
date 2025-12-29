@@ -5,6 +5,9 @@ import { WhatsNew } from "@/components/alpha/WhatsNew";
 import { EventsGrid } from "@/components/alpha/EventsGrid";
 import { Sponsors } from "@/components/alpha/Sponsors";
 import { alphaContent } from "@/data/alphaCrescendoData";
+import { SponsorsMarquee } from "@/components/SponsorsMarquee";
+import { SponsorshipTiers } from "@/components/alpha/SponsorshipTiers";
+import { YellowBrickRoad } from "@/components/alpha/YellowBrickRoad";
 
 // Simple About Component for Layout
 const AboutSection = () => (
@@ -49,6 +52,7 @@ export default function AlphaCrescendoPage() {
   return (
     <div className="bg-black min-h-screen text-white selection:bg-oz-emerald selection:text-black font-sans">
       <Navbar />
+      <YellowBrickRoad />
 
       {/* HERO */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-oz-dark via-black to-black">
@@ -132,11 +136,15 @@ export default function AlphaCrescendoPage() {
       </section>
 
       <Sponsors />
+     
+      
 
-      {/* Footer */}
+    
+
+      {/* Footer
       <footer className="py-12 text-center text-gray-600 border-t border-white/5 bg-black">
         <p>© 2026 INSEES. Alpha Crescendo.</p>
-      </footer>
+      </footer> */}
     </div>
   );
 }

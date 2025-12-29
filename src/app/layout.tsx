@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Poppins, Orbitron } from "next/font/google"; // Import Orbitron
 import GlobalLoader from "@/components/GlobalLoader";
+import { Footer } from "@/components/Footer";
 
 const poppins = Poppins({ 
   subsets: ["latin"], 
@@ -32,6 +33,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={`${poppins.className} ${orbitron.variable} bg-heroRadial`}>
         <GlobalLoader>
           {children}
+          <Footer />
         </GlobalLoader>
       </body>
     </html>

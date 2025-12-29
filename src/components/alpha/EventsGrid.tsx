@@ -45,55 +45,80 @@ export const EventsGrid = () => {
     <section className="py-24 px-4 bg-black/80 relative" id="events">
       <div className="max-w-7xl mx-auto relative z-10">
         
-        <div className="text-center mb-16">
+        <div className="flex items-end justify-between mb-16">
+          <div>
+            <h2 className="text-5xl md:text-5xl font-bold font-orbitron mb-2 bg-clip-text text-transparent bg-gradient-to-r from-amber-50 via-white to-amber-50">
+              THE REALMS
+            </h2>
+            <p className="text-gray-400">Navigate the modules of Oz</p>
+          </div>
+          <div className="hidden md:block h-[1px] bg-white/20 flex-grow ml-12 mb-4" />
+        </div>
+        {/* <div className="text-center mb-16">
           <h2 className="text-4xl md:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-oz-emerald via-white to-oz-emerald mb-4 font-orbitron tracking-wider">
             THE EVENTS
           </h2>
           <p className="text-gray-400 max-w-2xl mx-auto font-poppins">
             From the Binary Brick Road to the Emerald City Cup.
           </p>
-        </div>
+        </div> */}
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {alphaContent.events.map((event) => (
             <motion.div
-              layoutId={`card-${event.id}`}
-              key={event.id}
-              onClick={() => setSelectedId(event.id)}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="group relative bg-[#080808] hover:scale-105  rounded-3xl p-6 border border-white/10 hover:border-oz-emerald/50 transition-all duration-500 cursor-pointer overflow-hidden hover:shadow-[0_0_30px_rgba(16,185,129,0.15)]"
-            >
-              {/* Magic Dust on Card */}
-              <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                <MagicDust />
-              </div>
+  layoutId={`card-${event.id}`}
+  key={event.id}
+  onClick={() => setSelectedId(event.id)}
+  initial={{ opacity: 0, y: 20 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  viewport={{ once: true }}
+  className="group relative cursor-pointer"
+>
+  {/* Glitch Gradient Border */}
+  <div className="absolute -inset-0.5 bg-gradient-to-r from-oz-emerald via-teal-500 to-oz-gold opacity-20 group-hover:opacity-100 transition-opacity duration-500 blur-sm rounded-2xl" />
 
-              <div className="flex justify-between  items-start mb-8 relative z-10">
-                <div className="p-3 bg-white/5 rounded-2xl text-oz-emerald group-hover:scale-110 transition-transform duration-300">
-                  <event.icon size={28} />
-                </div>
-                <span className="px-3 py-1 rounded-full border border-white/10 text-[10px] uppercase tracking-widest text-gray-400">
-                  {event.category}
-                </span>
-              </div>
+  {/* Card Body */}
+  <div className="relative h-full bg-black/90 backdrop-blur-xl border border-white/10 rounded-2xl p-8 overflow-hidden flex flex-col">
 
-              <motion.h3 
-                layoutId={`title-${event.id}`}
-                className="text-2xl font-bold text-white mb-2 font-orbitron group-hover:text-oz-gold transition-colors"
-              >
-                {event.title}
-              </motion.h3>
-              
-              <p className="text-gray-400 text-sm line-clamp-2 mb-6">
-                {event.shortDesc}
-              </p>
+    {/* Grid Pattern */}
+    <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10" />
 
-              <div className="flex items-center gap-2 text-sm font-bold text-oz-emerald">
-                View Details <ArrowUpRight size={16} />
-              </div>
-            </motion.div>
+    {/* Glitch Overlay */}
+    <div className="absolute inset-0 bg-oz-emerald/5 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-in-out" />
+
+    {/* Magic Dust */}
+    <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+      <MagicDust />
+    </div>
+
+    <div className="relative z-10 flex flex-col h-full">
+      <div className="flex justify-between items-start mb-4">
+        <span className="text-xs font-mono text-oz-gold border border-oz-gold/30 px-2 py-1 rounded bg-oz-gold/5 uppercase tracking-widest">
+          {event.category}
+        </span>
+        <span className="text-gray-600 font-mono text-xs">
+          {String(event.id).padStart(2, "0")}
+        </span>
+      </div>
+
+      <motion.h3
+        layoutId={`title-${event.id}`}
+        className="text-2xl font-bold text-white mb-3 font-orbitron group-hover:text-oz-emerald transition-colors"
+      >
+        {event.title}
+      </motion.h3>
+
+      <p className="text-gray-400 text-sm leading-relaxed mb-6 flex-grow">
+        {event.shortDesc}
+      </p>
+
+      <button className="w-full py-3 rounded-lg border border-white/20 text-white font-medium text-sm group-hover:bg-oz-emerald group-hover:text-amber-100 group-hover:border-cyan-200 transition-all duration-300 shadow-lg">
+        EXPLORE MODULE →
+      </button>
+    </div>
+  </div>
+</motion.div>
+
           ))}
         </div>
 
@@ -226,3 +251,4 @@ export const EventsGrid = () => {
     </section>
   );
 };
+
