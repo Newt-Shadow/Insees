@@ -100,7 +100,7 @@ return (
     animate={{ opacity: 1, scale: 1 }}
     exit={{ opacity: 0, scale: 0.9 }}
     transition={{ duration: 0.3 }}
-    className="group relative w-full h-full min-h-[400px]"
+    className="group relative w-full h-full min-h-[320px] sm:min-h-[360px] lg:min-h-[400px]"
   >
     <TiltCard>
       {/* Holographic Border Glow */}
@@ -124,11 +124,14 @@ return (
         </div>
 
         {/* Image Container with Ring */}
-        <div className="relative w-40 h-40 mb-6 mt-4 shrink-0">
+        <div className="relative w-28 h-28 sm:w-32 sm:h-32 lg:w-40 lg:h-40 mb-4 sm:mb-6 mt-10 sm:mt-6 lg:mt-4 shrink-0">
+
+
           <div className="absolute inset-0 rounded-full border border-white/10" />
           {/* Rotating Rings */}
           <div className={`absolute inset-[-4px] border-2 border-dashed rounded-full animate-spin-slow ${rank === "CORE" ? "border-oz-emerald/40" : "border-oz-gold/40"}`} />
-          <div className="absolute inset-[-12px] border border-white/5 rounded-full animate-reverse-spin opacity-50" />
+          <div className="absolute inset-[-6px] sm:inset-[-10px] lg:inset-[-12px] border border-white/5 rounded-full animate-reverse-spin opacity-50" />
+
           
           <div className="w-full h-full rounded-full overflow-hidden relative z-10 bg-zinc-900">
              <Image 
@@ -143,7 +146,7 @@ return (
 
         {/* Text Content */}
         <div className="text-center z-10 w-full flex-grow flex flex-col">
-          <h3 className="text-2xl font-bold font-orbitron text-white mb-1 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-gray-400 transition-all">
+          <h3 className="text-xl sm:text-2xl font-bold font-orbitron text-white mb-1 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-gray-400 transition-all">
             {member.name}
           </h3>
           <div className="h-px w-12 bg-white/20 mx-auto my-3 group-hover:w-24 transition-all duration-300" />
@@ -185,7 +188,7 @@ return (
 
 // --- SKELETON LOADER ---
 const TeamSkeleton = () => (
-  <div className="w-full h-[400px] rounded-xl border border-white/10 bg-zinc-900/50 relative overflow-hidden">
+  <div className="w-full min-h-[320px] sm:min-h-[360px] lg:min-h-[400px] rounded-xl border border-white/10 bg-zinc-900/50 relative overflow-hidden">
     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent animate-[shimmer_2s_infinite]" />
     <div className="p-6 flex flex-col items-center h-full">
       <div className="w-40 h-40 rounded-full bg-white/5 mb-6 animate-pulse" />
@@ -326,7 +329,7 @@ export default function TeamPage() {
             <span className="font-mono text-xs text-gray-500 mb-2">{"// LEVEL 1 CLEARANCE"}</span>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
             <AnimatePresence mode="popLayout">
               {isLoading ? (
                 Array.from({ length: 4 }).map((_, i) => <TeamSkeleton key={i} />)
@@ -348,7 +351,7 @@ export default function TeamPage() {
             <span className="font-mono text-xs text-gray-500 mb-2">{"// LEVEL 2 CLEARANCE"}</span>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
             <AnimatePresence mode="popLayout">
               {isLoading ? (
                 Array.from({ length: 8 }).map((_, i) => <TeamSkeleton key={i} />)
