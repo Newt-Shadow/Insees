@@ -32,7 +32,7 @@ export const metadata: Metadata = {
   },
 
   title: {
-    default: "INSEES | Premier Tech Society of NIT Silchar",
+    default: "INSEES ",
     template: "%s | INSEES",
   },
 
