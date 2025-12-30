@@ -83,7 +83,7 @@ export const metadata: Metadata = {
   },
 
   verification: {
-    google: "YOUR_GOOGLE_SEARCH_CONSOLE_VERIFICATION_CODE",
+    google: "mpuppQm7zAOHGx4sgFzB1lkF5TSDhY-uIj71PpXsCdM",
   },
 
   authors: [{ name: "INSEES Tech Team" }],
