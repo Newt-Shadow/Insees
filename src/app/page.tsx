@@ -122,7 +122,7 @@ export default async function Home() {
 
       {/* Sections */}
       <AboutSection />
-      <EventsTimeline events={eventsData} />
+      <EventsTimeline events={eventsData as any} />
       <div id="contact" className="bg-black/70 py-2 mt-1">
         <ContactSection />
       </div>
