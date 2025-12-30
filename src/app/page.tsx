@@ -5,64 +5,24 @@ import { ScrollHint } from "../components/ScrollHint";
 import ContactSection from "../components/ContactSection";
 import { EventsTimeline } from "../components/EventsTimeline";
 import { AboutSection } from "../components/AboutSection";
-import MeetDevelopersButton from "@/components/MeetDevelopersButton";
-import CelebrationWrapper from "@/components/CelebrationWrapper";
 import eventsData from "./../../public/data/events.json"; // ✅ build-time fallback
 import ScrollToTop from "@/components/ScrollToTop";
 
 // ✅ Try API first, fallback to build-time JSON
 async function getEvents() {
   try {
-    const res = await fetch("/api/events", {
-      // For SSR on every request:
-      // cache: "no-store"
-
-      // For SSG (build-time static):
-      next: { revalidate: 60 }, // revalidate every 60s
+    const res = await fetch("https://insees.tech/api/events", { // Use absolute URL if possible, or just /api/events
+      next: { revalidate: 60 }, 
     });
 
     if (!res.ok) throw new Error("API not ready");
     return res.json();
   } catch {
-    // ✅ fallback to build-time local JSON
     return eventsData;
   }
 }
 
 export default async function Home() {
-  // Add this script inside your Home component's return statement
-  <script
-    type="application/ld+json"
-    dangerouslySetInnerHTML={{
-      __html: JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "StudentOrganization", // Specific type for societies
-        "name": "INSEES",
-        "alternateName": "Instrumentation and Electronics Engineering Society",
-        "url": "https://insees.tech",
-        "logo": "https://insees.tech/favicon.ico",
-        "foundingDate": "2000", // Update with actual date
-        "address": {
-          "@type": "PostalAddress",
-          "streetAddress": "NIT Silchar, Cachar",
-          "addressLocality": "Silchar",
-          "addressRegion": "Assam",
-          "postalCode": "788010",
-          "addressCountry": "IN"
-        },
-        "sameAs": [
-          "https://www.linkedin.com/company/insees-nits",
-          "https://www.instagram.com/insees_nits",
-          "https://www.facebook.com/insees"
-        ],
-        "contactPoint": {
-          "@type": "ContactPoint",
-          "email": "inseessociety.nits@gmail.com",
-          "contactType": "sponsorship inquiries"
-        }
-      }),
-    }}
-  />
   const events = await getEvents();
 
   const glowColors = {
@@ -72,11 +32,45 @@ export default async function Home() {
     orange: "shadow-[0_0_20px_6px_rgba(249,115,22,0.6)]",
   };
 
+  // Structured Data (JSON-LD)
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "StudentOrganization",
+    "name": "INSEES",
+    "alternateName": "Instrumentation and Electronics Engineering Society",
+    "url": "https://insees.tech",
+    "logo": "https://insees.tech/favicon.ico",
+    "foundingDate": "2000", 
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "NIT Silchar, Cachar",
+      "addressLocality": "Silchar",
+      "addressRegion": "Assam",
+      "postalCode": "788010",
+      "addressCountry": "IN"
+    },
+    "sameAs": [
+      "https://www.linkedin.com/company/insees-nits",
+      "https://www.instagram.com/insees_nits",
+      "https://www.facebook.com/insees"
+    ],
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "email": "inseessociety.nits@gmail.com",
+      "contactType": "sponsorship inquiries"
+    }
+  };
+
   return (
     <>
-      <Navbar />
-      {/* <CelebrationWrapper /> */}
+      {/* ✅ THIS MUST BE INSIDE THE RETURN */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
 
+      <Navbar />
+      
       {/* Hero Section */}
       <main className="relative min-h-screen flex flex-col items-center justify-center text-white font-[Poppins,sans-serif] overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(1200px_600px_at_50%_40%,rgba(255,255,255,.06),transparent)]" />
@@ -128,12 +122,10 @@ export default async function Home() {
 
       {/* Sections */}
       <AboutSection />
-      <EventsTimeline events={events} /> {/* ✅ Events with fallback */}
+      <EventsTimeline events={events} />
       <div id="contact" className="bg-black/70 py-2 mt-1">
         <ContactSection />
       </div>
-
-
     </>
   );
 }
