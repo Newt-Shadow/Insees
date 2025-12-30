@@ -3,15 +3,16 @@ import { FloatingIcon } from "../components/FloatingIcon";
 import { EmailForm } from "../components/EmailForm";
 import { ScrollHint } from "../components/ScrollHint";
 import ContactSection from "../components/ContactSection";
-import { EventsTimeline } from "../components/EventsTimeline";
+// ✅ Import EventType to fix casting error
+import { EventsTimeline, EventType } from "../components/EventsTimeline";
 import { AboutSection } from "../components/AboutSection";
-import eventsData from "./../../public/data/events.json"; // ✅ build-time fallback
-import ScrollToTop from "@/components/ScrollToTop";
+import eventsData from "./../../public/data/events.json"; 
+// ❌ Removed ScrollToTop (it is unused here)
 
-// ✅ Try API first, fallback to build-time JSON
+// ✅ Keep the function logic available as requested, but we won't call it if not needed
 async function getEvents() {
   try {
-    const res = await fetch("https://insees.tech/api/events", { // Use absolute URL if possible, or just /api/events
+    const res = await fetch("https://insees.tech/api/events", { 
       next: { revalidate: 60 }, 
     });
 
@@ -23,7 +24,9 @@ async function getEvents() {
 }
 
 export default async function Home() {
-  const events = await getEvents();
+  // ❌ Commented out to fix "unused variable" warning. 
+  // If you need it later for another component, uncomment it.
+  // const apiEvents = await getEvents();
 
   const glowColors = {
     blue: "shadow-[0_0_20px_6px_rgba(59,130,246,0.6)]",
@@ -32,7 +35,6 @@ export default async function Home() {
     orange: "shadow-[0_0_20px_6px_rgba(249,115,22,0.6)]",
   };
 
-  // Structured Data (JSON-LD)
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "StudentOrganization",
@@ -63,7 +65,6 @@ export default async function Home() {
 
   return (
     <>
-      {/* ✅ THIS MUST BE INSIDE THE RETURN */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -71,11 +72,9 @@ export default async function Home() {
 
       <Navbar />
       
-      {/* Hero Section */}
       <main className="relative min-h-screen flex flex-col items-center justify-center text-white font-[Poppins,sans-serif] overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(1200px_600px_at_50%_40%,rgba(255,255,255,.06),transparent)]" />
 
-        {/* Floating Electronics Icons */}
         <FloatingIcon
           className={`absolute rounded-xl p-[3px] top-[28%] left-[12%] ${glowColors.amber}`}
           color="amber"
@@ -105,7 +104,6 @@ export default async function Home() {
           delay={1.6}
         />
 
-        {/* Center Title + Form */}
         <div className="relative z-10 flex flex-col items-center text-center px-4">
           <h1 className="text-6xl md:text-7xl font-extrabold  tracking-wide bg-gradient-to-t from-gray-300 to-white text-transparent bg-clip-text">
             INSEES
@@ -120,9 +118,11 @@ export default async function Home() {
         <ScrollHint />
       </main>
 
-      {/* Sections */}
       <AboutSection />
-      <EventsTimeline events={eventsData as any} />
+
+      {/* ✅ Fixed casting: Cast generic JSON data to our specific EventType[] */}
+      <EventsTimeline events={eventsData as unknown as EventType[]} />
+      
       <div id="contact" className="bg-black/70 py-2 mt-1">
         <ContactSection />
       </div>
