@@ -3,7 +3,8 @@ import { useRef } from "react";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { FaRocket, FaGraduationCap, FaUsers, FaRegCalendarAlt, FaMicrochip } from "react-icons/fa";
 
-interface EventType {
+// ✅ ADDED "export" HERE
+export interface EventType {
   id: number;
   title: string;
   description: string;
