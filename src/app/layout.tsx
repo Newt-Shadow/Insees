@@ -23,10 +23,73 @@ const orbitron = Orbitron({
   display: "swap" 
 });
 
+
 export const metadata: Metadata = {
-  title: "INSEES — NIT Silchar",
-  description: "Instrumentation and Electronics Engineering Society, NIT Silchar",
+  metadataBase: new URL("https://insees.tech"),
+
+  alternates: {
+    canonical: "/",
+  },
+
+  title: {
+    default: "INSEES | Premier Tech Society of NIT Silchar",
+    template: "%s | INSEES",
+  },
+
+  description:
+    "The Instrumentation and Electronics Engineering Society (INSEES) at NIT Silchar. Driving innovation in robotics, IoT, embedded systems, and automation.",
+
+  keywords: [
+    "INSEES",
+    "NIT Silchar",
+    "Instrumentation Engineering",
+    "Electronics Society",
+    "Robotics Club India",
+    "Embedded Systems NIT",
+    "IoT Projects",
+    "Student Tech Society",
+    "Technical Club NIT",
+  ],
+
+  openGraph: {
+    title: "INSEES - Innovating the Future",
+    description:
+      "Premier technical society of NIT Silchar. Robotics, electronics, IoT, and innovation.",
+    url: "https://insees.tech",
+    siteName: "INSEES",
+    locale: "en_US",
+    type: "website",
+    
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "INSEES - NIT Silchar",
+    description:
+      "Instrumentation and Electronics Engineering Society | Innovating the future.",
+    
+  },
+
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
+
+  verification: {
+    google: "YOUR_GOOGLE_SEARCH_CONSOLE_VERIFICATION_CODE",
+  },
+
+  authors: [{ name: "INSEES Tech Team" }],
+  category: "technology",
 };
+
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

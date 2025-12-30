@@ -5,8 +5,9 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: '*',
       allow: '/',
-      disallow: ['/admin', '/api/'], // Hide admin and api from google
+      disallow: ['/admin', '/api/', '/_next/'],
     },
-    sitemap: 'https://insees.vercel.app/sitemap.xml',
+    // Point to the correct domain
+    sitemap: 'https://insees.tech/sitemap.xml',
   };
 }

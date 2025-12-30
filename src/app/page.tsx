@@ -2,7 +2,7 @@ import { Navbar } from "../components/navbar";
 import { FloatingIcon } from "../components/FloatingIcon";
 import { EmailForm } from "../components/EmailForm";
 import { ScrollHint } from "../components/ScrollHint";
-import ContactSection  from "../components/ContactSection";
+import ContactSection from "../components/ContactSection";
 import { EventsTimeline } from "../components/EventsTimeline";
 import { AboutSection } from "../components/AboutSection";
 import MeetDevelopersButton from "@/components/MeetDevelopersButton";
@@ -30,6 +30,39 @@ async function getEvents() {
 }
 
 export default async function Home() {
+  // Add this script inside your Home component's return statement
+  <script
+    type="application/ld+json"
+    dangerouslySetInnerHTML={{
+      __html: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "StudentOrganization", // Specific type for societies
+        "name": "INSEES",
+        "alternateName": "Instrumentation and Electronics Engineering Society",
+        "url": "https://insees.tech",
+        "logo": "https://insees.tech/favicon.ico",
+        "foundingDate": "2000", // Update with actual date
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "NIT Silchar, Cachar",
+          "addressLocality": "Silchar",
+          "addressRegion": "Assam",
+          "postalCode": "788010",
+          "addressCountry": "IN"
+        },
+        "sameAs": [
+          "https://www.linkedin.com/company/insees-nits",
+          "https://www.instagram.com/insees_nits",
+          "https://www.facebook.com/insees"
+        ],
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "email": "inseessociety.nits@gmail.com",
+          "contactType": "sponsorship inquiries"
+        }
+      }),
+    }}
+  />
   const events = await getEvents();
 
   const glowColors = {
@@ -96,11 +129,11 @@ export default async function Home() {
       {/* Sections */}
       <AboutSection />
       <EventsTimeline events={events} /> {/* ✅ Events with fallback */}
-      <div id="contact"  className="bg-black/70 py-2 mt-1">
+      <div id="contact" className="bg-black/70 py-2 mt-1">
         <ContactSection />
       </div>
-   
-      
+
+
     </>
   );
 }
