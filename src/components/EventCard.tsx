@@ -18,6 +18,12 @@ export interface EventProps {
   status: EventStatus;
   image: string;
   location: string;
+  // ✅ ADDED THESE OPTIONAL FIELDS TO FIX THE ERROR
+  fullDescription?: string;
+  sponsor?: string;
+  registrationLink?: string;
+  registrationEnabled?: boolean;
+  registrationOpen?: string;
 }
 
 const StatusBadge = ({ status }: { status: EventStatus }) => {
