@@ -1,4 +1,4 @@
-name: "CodeQL Advanced (Enterprise – All in One)"
+name: "CodeQL Advanced (Enterprise Stable)"
 
 on:
   push:
@@ -6,7 +6,6 @@ on:
   pull_request:
     branches: [ "main" ]
   schedule:
-    # Weekly deep scan (Sunday 06:33 UTC)
     - cron: "33 6 * * 0"
 
 permissions:
@@ -23,7 +22,7 @@ jobs:
 
     steps:
       # ----------------------------------------------------
-      # 1️⃣ Checkout (full history = better analysis)
+      # 1️⃣ Checkout
       # ----------------------------------------------------
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -31,7 +30,7 @@ jobs:
           fetch-depth: 0
 
       # ----------------------------------------------------
-      # 2️⃣ Setup Node.js (Next.js / Prisma / NextAuth)
+      # 2️⃣ Node.js setup
       # ----------------------------------------------------
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -40,28 +39,23 @@ jobs:
           cache: npm
 
       # ----------------------------------------------------
-      # 3️⃣ Install dependencies (no build required)
+      # 3️⃣ Install dependencies (no build)
       # ----------------------------------------------------
       - name: Install dependencies
         run: npm ci
 
       # ----------------------------------------------------
-      # 4️⃣ Initialize CodeQL (VERY ADVANCED MODE)
+      # 4️⃣ Initialize CodeQL (STABLE MODE)
       # ----------------------------------------------------
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v4
         with:
           languages: javascript-typescript
           build-mode: none
-          queries: |
-            security-extended
-            security-and-quality
 
-          # ⛔ IMPORTANT:
-          # No ** or glob aliases → avoids your previous crash
+          # ⚠️ NO security-extended here
+          # ⚠️ NO inline glob patterns
           config: |
-            name: "Enterprise Inline CodeQL Config"
-
             paths:
               - src
               - app
@@ -81,10 +75,13 @@ jobs:
               - tests
 
       # ----------------------------------------------------
-      # 5️⃣ Perform CodeQL Analysis
+      # 5️⃣ Perform CodeQL Analysis (ADVANCED)
       # ----------------------------------------------------
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v4
         with:
           upload: true
           category: "security-javascript-typescript"
+          queries: |
+            security-extended
+            security-and-quality
