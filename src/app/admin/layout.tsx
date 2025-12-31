@@ -32,7 +32,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     { name: "Developers", href: "/admin/developers", icon: <FaCode /> },
   ];
 
-  return role === "SUPER_ADMIN" && (
+  return (role === "SUPER_ADMIN" || role === "ADMIN")&&  (
     <div className="min-h-screen flex bg-black text-white font-sans selection:bg-green-500/30">
       {/* SIDEBAR */}
       <aside className="w-64 bg-zinc-900 border-r border-zinc-800 flex flex-col fixed h-full z-50">
