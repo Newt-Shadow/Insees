@@ -10,7 +10,7 @@ import { authOptions } from "@/lib/auth"
 async function logAction(action: string, details: string) {
   const session = await getServerSession(authOptions);
   if (session?.user) {
-   
+
 
     await prisma.auditLog.create({ data: { action, details, userId: session.user.id } });
   }
@@ -93,7 +93,7 @@ export async function updateMember(formData: FormData) {
   if (!session) throw new Error("Unauthorized");
 
   const id = formData.get("id") as string;
-  
+
   await prisma.teamMember.update({
     where: { id },
     data: {
@@ -114,12 +114,15 @@ export async function deleteMember(formData: FormData) {
   const session = await getServerSession(authOptions);
   if (!session) throw new Error("Unauthorized");
 
-  await prisma.teamMember.delete({ where: { id: formData.get("id") as string } });
+  const id = formData.get("id") as string;
+
+  await prisma.teamMember.delete({ where: { id } });
+
+  await logAction(
+    "DELETE_MEMBER",
+    `Deleted team member with ID: ${id}`
+  );
+
   revalidatePath("/admin/team");
   revalidatePath("/team");
-  await logAdminAction(
-    session.user.id, 
-    "DELETE_MEMBER", 
-    `Deleted team member with ID: ${memberId}`
-  );
 }
