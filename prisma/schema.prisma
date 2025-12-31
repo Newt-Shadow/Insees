@@ -36,108 +36,148 @@ enum MemberType {
   EXECUTIVE
 }
 
-// ----------------------------------------------------
-// Semesters -> Subjects -> Files
-// ----------------------------------------------------
-model Semester {
-  id       Int       @id @default(autoincrement())
-  title    String    @unique   // e.g. "1st Semester Study Material"
-  subjects Subject[]
+/// ... keep generator and datasource ...
+
+// --- ACCESS CONTROL ---
+enum Role {
+  SUPER_ADMIN
+  ADMIN
+  USER
 }
 
-model Subject {
-  id          Int       @id @default(autoincrement())
-  name        String
-  semesterId  Int
-  semester    Semester  @relation(fields: [semesterId], references: [id])
-
-  driveLink   String?   // ✅ Optional Google Drive link
-  files       File[]    // ✅ Files still allowed (optional)
-
-  @@unique([name, semesterId]) // ensures subject name is unique within a semester
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  role          Role      @default(USER) 
+  accounts      Account[]
+  sessions      Session[]
+  logs          AuditLog[] 
 }
 
-model File {
-  id        Int      @id @default(autoincrement())
-  name      String   // e.g. "Engineering Mathematics.pdf"
-  url       String   // e.g. Blob/Cloudinary/Vercel URL
-  subjectId Int
-  subject   Subject  @relation(fields: [subjectId], references: [id])
-
-  @@index([subjectId])
-}
-
-// ----------------------------------------------------
-// Gallery
-// ----------------------------------------------------
-model GalleryConfig {
-  id        Int       @id @default(autoincrement())
-  driveLink String    // Google Drive folder link
-  images    Gallery[]
-}
-
-model Gallery {
-  id              Int           @id @default(autoincrement())
-  src             String        // Blob URL (public link)
-  key             String        // Blob key (e.g. "gallery/12345-file.png")
-  category        String
-  galleryConfigId Int
-  galleryConfig   GalleryConfig @relation(fields: [galleryConfigId], references: [id])
-
-  @@index([galleryConfigId])
-}
-
-// ----------------------------------------------------
-// Events
-
-
-// ----------------------------------------------------
-// Contact Messages
-// ----------------------------------------------------
-model ContactMessage {
-  id        Int      @id @default(autoincrement())
-  email     String
-  message   String
+// --- AUDIT LOGS ---
+model AuditLog {
+  id        String   @id @default(cuid())
+  action    String   
+  details   String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
 }
 
-// ----------------------------------------------------
-// Newsletter Emails (from EmailForm)
-// ----------------------------------------------------
-model NewsletterEmail {
-  id        Int      @id @default(autoincrement())
+// --- CRM (MESSAGES & SUBSCRIBERS) ---
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  message   String
+  status    String   @default("UNREAD") // UNREAD, READ
+  createdAt DateTime @default(now())
+}
+
+model Subscriber {
+  id        String   @id @default(cuid())
   email     String   @unique
   createdAt DateTime @default(now())
 }
 
-// ... (Existing models for Year, Member, Semester, Subject, File, GalleryConfig, Gallery)
+// --- RESOURCES (DYNAMIC NOTES) ---
+model Semester {
+  id        String    @id @default(cuid())
+  title     String    // e.g. "3rd Semester"
+  order     Int       @default(0)
+  subjects  Subject[]
+}
 
-// ----------------------------------------------------
-// Events (Revised)
-// ... existing models (Year, Member, etc.)
+model Subject {
+  id         String   @id @default(cuid())
+  name       String   
+  driveLink  String?
+  semesterId String
+  semester   Semester @relation(fields: [semesterId], references: [id], onDelete: Cascade)
+}
 
+// --- CONTENT MODELS ---
 model Event {
-  id               Int       @id @default(autoincrement())
-  title            String
-  description      String
-  fullDescription  String    // For the modal details
-  category         String    // "Technical", "Flagship", etc.
-  
-  // Date & Scheduling
-  date             DateTime  // Actual Event Date
-  year             String    // e.g., "2026"
-  registrationOpen DateTime? // Date/Time when registration link becomes active
-  
-  // Visuals & Links
-  image            String    // URL for the banner
-  location         String
-  sponsor          String?
-  registrationLink String?
-  
-  // Status
-  status           String    // "upcoming", "live", "completed"
-  
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
-  registrationEnabled Boolean @default(true)
+  id                  String   @id @default(cuid())
+  title               String
+  description         String
+  fullDescription     String?
+  category            String   @default("Technical")
+  date                String?  
+  year                String?
+  status              String   @default("upcoming")
+  location            String?
+  sponsor             String?
+  registrationLink    String?
+  registrationEnabled Boolean  @default(true)
+  registrationOpen    String? 
+  image               String?
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+}
+
+model TeamMember {
+  id        String   @id @default(cuid())
+  name      String
+  role      String
+  // ✅ NEW FIELDS FOR "ULTIMATE" CONTROL
+  session   String   @default("2024-25") 
+  category  String   @default("Executive") // Core, Executive, etc.
+  image     String?
+  linkedin  String?
+  github    String?
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+}
+
+model Developer {
+  id        String   @id @default(cuid())
+  name      String
+  role      String
+  image     String?
+  github    String?
+  linkedin  String?
+  createdAt DateTime @default(now())
+}
+
+// ... Keep Account, Session, VerificationToken models ...
+model Account {
+  id                 String  @id @default(cuid())
+  userId             String
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String? @db.Text
+  access_token       String? @db.Text
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String? @db.Text
+  session_state      String?
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+  @@unique([identifier, token])
+}
+
+model NewsletterEmail {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  createdAt DateTime @default(now())
 }

@@ -1,81 +1,125 @@
-import { NextResponse } from "next/server";
-import { prisma } from "../../../lib/prisma";
-import fs from "fs";
-import path from "path";
+import { NextResponse } from "next/server"
+import { prisma } from "@/lib/prisma"
 
-interface Member {
-  id?: number;
-  name: string;
-  por: string;
-  img: string;
-  socials: { instagram?: string; facebook?: string; linkedin?: string };
-  type: "CORE" | "EXECUTIVE";
+/* =====================================================
+   CANONICAL CORE ROLE ORDER
+===================================================== */
+const CORE_ROLE_ORDER = [
+  "president",
+  "mentor",
+  "vice president",
+  "general secretary",
+  "treasurer",
+  "cultural head",
+  "tech head",
+  "tech head - iot",
+  "tech head - ml",
+  "tech head - web",
+]
+
+/* =====================================================
+   ROLE ALIASES / FIXES (CRITICAL)
+===================================================== */
+const ROLE_ALIASES: Record<string, string> = {
+  "vice-president": "vice president",
+  "vicepresident": "vice president",
+
+  "technical head": "tech head",
+  "techincal head": "tech head", // misspelling
+  "technical head - iot": "tech head - iot",
+  "techincal head - iot": "tech head - iot",
+
+  "tech head iot": "tech head - iot",
+  "tech head ml": "tech head - ml",
+  "tech head web": "tech head - web",
 }
 
-type TeamData = Record<string, { core: Member[]; executive: Member[] }>;
+/* =====================================================
+   NORMALIZE + CANONICALIZE ROLE
+===================================================== */
+const normalize = (v = "") =>
+  v
+    .toLowerCase()
+    .replace(/[–—]/g, "-")
+    .replace(/\s+/g, " ")
+    .trim()
 
-function loadTeamJson(): TeamData {
-  const filePath = path.join(process.cwd(), "public/data/team.json");
-  const file = fs.readFileSync(filePath, "utf-8");
-  return JSON.parse(file);
-}
+const canonicalizeRole = (role: string) => {
+  let r = normalize(role)
 
-async function syncDbWithJson(teamJson: TeamData) {
-  for (const [yearLabel, { core, executive }] of Object.entries(teamJson)) {
-    let year = await prisma.year.findUnique({ where: { label: yearLabel } });
-
-    if (!year) {
-      year = await prisma.year.create({ data: { label: yearLabel } });
-    }
-
-    const membersFromJson: Member[] = [
-      ...core.map((m) => ({ ...m, type: "CORE" as const })),
-      ...executive.map((m) => ({ ...m, type: "EXECUTIVE" as const })),
-    ];
-
-    for (const member of membersFromJson) {
-      const existing = await prisma.member.findFirst({
-        where: { name: member.name, yearId: year.id },
-      });
-
-      if (!existing) {
-        await prisma.member.create({
-          data: {
-            name: member.name,
-            por: member.por,
-            img: member.img,
-            socials: member.socials,
-            type: member.type,
-            yearId: year.id,
-          },
-        });
-      } else {
-        await prisma.member.update({
-          where: { id: existing.id },
-          data: {
-            por: member.por,
-            img: member.img,
-            socials: member.socials,
-            type: member.type,
-          },
-        });
-      }
+  // fix aliases / misspellings
+  for (const [bad, good] of Object.entries(ROLE_ALIASES)) {
+    if (r.includes(bad)) {
+      r = good
     }
   }
+
+  return r
 }
 
+/* =====================================================
+   RESOLVE PRIORITY (NOW FOOLPROOF)
+===================================================== */
+const getCorePriority = (role: string) => {
+  const r = canonicalizeRole(role)
+
+  for (let i = 0; i < CORE_ROLE_ORDER.length; i++) {
+    const key = CORE_ROLE_ORDER[i]
+    const regex = new RegExp(`^${key}(\\b|\\s|-|\\()`, "i")
+    if (regex.test(r)) return i
+  }
+
+  return 999
+}
+
+/* =====================================================
+   API HANDLER
+===================================================== */
 export async function GET() {
-  const teamJson = loadTeamJson();
-   console.log(teamJson);
+  try {
+    const members = await prisma.teamMember.findMany({
+      orderBy: { createdAt: "asc" },
+    })
 
+    const teamData: Record<string, any> = {}
 
-  // return response immediately
-  const response = NextResponse.json(teamJson);
+    for (const member of members) {
+      const session = member.session
 
-  // trigger DB sync in background (non-blocking)
-  syncDbWithJson(teamJson).catch((err) =>
-    console.error("DB sync failed:", err)
-  );
+      const isCore = getCorePriority(member.role) !== 999
+      const category = isCore ? "core" : normalize(member.category)
 
-  return response;
+      if (!teamData[session]) teamData[session] = {}
+      if (!teamData[session][category]) teamData[session][category] = []
+
+      teamData[session][category].push({
+        name: member.name,
+        por: member.role,
+        img: member.image,
+        socials: {
+          linkedin: member.linkedin,
+          github: member.github,
+        },
+        __priority: isCore ? getCorePriority(member.role) : 999,
+      })
+    }
+
+    /* =================================================
+       HARD SORT — PER YEAR
+    ================================================= */
+    Object.values(teamData).forEach((year: any) => {
+      if (Array.isArray(year.core)) {
+        year.core.sort((a: any, b: any) => a.__priority - b.__priority)
+        year.core.forEach((m: any) => delete m.__priority)
+      }
+    })
+
+    return NextResponse.json(teamData)
+  } catch (error) {
+    console.error(error)
+    return NextResponse.json(
+      { error: "Failed to fetch team" },
+      { status: 500 }
+    )
+  }
 }
