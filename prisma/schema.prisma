@@ -183,3 +183,21 @@ model NewsletterEmail {
   email     String   @unique
   createdAt DateTime @default(now())
 }
+
+
+model GalleryConfig {
+  id        Int       @id @default(autoincrement())
+  driveLink String    // Google Drive folder link
+  images    Gallery[]
+}
+
+model Gallery {
+  id              Int           @id @default(autoincrement())
+  src             String        // Blob URL (public link)
+  key             String        // Blob key (e.g. "gallery/12345-file.png")
+  category        String
+  galleryConfigId Int
+  galleryConfig   GalleryConfig @relation(fields: [galleryConfigId], references: [id])
+
+  @@index([galleryConfigId])
+}
