@@ -10,7 +10,7 @@ import Image from "next/image";
 export interface Member {
   name: string;
   por: string;
-  img: string;
+  img?: string;
   socials: {
     instagram?: string;
     facebook?: string;
@@ -21,8 +21,8 @@ export interface Member {
 
 export interface TeamData {
   [year: string]: {
-    core: Member[];
-    executive: Member[];
+    core?: Member[];
+    executive?: Member[];
   };
 }
 
