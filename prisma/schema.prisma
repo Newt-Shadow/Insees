@@ -28,6 +28,9 @@ model Member {
   yearId   Int
   year     Year      @relation(fields: [yearId], references: [id])
 
+  
+  @@unique([name, yearId, type])
+
   @@index([yearId])
 }
 

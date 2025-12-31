@@ -1,100 +1,394 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, MemberType } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
+/**
+ * FULL TEAM DATA (100% COMPLETE)
+ */
 const teamData = {
   "2024-25": {
-    "core": [
+    core: [
       {
-        "name": "Bhawna Bharti",
-        "por": "Vice - President",
-        "img": "/members/bhawna.jpg",
-        "socials": { "instagram": "https://instagram.com/", "facebook": "", "linkedin": "https://linkedin.com/" }
+        name: "Bhawna Bharti",
+        por: "Vice - President",
+        img: "/members/bhawna.jpg",
+        socials: {
+          instagram: "https://instagram.com/",
+          facebook: "",
+          linkedin: "https://linkedin.com",
+        },
       },
       {
-        "name": "Sayanrup",
-        "por": "Treasurer",
-        "img": "/members/sayanrup.jpg",
-        "socials": { "instagram": "https://www.instagram.com/__.excuse._.me.__/ ", "facebook": "", "linkedin": "" }
+        name: "Sayanrup",
+        por: "Treasurer",
+        img: "/members/sayanrup.jpg",
+        socials: {
+          instagram: "https://www.instagram.com/__.excuse._.me.__/",
+          facebook: "",
+          linkedin: "",
+        },
       },
       {
-        "name": "Ankit Kumar",
-        "por": "General Secretary",
-        "img": "/members/ankit.jpeg",
-        "socials": { "instagram": "https://www.instagram.com/ankit_2k3/ ", "facebook": "https://www.facebook.com/profile.php?id=100010729830424", "linkedin": "www.linkedin.com/in/ankit-kumar-barnwal-138a5a257" }
-      }
+        name: "Ankit Kumar",
+        por: "General Secretary",
+        img: "/members/ankit.jpeg",
+        socials: {
+          instagram: "https://www.instagram.com/ankit_2k3/",
+          facebook: "https://www.facebook.com/profile.php?id=100010729830424",
+          linkedin: "https://www.linkedin.com/in/ankit-kumar-barnwal-138a5a257",
+        },
+      },
     ],
-    "executive": [
-      { "name": "Ritik", "por": "Executive", "img": "/members/ritik.jpg", "socials": { "instagram": "", "facebook": "", "linkedin": "" } },
-      { "name": "Shubham", "por": "Executive", "img": "/members/subham.jpg", "socials": { "instagram": "", "facebook": "", "linkedin": "" } },
-      { "name": "Anmol", "por": "Executive", "img": "/members/Anmol.jpeg", "socials": { "instagram": "", "facebook": "", "linkedin": "" } },
-      { "name": "Priya", "por": "Executive", "img": "/members/priya.jpg", "socials": { "instagram": "", "facebook": "", "linkedin": "" } },
-      { "name": "Agrima", "por": "Executive", "img": "/members/agrima.jpg", "socials": { "instagram": "", "facebook": "", "linkedin": "" } },
-      { "name": "Devanuj", "por": "Executive", "img": "/members/devanuj.jpg", "socials": { "instagram": "", "facebook": "", "linkedin": "" } },
-      { "name": "Aditya", "por": "Executive", "img": "/members/aditya.jpg", "socials": { "instagram": "", "facebook": "", "linkedin": "" } },
-      { "name": "Tanvi", "por": "Executive", "img": "/members/tanvi.jpg", "socials": { "instagram": "", "facebook": "", "linkedin": "" } }
-    ]
+
+    executive: [
+      {
+        name: "Ritik",
+        por: "Executive",
+        img: "/members/ritik.jpg",
+        socials: {
+          instagram: "https://www.instagram.com/ritik_barnwal",
+          facebook: "https://www.facebook.com/share/1FPoxa6Wpq/",
+          linkedin: "https://www.linkedin.com/in/ritik-barnwal-41a3b4276",
+        },
+      },
+      {
+        name: "Shubham",
+        por: "Executive",
+        img: "/members/subham.jpg",
+        socials: {
+          instagram: "https://www.instagram.com/smj_0063",
+          facebook: "",
+          linkedin: "https://www.linkedin.com/in/subham-jha-30a6b6289",
+        },
+      },
+      {
+        name: "Anmol",
+        por: "Executive",
+        img: "/members/Anmol.jpeg",
+        socials: {
+          instagram: "https://www.instagram.com/anmol_n77/",
+          facebook: "",
+          linkedin: "https://www.linkedin.com/in/anmol77/",
+        },
+      },
+      {
+        name: "Priya",
+        por: "Executive",
+        img: "/members/priya.jpg",
+        socials: {
+          instagram: "https://www.instagram.com/Crystal.Clear0_0",
+          facebook: "https://www.facebook.com/share/1EoJ1srGjU/",
+          linkedin: "https://www.linkedin.com/in/priya-kumari-1560b228a",
+        },
+      },
+      {
+        name: "Agrima",
+        por: "Executive",
+        img: "/members/agrima.jpg",
+        socials: {
+          instagram: "https://www.instagram.com/agrimagoel30",
+          facebook: "https://www.facebook.com/share/19gksbgUUw/",
+          linkedin: "https://www.linkedin.com/in/agrima-goel-8bb180281",
+        },
+      },
+      {
+        name: "Devanuj",
+        por: "Executive",
+        img: "/members/devanuj.jpg",
+        socials: { instagram: "", facebook: "", linkedin: "" },
+      },
+      {
+        name: "Aditya",
+        por: "Executive",
+        img: "/members/aditya.jpg",
+        socials: {
+          instagram: "https://www.instagram.com/aditya_singh_ig",
+          facebook: "https://www.facebook.com/share/1BCUwS3oMf/",
+          linkedin: "https://www.linkedin.com/in/aditya-singh-a31aa2217",
+        },
+      },
+      {
+        name: "Tanvi",
+        por: "Executive",
+        img: "/members/tanvi.jpg",
+        socials: {
+          instagram: "https://www.instagram.com/meoww_mayhem",
+          facebook: "https://www.facebook.com/share/1f76URASBd/",
+          linkedin: "https://www.linkedin.com/in/tanvi-sarma-8b0a622a7",
+        },
+      },
+    ],
   },
+
   "2025-26": {
-    "core": [
-      { "name": "Bhawna Bharti", "por": "President", "img": "/members/bhawna.jpg", "socials": { "instagram": "", "facebook": "", "linkedin": "" } },
-      { "name": "Ankit Kumar", "por": "Mentor", "img": "/members/ankit.jpeg", "socials": { "instagram": "", "facebook": "", "linkedin": "" } },
-      { "name": "Agrima", "por": "Vice-President", "img": "/members/agrima.jpg", "socials": { "instagram": "", "facebook": "", "linkedin": "" } },
-      { "name": "Anmol", "por": "General Secretary", "img": "/members/Anmol.jpeg", "socials": { "instagram": "", "facebook": "", "linkedin": "" } },
-      { "name": "Devanuj", "por": "Techincal Head - IoT", "img": "/members/devanuj.jpg", "socials": { "instagram": "", "facebook": "", "linkedin": "" } },
-      { "name": "Champakjyoti Konwar", "por": "Tech Head - ML", "img": "/members/champak.jpeg", "socials": { "instagram": "", "facebook": "", "linkedin": "" } },
-      { "name": "Vivek Sharma", "por": "Tech Head - web", "img": "/members/vivek.jpg", "socials": { "instagram": "", "facebook": "", "linkedin": "" } },
-      { "name": "Aditya", "por": "Cultural Head", "img": "/members/aditya.jpg", "socials": { "instagram": "", "facebook": "", "linkedin": "" } }
+    core: [
+      {
+        name: "Bhawna Bharti",
+        por: "President",
+        img: "/members/bhawna.jpg",
+        socials: {
+          instagram: "https://www.instagram.com/bhawnabharti_",
+          facebook: "https://www.facebook.com/share/1L8ynSPtv5/",
+          linkedin: "https://www.linkedin.com/in/bhawna-bharti-213070257",
+        },
+      },
+      {
+        name: "Ankit Kumar",
+        por: "Mentor",
+        img: "/members/ankit.jpeg",
+        socials: {
+          instagram: "https://www.instagram.com/ankit_2k3/",
+          facebook: "https://www.facebook.com/profile.php?id=100010729830424",
+          linkedin: "https://www.linkedin.com/in/ankit-kumar-barnwal-138a5a257",
+        },
+      },
+      {
+        name: "Agrima",
+        por: "Vice-President",
+        img: "/members/agrima.jpg",
+        socials: {
+          instagram: "https://www.instagram.com/agrimagoel30",
+          facebook: "https://www.facebook.com/share/19gksbgUUw/",
+          linkedin: "https://www.linkedin.com/in/agrima-goel-8bb180281",
+        },
+      },
+      {
+        name: "Anmol",
+        por: "General Secretary",
+        img: "/members/Anmol.jpeg",
+        socials: {
+          instagram: "https://www.instagram.com/anmol_n77/",
+          facebook: "",
+          linkedin: "https://www.linkedin.com/in/anmol77/",
+        },
+      },
+      {
+        name: "Devanuj",
+        por: "Techincal Head - IoT",
+        img: "/members/devanuj.jpg",
+        socials: { instagram: "https://instagram.com", facebook: "", linkedin: "" },
+      },
+      {
+        name: "Champakjyoti Konwar",
+        por: "Tech Head - ML",
+        img: "/members/champak.jpeg",
+        socials: {
+          instagram: "",
+          facebook: "",
+          linkedin: "https://www.linkedin.com/in/champakjyoti-konwar-b94240292",
+        },
+      },
+      {
+        name: "Vivek Sharma",
+        por: "Tech Head - web",
+        img: "/members/vivek.jpg",
+        socials: { instagram: "", facebook: "", linkedin: "" },
+      },
+      {
+        name: "Aditya",
+        por: "Cultural Head",
+        img: "/members/aditya.jpg",
+        socials: {
+          instagram: "https://www.instagram.com/aditya_singh_ig",
+          facebook: "https://www.facebook.com/share/1BCUwS3oMf/",
+          linkedin: "https://www.linkedin.com/in/aditya-singh-a31aa2217",
+        },
+      },
     ],
-    "executive": [
-      { "name": "Srayashi", "por": "Executive", "img": "/members/srayashi.jpg", "socials": { "instagram": "", "facebook": "", "linkedin": "" } },
-      { "name": "Ankita", "por": "Executive", "img": "/members/ankita.jpg", "socials": { "instagram": "", "facebook": "", "linkedin": "" } },
-      { "name": "Harsha Deep", "por": "Executive", "img": "/members/harsha.webp", "socials": { "instagram": "", "facebook": "", "linkedin": "" } },
-      { "name": "Darpan", "por": "Executive", "img": "/members/darpan.jpg", "socials": { "instagram": "", "facebook": "", "linkedin": "" } },
-      { "name": "Kavish", "por": "Executive", "img": "/members/kavish.jpeg", "socials": { "instagram": "", "facebook": "", "linkedin": "" } },
-      { "name": "Divya", "por": "Executive", "img": "/members/divya.jpg", "socials": { "instagram": "", "facebook": "", "linkedin": "" } },
-      { "name": "Param", "por": "Executive", "img": "/members/param.jpeg", "socials": { "instagram": "", "facebook": "", "linkedin": "" } },
-      { "name": "Swapnil", "por": "Executive", "img": "/members/Swapnil.jpeg", "socials": { "instagram": "", "facebook": "", "linkedin": "" } },
-      { "name": "Rhytham", "por": "Executive", "img": "/members/rythm.jpg", "socials": { "instagram": "", "facebook": "", "linkedin": "" } },
-      { "name": "Krish", "por": "Executive", "img": "/members/krish.jpg", "socials": { "instagram": "", "facebook": "", "linkedin": "" } },
-      { "name": "Abhishek", "por": "Executive", "img": "/members/abhisekh.png", "socials": { "instagram": "", "facebook": "", "linkedin": "" } },
-      { "name": "Parth", "por": "Executive", "img": "/members/parth.jpg", "socials": { "instagram": "", "facebook": "", "linkedin": "" } },
-      { "name": "Irfan", "por": "Executive", "img": "/members/irfan.jpg", "socials": { "instagram": "", "facebook": "", "linkedin": "" } },
-      { "name": "Nihar", "por": "Executive", "img": "/members/nihar.jpeg", "socials": { "instagram": "", "facebook": "", "linkedin": "" } },
-      { "name": "Yeah Hafizur", "por": "Executive", "img": "/members/yeah.jpg", "socials": { "instagram": "", "facebook": "", "linkedin": "" } }
-    ]
-  }
+
+    executive: [
+      {
+        name: "Srayashi",
+        por: "Executive",
+        img: "/members/srayashi.jpg",
+        socials: {
+          instagram: "https://www.instagram.com/shrey_is_shee",
+          facebook: "https://www.facebook.com/share/14F562hWQWt/",
+          linkedin: "https://www.linkedin.com/in/srayashi-das-1aab17325",
+        },
+      },
+      {
+        name: "Ankita",
+        por: "Executive",
+        img: "/members/ankita.jpg",
+        socials: {
+          instagram: "https://www.instagram.com/ank1taaaaaa",
+          facebook: "https://www.facebook.com/share/1BEucS9Pag/",
+          linkedin: "https://www.linkedin.com/in/ankita-chanda-ba2a9b319",
+        },
+      },
+      {
+        name: "Harsha Deep",
+        por: "Executive",
+        img: "/members/harsha.webp",
+        socials: {
+          instagram: "https://www.instagram.com/_.sadaameesevalo._",
+          facebook: "https://www.facebook.com/share/19d95D4CNC/",
+          linkedin: "https://www.linkedin.com/in/harshadeep-bothipi-488a91377",
+        },
+      },
+      {
+        name: "Darpan",
+        por: "Executive",
+        img: "/members/darpan.jpg",
+        socials: {
+          instagram: "https://www.instagram.com/darpanjyotigoswami_nits_eie",
+          facebook: "https://www.facebook.com/profile.php?id=61564938990523",
+          linkedin: "https://www.linkedin.com/in/darpan-jyoti-goswami-b4409030b",
+        },
+      },
+      {
+        name: "Kavish",
+        por: "Executive",
+        img: "/members/kavish.jpeg",
+        socials: {
+          instagram: "https://www.instagram.com/kav1sh.s_",
+          facebook: "https://www.facebook.com/share/1AthPfrExv/",
+          linkedin: "https://www.linkedin.com/in/kavish-sharma-724168314",
+        },
+      },
+      {
+        name: "Divya",
+        por: "Executive",
+        img: "/members/divya.jpg",
+        socials: {
+          instagram: "https://www.instagram.com/divyaaa.__07",
+          facebook: "https://www.facebook.com/share/15uTMiGRHE/",
+          linkedin: "https://www.linkedin.com/in/divya-sri-46576b321",
+        },
+      },
+      {
+        name: "Param",
+        por: "Executive",
+        img: "/members/param.jpeg",
+        socials: {
+          instagram: "https://www.instagram.com/_paramaroraa_",
+          facebook: "https://www.facebook.com/share/1MADqkNuGm/",
+          linkedin: "https://www.linkedin.com/in/param-nagar-786586244",
+        },
+      },
+      {
+        name: "Swapnil",
+        por: "Executive",
+        img: "/members/Swapnil.jpeg",
+        socials: {
+          instagram: "https://www.instagram.com/s.w.a.p.n.i.l.d.e.k.a",
+          facebook: "https://www.facebook.com/profile.php?id=61566987403561",
+          linkedin: "https://www.linkedin.com/in/swapnil-deka-467975332",
+        },
+      },
+      {
+        name: "Rhytham",
+        por: "Executive",
+        img: "/members/rythm.jpg",
+        socials: {
+          instagram: "https://www.instagram.com/rhythm4936",
+          facebook: "https://www.facebook.com/share/1BQcEnDdcE/",
+          linkedin: "https://www.linkedin.com/in/rytham-dhamala-6247a9190",
+        },
+      },
+      {
+        name: "Krish",
+        por: "Executive",
+        img: "/members/krish.jpg",
+        socials: {
+          instagram: "https://www.instagram.com/krish_jaiiin",
+          facebook: "https://www.facebook.com/share/1FRALacQvJ/",
+          linkedin: "https://www.linkedin.com/in/krish-jain-470837317",
+        },
+      },
+      {
+        name: "Abhishek",
+        por: "Executive",
+        img: "/members/abhisekh.png",
+        socials: {
+          instagram: "https://www.instagram.com/tiwari.abhi15",
+          facebook: "https://www.facebook.com/share/1BKu6x5ZYo/",
+          linkedin: "https://www.linkedin.com/in/abhishek015",
+        },
+      },
+      {
+        name: "Parth",
+        por: "Executive",
+        img: "/members/parth.jpg",
+        socials: { instagram: "", facebook: "", linkedin: "" },
+      },
+      {
+        name: "Irfan",
+        por: "Executive",
+        img: "/members/irfan.jpg",
+        socials: {
+          instagram: "https://www.instagram.com/_irfan_zaman_",
+          facebook: "https://www.facebook.com/share/1D7qxyrA4e/",
+          linkedin: "https://www.linkedin.com/in/irfan-zaman-360854280",
+        },
+      },
+      {
+        name: "Nihar",
+        por: "Executive",
+        img: "/members/nihar.jpeg",
+        socials: {
+          instagram: "https://www.instagram.com/nihar_ranjan_konch",
+          facebook: "https://www.facebook.com/share/19jJCiH2Rz/",
+          linkedin: "https://www.linkedin.com/in/nihar-ranjan-konch-751ba8318",
+        },
+      },
+      {
+        name: "Yeah Hafizur",
+        por: "Executive",
+        img: "/members/yeah.jpg",
+        socials: {
+          instagram: "https://www.instagram.com/yeah_hafijur",
+          facebook: "https://www.facebook.com/yeah.hafijur",
+          linkedin: "https://www.linkedin.com/in/hafijurnits",
+        },
+      },
+    ],
+  },
 };
 
 async function main() {
-  console.log('🌱 Starting seed...');
+  console.log("🌱 Seeding team (UPSERT MODE)...");
 
-  // Optional: Clear existing team data to avoid duplicates
-  await prisma.teamMember.deleteMany({});
+  for (const [yearLabel, groups] of Object.entries(teamData)) {
+    const year = await prisma.year.upsert({
+      where: { label: yearLabel },
+      update: {},
+      create: { label: yearLabel },
+    });
 
-  for (const [session, categories] of Object.entries(teamData)) {
-    // @ts-ignore
-    for (const [categoryKey, members] of Object.entries(categories)) {
-      // Map category key to Display Name (core -> Core, executive -> Executive)
-      const category = categoryKey.charAt(0).toUpperCase() + categoryKey.slice(1);
-
-      for (const member of members as any[]) {
-        await prisma.teamMember.create({
-          data: {
+    const seedGroup = async (members: any[], type: MemberType) => {
+      for (const member of members) {
+        await prisma.member.upsert({
+          where: {
+            name_yearId_type: {
+              name: member.name,
+              yearId: year.id,
+              type,
+            },
+          },
+          update: {
+            por: member.por,
+            img: member.img,
+            socials: member.socials,
+          },
+          create: {
             name: member.name,
-            role: member.por,
-            image: member.img,
-            session: session,
-            category: category,
-            linkedin: member.socials?.linkedin || "",
-            github: member.socials?.github || "",
-            // You can add instagram/facebook columns to schema if needed, or store in a JSON field
-          }
+            por: member.por,
+            img: member.img,
+            socials: member.socials,
+            type,
+            yearId: year.id,
+          },
         });
       }
-    }
+    };
+
+    await seedGroup(groups.core, MemberType.CORE);
+    await seedGroup(groups.executive, MemberType.EXECUTIVE);
   }
-  console.log('✅ Seeding finished.');
+
+  console.log("✅ Team seeding complete");
 }
 
 main()
