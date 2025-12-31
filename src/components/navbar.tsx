@@ -143,7 +143,7 @@ export const Navbar = () => {
               >
                 {/* Header */}
                 <div className="flex justify-between items-center p-6 border-b border-white/10">
-                  <span className="text-oz-emerald font-mono text-sm">// NAVIGATION</span>
+                  <span className="text-oz-emerald font-mono text-sm">{"// NAVIGATION"}</span>
                   <button
                     onClick={() => setIsOpen(false)}
                     className="p-2 bg-white/5 rounded-full text-gray-400 hover:text-white border border-white/10"
@@ -194,7 +194,7 @@ export const Navbar = () => {
                 {/* Footer */}
                 <div className="p-6 text-center border-t border-white/10 bg-zinc-950">
                   <p className="text-[10px] font-mono text-gray-500 mb-1">
-                    SYSTEM STATUS: <span className="text-green-500">ONLINE</span>
+                    {"SYSTEM STATUS:"} <span className="text-green-500">ONLINE</span>
                   </p>
                   <p className="text-[10px] text-gray-600">v2026.1.0</p>
                 </div>

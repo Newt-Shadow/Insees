@@ -34,6 +34,18 @@ const ROLE_ALIASES: Record<string, string> = {
   "tech head web": "tech head - web",
 }
 
+
+interface TeamMember {
+  name: string;
+  por: string;
+  img: string | null;
+  socials: { linkedin?: string; github?: string };
+  __priority?: number;
+}
+
+interface YearData {
+  [category: string]: TeamMember[];
+}   
 /* =====================================================
    NORMALIZE + CANONICALIZE ROLE
 ===================================================== */

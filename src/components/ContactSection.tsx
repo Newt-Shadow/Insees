@@ -83,7 +83,7 @@ export default function ContactSection() {
               </div>
               <div>
                 <h4 className="font-bold text-white">Electronic Mail</h4>
-                <p className="text-sm text-gray-500">insees@nits.ac.in</p>
+                <p className="text-sm text-gray-500">inseessociety.nits@gmail.com</p>
               </div>
             </div>
           </div>
