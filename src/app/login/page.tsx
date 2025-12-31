@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { FcGoogle } from "react-icons/fc";
 import { FaMicrochip, FaUserAstronaut, FaLock, FaBuilding, FaEnvelope, FaArrowLeft, FaBolt } from "react-icons/fa";
 import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 
 interface InputGroupProps extends React.InputHTMLAttributes<HTMLInputElement> {
   icon: React.ReactNode
@@ -34,22 +35,35 @@ export default function LoginPage() {
     e.preventDefault();
     setLoading(true);
 
-    const res = await signIn("credentials", {
-      redirect: false,
-      email: formData.email,
-      password: formData.password,
-    });
 
-    if (res?.error) {
-      alert("Access Denied: " + res.error);
+    try {
+      const res = await signIn("credentials", {
+        redirect: false,
+        email: formData.email,
+        password: formData.password,
+      });
+
+      if (res?.error) {
+        throw new Error(res.error);
+      }
+
+      router.push("/admin");
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "Login failed");
+    } finally {
       setLoading(false);
-    } else {
-      router.push("/admin"); // Redirect to admin dashboard
     }
   };
 
+
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!formData.email || !formData.password || !formData.name) {
+      alert("Missing required fields");
+      return;
+    }
+
+
     setLoading(true);
 
     try {
@@ -69,15 +83,11 @@ export default function LoginPage() {
         password: formData.password,
       });
       router.push("/admin");
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        alert(err.message)
-      } else {
-        alert("Something went wrong")
-      }
-      setLoading(false)
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "Signup failed");
+    } finally {
+      setLoading(false);
     }
-
   };
 
   const handleForgot = async (e: React.FormEvent) => {
@@ -88,27 +98,35 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center relative overflow-hidden font-[Poppins]">
+    <div className="min-h-screen bg-black flex items-center justify-center relative overflow-hidden font-[Poppins]" >
+      <Link
+        href="/"
+        className="absolute top-4 left-4 md:top-8 md:left-8 flex items-center gap-2 text-zinc-400 hover:text-white transition-colors group z-50"
+      >
+        <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+        <span className="text-sm font-medium">Back to Home</span>
+      </Link>
 
       {/* --- BACKGROUND FX --- */}
       {/* Radial Gradient (The Emerald Glow) */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(16,185,129,0.15)_0%,rgba(0,0,0,1)_70%)]" />
 
       {/* Circuit Grid */}
-      <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-20" />
+      < div className="absolute inset-0 bg-[url('/grid.svg')] opacity-20" />
 
       {/* Floating Particles */}
-      <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-emerald-500 rounded-full animate-ping" />
+      < div className="absolute top-1/4 left-1/4 w-2 h-2 bg-emerald-500 rounded-full animate-ping" />
       <div className="absolute bottom-1/3 right-1/4 w-1 h-1 bg-yellow-500 rounded-full animate-pulse" />
 
       {/* --- MAIN CARD --- */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
+        animate={{ opacity: 1, y: 0 }
+        }
         className="relative z-10 w-full max-w-md p-1"
       >
         {/* Holographic Border */}
-        <div className="absolute inset-0 bg-gradient-to-b from-emerald-500 via-teal-500 to-cyan-600 rounded-2xl blur opacity-40 animate-pulse" />
+        < div className="absolute inset-0 bg-gradient-to-b from-emerald-500 via-teal-500 to-cyan-600 rounded-2xl blur opacity-40 animate-pulse" />
 
         <div className="relative bg-zinc-900/90 backdrop-blur-xl border border-white/10 rounded-2xl p-8 shadow-2xl overflow-hidden">
 
@@ -156,8 +174,9 @@ export default function LoginPage() {
                 </div>
 
                 <button
+                  disabled={loading}
                   onClick={() => signIn("google", { callbackUrl: "/admin" })}
-                  className="w-full bg-white text-black font-bold py-3 rounded-lg flex items-center justify-center gap-3 hover:bg-gray-200 transition-all"
+                  className="w-full bg-white text-black hover:cursor-pointer font-bold py-3 rounded-lg flex items-center justify-center gap-3 hover:bg-gray-200 transition-all"
                 >
                   <FcGoogle size={20} /> Google Neural Link
                 </button>
@@ -224,8 +243,8 @@ export default function LoginPage() {
 
           </AnimatePresence>
         </div>
-      </motion.div>
-    </div>
+      </motion.div >
+    </div >
   );
 }
 
