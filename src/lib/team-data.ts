@@ -1,6 +1,29 @@
 // src/lib/team-data.ts
 import { prisma } from "@/lib/prisma";
 
+type SocialLinks = {
+  linkedin?: string;
+  github?: string;
+  instagram?: string;
+  facebook?: string;
+};
+
+type TeamMemberUI = {
+  name: string;
+  por: string;
+  img?: string;
+  socials: SocialLinks;
+};
+
+type TeamYear = {
+  core?: TeamMemberUI[];
+  executive?: TeamMemberUI[];
+  [category: string]: TeamMemberUI[] | undefined;
+};
+
+type TeamData = Record<string, TeamYear>;
+
+
 /* =====================================================
    CONSTANTS & HELPERS
 ===================================================== */
@@ -53,7 +76,8 @@ export async function getTeamData() {
     orderBy: { createdAt: "asc" },
   });
 
-  const teamData: Record<string, any> = {};
+  const teamData: TeamData = {};
+
 
   for (const member of members) {
     const session = member.session;
@@ -66,7 +90,8 @@ export async function getTeamData() {
     teamData[session][category].push({
       name: member.name,
       por: member.role,
-      img: member.image,
+      img: member.image ?? undefined,
+
       socials: {
         linkedin: member.linkedin ?? undefined,
         github: member.github ?? undefined,
@@ -80,5 +105,12 @@ export async function getTeamData() {
 
   // ... (keep the rest of the sorting logic)
   
+  // SORTING
+  Object.values(teamData).forEach((year) => {
+    if (year.core) {
+      year.core.sort((a, b) => getCorePriority(a.por) - getCorePriority(b.por));
+    }
+  });
+
   return teamData;
 }
