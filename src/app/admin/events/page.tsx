@@ -411,7 +411,7 @@ export default function AdminEventsPage() {
                             </div>
                         </div>
                         <p className="text-[10px] text-gray-500 mt-4 text-center font-mono">
-                            // LIVE RENDER SIMULATION
+                           {" // LIVE RENDER SIMULATION"}
                         </p>
                     </div>
 

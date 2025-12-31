@@ -8,6 +8,9 @@ import { FcGoogle } from "react-icons/fc";
 import { FaMicrochip, FaUserAstronaut, FaLock, FaBuilding, FaEnvelope, FaArrowLeft, FaBolt } from "react-icons/fa";
 import Link from "next/link";
 
+interface InputGroupProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  icon: React.ReactNode
+}
 export default function LoginPage() {
   const [view, setView] = useState<"login" | "signup" | "forgot">("login");
   const [loading, setLoading] = useState(false);
@@ -222,7 +225,7 @@ export default function LoginPage() {
 }
 
 // --- REUSABLE INPUT COMPONENT ---
-function InputGroup({ icon, ...props }: any) {
+function InputGroup({ icon, ...props }: InputGroupProps) {
   return (
     <div className="relative group">
       <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-500 group-focus-within:text-emerald-400 transition-colors">

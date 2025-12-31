@@ -49,16 +49,19 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
-        // @ts-expect-error
+        // @ts-expect-error -- NextAuth adapter type mismatch
+
         token.role = user.role;
       }
       return token;
     },
     async session({ session, token }) {
       if (session.user) {
-        // @ts-expect-error
+        // @ts-expect-error -- NextAuth adapter type mismatch
+
         session.user.id = token.id as string;
-        // @ts-expect-error
+        // @ts-expect-error -- NextAuth adapter type mismatch
+
         session.user.role = token.role as string;
       }
       return session;

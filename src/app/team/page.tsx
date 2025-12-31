@@ -37,47 +37,14 @@ const getCorePriority = (role: string) => {
 
 // --- SERVER COMPONENT ---
 export default async function TeamPage() {
-  // 1. Fetch data directly from DB (no API call needed)
-  const members = await prisma.teamMember.findMany({ 
-    orderBy: { createdAt: "asc" } 
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/team`, {
+    cache: "no-store",
   });
 
-  // 2. Process data into the required structure
-  const teamData: any = {};
+  const teamData = await res.json();
 
-  for (const member of members) {
-    const session = member.session;
-    const isCore = getCorePriority(member.role) !== 999;
-    const category = isCore ? "core" : member.category.toLowerCase();
-
-    if (!teamData[session]) teamData[session] = { core: [], executive: [] };
-    if (!teamData[session][category]) teamData[session][category] = [];
-
-    teamData[session][category].push({
-      name: member.name,
-      por: member.role,
-      img: member.image || "",
-      socials: { 
-        linkedin: member.linkedin || undefined, 
-        github: member.github || undefined 
-      },
-      __priority: isCore ? getCorePriority(member.role) : 999,
-    });
-  }
-
-  // 3. Sort Core Members by Priority
-  Object.values(teamData).forEach((year: any) => {
-    if (Array.isArray(year.core)) {
-      year.core.sort((a: any, b: any) => a.__priority - b.__priority);
-      // Clean up internal priority field
-      year.core.forEach((m: any) => delete m.__priority);
-    }
-  });
-
-  // 4. Determine default year (Latest)
   const years = Object.keys(teamData).sort().reverse();
-  const initialYear = years.length > 0 ? years[0] : "";
+  const initialYear = years[0] ?? "";
 
-  // 5. Pass to Client Component
-  return <TeamClient initialData={teamData as TeamData} initialYear={initialYear} />;
+  return <TeamClient initialData={teamData} initialYear={initialYear} />;
 }

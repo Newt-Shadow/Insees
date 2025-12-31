@@ -43,9 +43,23 @@ interface TeamMember {
   __priority?: number;
 }
 
+
+
+interface TeamMemberResponse {
+  name: string
+  por: string
+  img: string | null
+  socials: {
+    linkedin?: string
+    github?: string
+  }
+}
+
 interface YearData {
-  [category: string]: TeamMember[];
-}   
+  core?: TeamMemberResponse[]
+  [category: string]: TeamMemberResponse[] | undefined
+}
+
 /* =====================================================
    NORMALIZE + CANONICALIZE ROLE
 ===================================================== */
@@ -93,7 +107,8 @@ export async function GET() {
       orderBy: { createdAt: "asc" },
     })
 
-    const teamData: Record<string, any> = {}
+    const teamData: Record<string, YearData> = {}
+
 
     for (const member of members) {
       const session = member.session
@@ -109,22 +124,25 @@ export async function GET() {
         por: member.role,
         img: member.image,
         socials: {
-          linkedin: member.linkedin,
-          github: member.github,
+          linkedin: member.linkedin ?? undefined,
+          github: member.github ?? undefined,
         },
-        __priority: isCore ? getCorePriority(member.role) : 999,
+        
       })
     }
 
     /* =================================================
        HARD SORT — PER YEAR
     ================================================= */
-    Object.values(teamData).forEach((year: any) => {
-      if (Array.isArray(year.core)) {
-        year.core.sort((a: any, b: any) => a.__priority - b.__priority)
-        year.core.forEach((m: any) => delete m.__priority)
+    Object.values(teamData).forEach((year) => {
+      if (year.core) {
+        year.core.sort(
+          (a, b) =>
+            getCorePriority(a.por) - getCorePriority(b.por)
+        )
       }
     })
+
 
     return NextResponse.json(teamData)
   } catch (error) {

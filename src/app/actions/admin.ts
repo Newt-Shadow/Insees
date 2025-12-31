@@ -9,7 +9,8 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 async function logAction(action: string, details: string) {
   const session = await getServerSession(authOptions);
   if (session?.user) {
-    // @ts-ignore
+    // @ts-expect-error -- intentional override (explain why)
+
     await prisma.auditLog.create({ data: { action, details, userId: session.user.id } });
   }
 }
