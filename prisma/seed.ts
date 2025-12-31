@@ -350,45 +350,49 @@ const teamData = {
 async function main() {
   console.log("🌱 Seeding team (UPSERT MODE)...");
 
-  for (const [yearLabel, groups] of Object.entries(teamData)) {
-    const year = await prisma.year.upsert({
-      where: { label: yearLabel },
-      update: {},
-      create: { label: yearLabel },
-    });
+  await prisma.teamMember.deleteMany({});
 
-    const seedGroup = async (members: any[], type: MemberType) => {
-      for (const member of members) {
-        await prisma.member.upsert({
-          where: {
-            name_yearId_type: {
-              name: member.name,
-              yearId: year.id,
-              type,
-            },
-          },
-          update: {
-            por: member.por,
-            img: member.img,
-            socials: member.socials,
-          },
-          create: {
-            name: member.name,
-            por: member.por,
-            img: member.img,
-            socials: member.socials,
-            type,
-            yearId: year.id,
+  for (const [session, groups] of Object.entries(teamData)) {
+    // Handle Core Members
+    if (groups.core) {
+      for (const m of groups.core) {
+        await prisma.teamMember.create({
+          data: {
+            name: m.name,
+            role: m.por,              // Map 'por' to 'role'
+            image: m.img,             // Map 'img' to 'image'
+            session: session,         // Set session (e.g., "2024-25")
+            category: "Core",         // Set category
+            linkedin: m.socials.linkedin || null,
+            instagram: m.socials.instagram || null,
+            facebook: m.socials.facebook || null,
+            github: null, // Add if you have it in your data
           },
         });
       }
-    };
+    }
 
-    await seedGroup(groups.core, MemberType.CORE);
-    await seedGroup(groups.executive, MemberType.EXECUTIVE);
+    // Handle Executive Members
+    if (groups.executive) {
+      for (const m of groups.executive) {
+        await prisma.teamMember.create({
+          data: {
+            name: m.name,
+            role: m.por,
+            image: m.img,
+            session: session,
+            category: "Executive",
+            linkedin: m.socials.linkedin || null,
+            instagram: m.socials.instagram || null,
+            facebook: m.socials.facebook || null,
+            github: null,
+          },
+        });
+      }
+    }
   }
 
-  console.log("✅ Team seeding complete");
+  console.log("✅ TeamMember seeding complete");
 }
 
 main()
