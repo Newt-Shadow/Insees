@@ -76,9 +76,9 @@ jobs:
               - coverage
               - prisma/migrations
               - public
-              - **/*.test.ts
-              - **/*.spec.ts
-              - **/*.d.ts
+              - "**/*.test.ts"
+              - "**/*.spec.ts"
+              - "**/*.d.ts"
 
             paths:
               - src
