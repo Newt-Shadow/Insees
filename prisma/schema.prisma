@@ -134,6 +134,8 @@ model TeamMember {
   image     String?
   linkedin  String?
   github    String?
+  instagram String?  // New
+  facebook  String?  // New
   order     Int      @default(0)
   createdAt DateTime @default(now())
 }

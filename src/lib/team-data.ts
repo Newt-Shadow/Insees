@@ -44,12 +44,15 @@ const getCorePriority = (role: string) => {
 /* =====================================================
    MAIN DATA FETCHING FUNCTION
 ===================================================== */
+// src/lib/team-data.ts
+
+// ... (keep existing imports and constants)
+
 export async function getTeamData() {
   const members = await prisma.teamMember.findMany({
     orderBy: { createdAt: "asc" },
   });
 
-  // Use 'any' or define a proper interface for the accumulator if strict
   const teamData: Record<string, any> = {};
 
   for (const member of members) {
@@ -67,16 +70,15 @@ export async function getTeamData() {
       socials: {
         linkedin: member.linkedin ?? undefined,
         github: member.github ?? undefined,
+        // --- ADD THESE LINES ---
+        instagram: member.instagram ?? undefined,
+        facebook: member.facebook ?? undefined,
+        // ----------------------
       },
     });
   }
 
-  // SORTING
-  Object.values(teamData).forEach((year: any) => {
-    if (year.core) {
-      year.core.sort((a: any, b: any) => getCorePriority(a.por) - getCorePriority(b.por));
-    }
-  });
-
+  // ... (keep the rest of the sorting logic)
+  
   return teamData;
 }
