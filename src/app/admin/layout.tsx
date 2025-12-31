@@ -15,7 +15,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
 
   if (!session) redirect("/api/auth/signin");
 
-  // @ts-expect-error - Role is injected by authOptions
+  
   const role = session.user.role;
   const user = session.user;
 

@@ -4,6 +4,7 @@ import CredentialsProvider from "next-auth/providers/credentials"
 import { PrismaAdapter } from "@next-auth/prisma-adapter"
 import { prisma } from "@/lib/prisma"
 import bcrypt from "bcryptjs"
+import { logAdminAction } from "@/lib/logger";
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -49,29 +50,45 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id
-        // @ts-expect-error -- next-auth adapter typing
+        
         token.role = user.role
       }
       return token
     },
     async session({ session, token }) {
       if (session.user) {
-        // @ts-expect-error -- next-auth adapter typing
+      
         session.user.id = token.id as string
-        // @ts-expect-error -- next-auth adapter typing
+   
         session.user.role = token.role as string
       }
       return session
     },
   },
   events: {
+    async signIn({ user, account, isNewUser }) {
+      if (user.id) {
+        await logAdminAction(
+          user.id,
+          isNewUser ? "REGISTER" : "LOGIN",
+          `Provider: ${account?.provider}`
+        );
+      }
+    },
+    async signOut({ token }) {
+      // Note: In JWT sessions, 'token' contains the user payload
+      if (token && token.sub) {
+         await logAdminAction(token.sub, "LOGOUT", "User logged out");
+      }
+    },
     async createUser({ user }) {
       const count = await prisma.user.count()
       if (count === 1) {
         await prisma.user.update({
           where: { id: user.id },
           data: { role: "SUPER_ADMIN" },
-        })
+        });
+        await logAdminAction(user.id, "SYSTEM_PROMOTE", "First user promoted to SUPER_ADMIN");
       }
     },
   },

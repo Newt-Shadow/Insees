@@ -117,4 +117,9 @@ export async function deleteMember(formData: FormData) {
   await prisma.teamMember.delete({ where: { id: formData.get("id") as string } });
   revalidatePath("/admin/team");
   revalidatePath("/team");
+  await logAdminAction(
+    session.user.id, 
+    "DELETE_MEMBER", 
+    `Deleted team member with ID: ${memberId}`
+  );
 }
