@@ -11,13 +11,13 @@ export default async function AuditLogs() {
   // Only SUPER_ADMIN can view logs. Regular ADMINs get kicked out.
   // The type error on 'role' is fixed by the new d.ts file you created in Step 1.
   if (!session || session.user?.role !== "SUPER_ADMIN") {
-    redirect("/admin"); 
+    redirect("/admin");
   }
 
-  const logs = await prisma.auditLog.findMany({ 
-    include: { user: true }, 
-    orderBy: { createdAt: 'desc' }, 
-    take: 100 
+  const logs = await prisma.auditLog.findMany({
+    include: { user: true },
+    orderBy: { createdAt: 'desc' },
+    take: 100
   });
 
   return (
@@ -43,27 +43,52 @@ export default async function AuditLogs() {
           </thead>
           <tbody className="divide-y divide-zinc-800">
             {logs.map((log) => (
-              <tr key={log.id} className="hover:bg-zinc-800/50 transition-colors">
+              <tr
+                key={log.id}
+                className="hover:bg-zinc-800/50 transition-colors"
+              >
+                {/* Time (IST) */}
                 <td className="px-6 py-4 text-gray-500 font-mono whitespace-nowrap">
-                  {new Date(log.createdAt).toLocaleString()}
+                  {new Date(log.createdAt).toLocaleString("en-IN", {
+                    timeZone: "Asia/Kolkata",
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    second: "2-digit",
+                    hour12: true,
+                  })}
                 </td>
+
+                {/* User */}
                 <td className="px-6 py-4">
                   <div className="flex items-center gap-2">
-                    <span className="text-white font-medium">{log.user?.name || "Unknown"}</span>
-                    {/* The ? check handles cases where user might be null (deleted users) */}
-                    <span className="text-xs text-zinc-500">({log.user?.role ?? "N/A"})</span>
+                    <span className="text-white font-medium">
+                      {log.user?.name || "Unknown"}
+                    </span>
+                    <span className="text-xs text-zinc-500">
+                      ({log.user?.role ?? "N/A"})
+                    </span>
                   </div>
                 </td>
+
+                {/* Action */}
                 <td className="px-6 py-4">
-                   <Badge action={log.action} />
+                  <Badge action={log.action} />
                 </td>
-                <td className="px-6 py-4 text-gray-400">{log.details}</td>
+
+                {/* Details */}
+                <td className="px-6 py-4 text-gray-400">
+                  {log.details}
+                </td>
               </tr>
             ))}
           </tbody>
+
         </table>
         {logs.length === 0 && (
-            <div className="p-8 text-center text-zinc-500">No logs found</div>
+          <div className="p-8 text-center text-zinc-500">No logs found</div>
         )}
       </div>
     </div>
