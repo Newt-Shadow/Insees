@@ -1,4 +1,4 @@
-name: "CodeQL Advanced (Enterprise)"
+name: "CodeQL Advanced (Enterprise – All in One)"
 
 on:
   push:
@@ -6,8 +6,8 @@ on:
   pull_request:
     branches: [ "main" ]
   schedule:
-    # Weekly deep security scan
-    - cron: '33 6 * * 0'
+    # Weekly deep scan (Sunday 06:33 UTC)
+    - cron: "33 6 * * 0"
 
 permissions:
   security-events: write
@@ -17,20 +17,13 @@ permissions:
 
 jobs:
   analyze:
-    name: Analyze (${{ matrix.language }})
+    name: Analyze (JavaScript / TypeScript)
     runs-on: ubuntu-latest
     timeout-minutes: 45
 
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - language: javascript-typescript
-            build-mode: none
-
     steps:
       # ----------------------------------------------------
-      # 1️⃣ Checkout (full history improves analysis)
+      # 1️⃣ Checkout (full history = better analysis)
       # ----------------------------------------------------
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -38,7 +31,7 @@ jobs:
           fetch-depth: 0
 
       # ----------------------------------------------------
-      # 2️⃣ Node.js Setup (Next.js / Prisma / NextAuth)
+      # 2️⃣ Setup Node.js (Next.js / Prisma / NextAuth)
       # ----------------------------------------------------
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -47,7 +40,7 @@ jobs:
           cache: npm
 
       # ----------------------------------------------------
-      # 3️⃣ Install dependencies (NO build)
+      # 3️⃣ Install dependencies (no build required)
       # ----------------------------------------------------
       - name: Install dependencies
         run: npm ci
@@ -58,16 +51,24 @@ jobs:
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v4
         with:
-          languages: ${{ matrix.language }}
-          build-mode: ${{ matrix.build-mode }}
-
-          # 🔐 STRONG QUERY SETS
+          languages: javascript-typescript
+          build-mode: none
           queries: |
             security-extended
             security-and-quality
 
-          # 🧹 Reduce noise & speed up scans
+          # ⛔ IMPORTANT:
+          # No ** or glob aliases → avoids your previous crash
           config: |
+            name: "Enterprise Inline CodeQL Config"
+
+            paths:
+              - src
+              - app
+              - pages
+              - lib
+              - prisma
+
             paths-ignore:
               - node_modules
               - .next
@@ -76,22 +77,14 @@ jobs:
               - coverage
               - prisma/migrations
               - public
-              - "**/*.test.ts"
-              - "**/*.spec.ts"
-              - "**/*.d.ts"
-
-            paths:
-              - src
-              - app
-              - prisma
-              - lib
-              - pages
+              - test
+              - tests
 
       # ----------------------------------------------------
-      # 5️⃣ Perform Analysis
+      # 5️⃣ Perform CodeQL Analysis
       # ----------------------------------------------------
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v4
         with:
           upload: true
-          category: "security-${{ matrix.language }}"
+          category: "security-javascript-typescript"
