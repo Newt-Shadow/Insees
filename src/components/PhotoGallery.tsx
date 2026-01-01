@@ -1,23 +1,28 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from "framer-motion";
-import { X, Download, Scan, Loader2 } from "lucide-react";
+import { X, Download, Scan, Loader2, Filter, Calendar, ChevronDown } from "lucide-react";
 import Image, { ImageLoaderProps } from "next/image";
 
+// --- TYPES (UPDATED FOR DB) ---
 export type GalleryImage = {
-  id: number;
+  id: string;
   src: string;
-  category: string;
-};
-
-export type GalleryConfig = {
-  images: GalleryImage[];
+  year: string;
+  event: string;
+  width?: number;
+  height?: number;
 };
 
 interface PhotoGalleryProps {
-  initialGalleryConfig: GalleryConfig | null;
-  initialCategories: string[];
+  initialData: {
+    images: GalleryImage[];
+    filters: {
+      years: string[];
+      events: string[];
+    };
+  };
 }
 
 // 🔹 HELPER: Generate optimized URL for standard <img> tags
@@ -79,26 +84,52 @@ const TiltCard = ({ children, onClick }: { children: React.ReactNode; onClick: (
   );
 };
 
-export default function PhotoGallery({ initialGalleryConfig, initialCategories }: PhotoGalleryProps) {
-  const [selectedCategory, setSelectedCategory] = useState("All");
+export default function PhotoGallery({ initialData }: PhotoGalleryProps) {
+  // --- STATE ---
+  const [selectedYear, setSelectedYear] = useState("All");
+  const [selectedEvent, setSelectedEvent] = useState("All");
   const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
+  
   const [isDownloading, setIsDownloading] = useState(false);
   const [isImageLoading, setIsImageLoading] = useState(true);
   const [mounted, setMounted] = useState(false);
   
   const imgRef = useRef<HTMLImageElement>(null);
 
-  const images = initialGalleryConfig?.images || [];
-  const filteredImages = selectedCategory === "All" 
-    ? images 
-    : images.filter(img => img.category === selectedCategory);
+  // --- DERIVED DATA ---
+  const images = initialData?.images || [];
+  const years = initialData?.filters?.years || [];
+  
+  const filteredImages = useMemo(() => {
+    return images.filter(img => {
+      const matchYear = selectedYear === "All" || img.year === selectedYear;
+      const matchEvent = selectedEvent === "All" || img.event === selectedEvent;
+      return matchYear && matchEvent;
+    });
+  }, [images, selectedYear, selectedEvent]);
 
-  // 🔹 Portal Mount Check
+  // Dynamic Events List (updates based on selected year)
+  const availableEvents = useMemo(() => {
+    let relevantImages = images;
+    if (selectedYear !== "All") {
+      relevantImages = images.filter(img => img.year === selectedYear);
+    }
+    const events = new Set(relevantImages.map(img => img.event));
+    return ["All", ...Array.from(events).sort()];
+  }, [images, selectedYear]);
+
+  // Reset event if it doesn't exist in the new year selection
+  useEffect(() => {
+    if (selectedEvent !== "All" && !availableEvents.includes(selectedEvent)) {
+      setSelectedEvent("All");
+    }
+  }, [selectedYear, availableEvents, selectedEvent]);
+
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  // --- LOCK BODY SCROLL & RESET LOADING ---
+  // Lock scroll when modal is open
   useEffect(() => {
     if (selectedImage) {
       document.body.style.overflow = "hidden";
@@ -118,8 +149,7 @@ export default function PhotoGallery({ initialGalleryConfig, initialCategories }
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      const filename = img.src.split('/').pop() || `insees-gallery-${img.id}.jpg`;
-      link.download = filename;
+      link.download = `insees-${img.event}-${img.year}-${img.id}.jpg`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -128,6 +158,59 @@ export default function PhotoGallery({ initialGalleryConfig, initialCategories }
       console.error("Download failed:", err);
     }
     setIsDownloading(false);
+  };
+
+  // --- UI HELPER: BUTTONS VS DROPDOWN ---
+  const renderFilterControl = (
+    label: string, 
+    icon: React.ReactNode, 
+    items: string[], 
+    current: string, 
+    setFunc: (val: string) => void,
+    color: string
+  ) => {
+    const realItems = items.filter(i => i !== "All");
+    
+    return (
+      <div className="flex flex-col items-center">
+        <p className={`text-[10px] font-mono ${color} uppercase tracking-widest mb-2 flex items-center gap-2`}>
+          {icon} {label}
+        </p>
+
+        {realItems.length > 3 ? (
+           // DROPDOWN MODE (If > 3 items)
+           <div className="relative group">
+              <select 
+                value={current} 
+                onChange={(e) => setFunc(e.target.value)}
+                className="appearance-none bg-zinc-900 border border-white/10 text-white rounded px-4 py-2 pr-10 font-mono text-sm uppercase tracking-wider focus:border-white focus:outline-none cursor-pointer hover:bg-zinc-800 transition-colors min-w-[180px] text-center shadow-[0_0_15px_rgba(0,0,0,0.3)]"
+              >
+                {items.map(item => (
+                  <option key={item} value={item}>{item}</option>
+                ))}
+              </select>
+              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" size={16} />
+           </div>
+        ) : (
+           // BUTTONS MODE (If <= 3 items)
+           <div className="flex flex-wrap justify-center gap-2">
+             {items.map((item) => (
+               <button
+                 key={item}
+                 onClick={() => setFunc(item)}
+                 className={`relative px-4 py-2 text-sm font-mono uppercase tracking-wider transition-all border rounded-sm ${
+                   current === item
+                     ? `bg-white text-black border-white font-bold shadow-[0_0_10px_white]`
+                     : `bg-transparent text-gray-400 border-white/10 hover:border-white/50 hover:text-white`
+                 }`}
+               >
+                 {item}
+               </button>
+             ))}
+           </div>
+        )}
+      </div>
+    );
   };
 
   return (
@@ -151,62 +234,68 @@ export default function PhotoGallery({ initialGalleryConfig, initialCategories }
         </p>
       </div>
 
-      {/* Filter Tabs */}
-      <div className="relative z-10 flex flex-wrap justify-center gap-4 mb-16">
-        {["All", ...initialCategories].map((cat) => (
-          <button
-            key={cat}
-            onClick={() => setSelectedCategory(cat)}
-            className={`relative px-6 py-2 text-sm font-mono uppercase tracking-wider transition-all clip-path-slant ${
-              selectedCategory === cat
-                ? "text-blue-300 font-bold"
-                : "text-gray-400 hover:text-white"
-            }`}
-          >
-            {selectedCategory === cat && (
-              <motion.div
-                layoutId="activeTab"
-                className="absolute inset-0 bg-oz-emerald rounded-sm skew-x-[-10deg]"
-                transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              />
-            )}
-            <span className="relative z-10">{cat}</span>
-          </button>
-        ))}
+      {/* --- FILTER CONTROL DECK (Latest Update Logic) --- */}
+      <div className="relative z-10 max-w-5xl mx-auto mb-16 space-y-8">
+        {/* Render Year Controls */}
+        {renderFilterControl(
+           "Time Cycle", 
+           <Calendar size={10} />, 
+           ["All", ...years], 
+           selectedYear, 
+           setSelectedYear, 
+           "text-gray-400"
+        )}
+
+        {/* Render Event Controls */}
+        {renderFilterControl(
+           "Signal Frequency", 
+           <Filter size={10} />, 
+           availableEvents, 
+           selectedEvent, 
+           setSelectedEvent, 
+           "text-oz-emerald"
+        )}
       </div>
 
       {/* Masonry Grid */}
-      <motion.div layout className="relative z-10 columns-1 sm:columns-2 lg:columns-3 gap-8 space-y-8 max-w-7xl mx-auto px-4">
+      <motion.div layout className="relative z-10 columns-1 sm:columns-2 lg:columns-3 gap-8 space-y-8 max-w-7xl mx-auto px-4 min-h-[50vh]">
         <AnimatePresence mode="popLayout">
-          {filteredImages.map((img) => (
-            <div key={img.id} className="break-inside-avoid perspective-1000">
-               <TiltCard onClick={() => setSelectedImage(img)}>
-                  <div className="relative group bg-gray-900 rounded-xl">
-                    <Image
-                      loader={cloudinaryLoader}
-                      src={img.src}
-                      alt={`Gallery ${img.id}`}
-                      width={600}
-                      height={400}
-                      className="w-full h-auto object-cover rounded-xl border border-white/5 transition-all duration-500 group-hover:scale-105 group-hover:grayscale-0 grayscale-[0.3]"
-                      priority={img.id < 4} 
-                    />
-                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center backdrop-blur-[2px] rounded-xl">
-                      <div className="text-oz-emerald flex flex-col items-center gap-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                        <Scan size={40} className="animate-pulse" />
-                        <span className="font-mono text-xs tracking-[0.2em] bg-black/50 px-2 py-1 rounded border border-oz-emerald/30">
-                          ACCESS DATA
-                        </span>
+          {filteredImages.length > 0 ? (
+            filteredImages.map((img) => (
+              <div key={img.id} className="break-inside-avoid perspective-1000 mb-8">
+                 <TiltCard onClick={() => setSelectedImage(img)}>
+                    <div className="relative group bg-gray-900 rounded-xl">
+                      <Image
+                        loader={cloudinaryLoader}
+                        src={img.src}
+                        alt={`Gallery ${img.id}`}
+                        width={img.width || 600}
+                        height={img.height || 400}
+                        className="w-full h-auto object-cover rounded-xl border border-white/5 transition-all duration-500 group-hover:scale-105 group-hover:grayscale-0 grayscale-[0.3]"
+                        priority={false} 
+                      />
+                      <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center backdrop-blur-[2px] rounded-xl z-20">
+                        <div className="text-oz-emerald flex flex-col items-center gap-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                          <Scan size={40} className="animate-pulse" />
+                          <span className="font-mono text-xs tracking-[0.2em] bg-black/50 px-2 py-1 rounded border border-oz-emerald/30">
+                            ACCESS DATA
+                          </span>
+                        </div>
                       </div>
                     </div>
-                  </div>
-               </TiltCard>
+                 </TiltCard>
+              </div>
+            ))
+          ) : (
+            <div className="col-span-full flex flex-col items-center justify-center py-20 opacity-50">
+               <Scan size={48} className="text-gray-600 mb-4" />
+               <p className="text-gray-500 font-mono">NO DATA SIGNALS FOUND</p>
             </div>
-          ))}
+          )}
         </AnimatePresence>
       </motion.div>
 
-      {/* --- PORTAL LIGHTBOX MODAL (Z-INDEX 9999) --- */}
+      {/* --- PORTAL LIGHTBOX MODAL --- */}
       {mounted && createPortal(
         <AnimatePresence>
           {selectedImage && (
@@ -257,7 +346,7 @@ export default function PhotoGallery({ initialGalleryConfig, initialCategories }
                        </div>
                      )}
 
-                     {/* MAIN IMAGE - Using optimized helper */}
+                     {/* MAIN IMAGE */}
                      <img 
                        ref={imgRef}
                        src={getOptimizedUrl(selectedImage.src)} 
@@ -276,7 +365,7 @@ export default function PhotoGallery({ initialGalleryConfig, initialCategories }
                           <p className="font-orbitron text-lg font-bold text-white">IMG_SEQ_00{selectedImage.id}</p>
                         </div>
                         <p className="font-mono text-xs text-oz-emerald/70 uppercase tracking-wider">
-                          {"// CLASSIFICATION:"} {selectedImage.category}
+                           {"// EVENT:"} {selectedImage.event} <span className="text-gray-500 mx-2">|</span> {"// YEAR:"} {selectedImage.year}
                         </p>
                       </div>
 

@@ -207,3 +207,22 @@ model Gallery {
 
   @@index([galleryConfigId])
 }
+
+// ... keep existing generator and datasource ...
+
+// ... keep other models (User, Event, etc.) ...
+
+// ✅ NEW GALLERY MODEL
+model GalleryImage {
+  id        String   @id @default(cuid())
+  src       String
+  publicId  String   @unique // Cloudinary Public ID for deletion
+  year      String   // e.g. "2024", "2025"
+  event     String   // e.g. "Alpha Crescendo", "Orientation"
+  width     Int?
+  height    Int?
+  createdAt DateTime @default(now())
+  
+  @@index([year])
+  @@index([event])
+}

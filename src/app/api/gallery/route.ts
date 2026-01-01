@@ -1,121 +1,109 @@
 import { NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
 import { cloudinary } from "@/lib/cloudinary";
 
-export const runtime = "nodejs";
+export const runtime = "nodejs"; // Required for Cloudinary upload
 export const dynamic = "force-dynamic";
 
-
-// 🔹 Define a type for the cached response
-interface GalleryResponse {
-  categories: string[];
-  images: { src: string; category: string }[];
-}
-
-// 🔹 Simple in-memory cache
-let cache: {
-  data: GalleryResponse;
-  timestamp: number;
-} | null = null;
-
-const CACHE_TTL = 1000 * 60 * 10; // 10 minutes
-
-function normalizeCategory(name: string) {
-  return name
-    .trim()
-    .replace(/[-_]+/g, " ")
-    .replace(/\b\w/g, (c) => c.toUpperCase());
-}
-
-interface CloudinaryFolder {
-  name: string;
-  path: string;
-}
-
-interface CloudinaryResource {
-  public_id: string;
-  secure_url: string;
-  [key: string]: unknown;
-}
-
-export async function GET(req: Request) {
+// GET: Fetch Images + Filter Options
+export async function GET() {
   try {
-    const { searchParams } = new URL(req.url);
-    const category = searchParams.get("category");
+    const images = await prisma.galleryImage.findMany({
+      orderBy: { createdAt: "desc" },
+    });
 
-    // ✅ Check cache
-    if (cache && Date.now() - cache.timestamp < CACHE_TTL) {
-      return NextResponse.json(cache.data);
+    // Extract unique Years and Events dynamically from the data
+    // This ensures if you add a new year in Admin, it appears here automatically.
+    const years = [...new Set(images.map((img) => img.year))].sort().reverse();
+    const events = [...new Set(images.map((img) => img.event))].sort();
+
+    return NextResponse.json({ 
+      images, 
+      filters: { years, events } 
+    });
+  } catch (err) {
+    console.error("Gallery Fetch Error:", err);
+    return NextResponse.json({ error: "Failed to fetch gallery" }, { status: 500 });
+  }
+}
+
+// POST: Upload Images
+export async function POST(req: Request) {
+  try {
+    const formData = await req.formData();
+    const files = formData.getAll("files") as File[];
+    const year = formData.get("year") as string;
+    const event = formData.get("event") as string;
+
+    if (!files.length || !year || !event) {
+      return NextResponse.json({ error: "Missing fields" }, { status: 400 });
     }
 
-    // 🔹 Specific category
-    if (category && category.toLowerCase() !== "all") {
-      const normalized = normalizeCategory(category);
+    const uploadPromises = files.map(async (file) => {
+      const arrayBuffer = await file.arrayBuffer();
+      const buffer = Buffer.from(arrayBuffer);
 
-      const response = await cloudinary.api.resources({
-        type: "upload",
-        prefix: `insees/gallery/${category}`,
-        max_results: 200,
+      return new Promise<any>((resolve, reject) => {
+        cloudinary.uploader.upload_stream(
+          {
+            folder: `insees/gallery/${year}/${event}`, // Organize in Cloudinary too
+            resource_type: "image",
+          },
+          async (error, result) => {
+            if (error) return reject(error);
+            
+            // Save to DB
+            if (result) {
+              const savedImage = await prisma.galleryImage.create({
+                data: {
+                  src: result.secure_url,
+                  publicId: result.public_id,
+                  width: result.width,
+                  height: result.height,
+                  year,
+                  event,
+                },
+              });
+              resolve(savedImage);
+            }
+          }
+        ).end(buffer);
       });
+    });
 
-      const resources = (response?.resources || []) as CloudinaryResource[];
+    const results = await Promise.all(uploadPromises);
+    return NextResponse.json({ success: true, data: results });
 
-      const images = resources.map((img) => ({
-        src: img.secure_url,
-        category: normalized,
-      }));
+  } catch (err) {
+    console.error("Upload Error:", err);
+    return NextResponse.json({ error: "Upload failed" }, { status: 500 });
+  }
+}
 
-      const payload: GalleryResponse = {
-        categories: images.length > 0 ? [normalized] : [],
-        images,
-      };
+// DELETE: Bulk Delete
+export async function DELETE(req: Request) {
+  try {
+    const { ids } = await req.json(); // Array of DB IDs
+    
+    // 1. Get publicIds from DB to delete from Cloudinary
+    const imagesToDelete = await prisma.galleryImage.findMany({
+      where: { id: { in: ids } },
+    });
 
-      cache = { data: payload, timestamp: Date.now() };
-      return NextResponse.json(payload);
-    }
-
-    // 🔹 All folders
-    const folderRes = await cloudinary.api.sub_folders("insees/gallery");
-    const folders = (folderRes?.folders || []) as CloudinaryFolder[];
-
-    if (!folders.length) {
-      const payload: GalleryResponse = { categories: [], images: [] };
-      cache = { data: payload, timestamp: Date.now() };
-      return NextResponse.json(payload);
-    }
-
-    const categories = folders.map((f) => normalizeCategory(f.name));
-
-    const results = await Promise.all(
-      folders.map(async (folder) => {
-        const response = await cloudinary.api.resources({
-          type: "upload",
-          prefix: `insees/gallery/${folder.name}`,
-          max_results: 200,
-        });
-
-        const resources = (response?.resources || []) as CloudinaryResource[];
-
-        return resources.map((img) => ({
-          src: img.secure_url,
-          category: normalizeCategory(folder.name),
-        }));
-      })
+    // 2. Delete from Cloudinary
+    const deletePromises = imagesToDelete.map((img) => 
+      cloudinary.uploader.destroy(img.publicId)
     );
+    await Promise.all(deletePromises);
 
-    const allImages = results.flat();
+    // 3. Delete from DB
+    await prisma.galleryImage.deleteMany({
+      where: { id: { in: ids } },
+    });
 
-    const payload: GalleryResponse = {
-      categories: allImages.length ? categories : [],
-      images: allImages,
-    };
-
-    cache = { data: payload, timestamp: Date.now() };
-    return NextResponse.json(payload);
-  } catch (err: unknown) {
-    console.error("❌ Gallery API error:", err);
-    return NextResponse.json(
-      { error: "Failed to load gallery" },
-      { status: 500 }
-    );
+    return NextResponse.json({ success: true });
+  } catch (err) {
+    console.error("Delete Error:", err);
+    return NextResponse.json({ error: "Delete failed" }, { status: 500 });
   }
 }
