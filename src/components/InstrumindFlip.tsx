@@ -54,7 +54,7 @@ export function InstrumindFlipCard() {
               className="relative w-[260px] h-[380px]"
             >
               <iframe
-                src="https://online.fliphtml5.com/svrwe/aupi/index.html?mode=doublepage"
+                src="https://online.fliphtml5.com/svrwe/aupi/index.html"
                 className="w-full h-full rounded-xl border border-white/10"
                 allow="fullscreen"
                 loading="lazy"
