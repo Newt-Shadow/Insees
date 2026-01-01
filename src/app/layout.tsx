@@ -27,6 +27,12 @@ const orbitron = Orbitron({
 export const metadata: Metadata = {
   metadataBase: new URL("https://insees.tech"),
 
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/favicon.ico",
+  },
+
   alternates: {
     canonical: "/",
   },

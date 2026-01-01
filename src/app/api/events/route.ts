@@ -15,21 +15,43 @@ export async function GET() {
 }
 
 // POST a new event
+// POST a new event
 export async function POST(req: Request) {
   try {
     const body = await req.json();
+
     const eventData = {
-      ...body,
-      date: body.date ? new Date(body.date) : new Date(),
-      registrationOpen: body.registrationOpen ? new Date(body.registrationOpen) : null,
+      title: body.title,
+      description: body.description,
+      fullDescription: body.fullDescription,
+      category: body.category ?? "Technical",
+
+      // ✅ STRING — EXACTLY AS SCHEMA EXPECTS
+      date: body.date ? String(body.date) : null,
+      registrationOpen: body.registrationOpen
+        ? String(body.registrationOpen)
+        : null,
+
+      year: body.year,
+      status: body.status ?? "upcoming",
+      location: body.location,
+      sponsor: body.sponsor,
+      registrationLink: body.registrationLink,
+      image: body.image,
+      registrationEnabled: body.registrationEnabled ?? true,
     };
+
     const newEvent = await prisma.event.create({ data: eventData });
     return NextResponse.json(newEvent);
   } catch (err) {
     console.error("Error creating event:", err);
-    return NextResponse.json({ error: "Failed to create event" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to create event" },
+      { status: 500 }
+    );
   }
 }
+
 
 // DELETE an event
 export async function DELETE(req: Request) {
@@ -51,10 +73,18 @@ export async function PATCH(req: Request) {
   try {
     const body = await req.json();
     const { id, ...data } = body;
-    const updated = await prisma.event.update({ where: { id }, data });
+
+    if (data.date) data.date = String(data.date);
+    if (data.registrationOpen) data.registrationOpen = String(data.registrationOpen);
+
+    const updated = await prisma.event.update({
+      where: { id },
+      data,
+    });
+
     return NextResponse.json(updated);
-  } catch {
-    // Removed unused 'err' variable
+  } catch (err) {
+    console.error("Error updating event:", err);
     return NextResponse.json({ error: "Update failed" }, { status: 500 });
   }
 }

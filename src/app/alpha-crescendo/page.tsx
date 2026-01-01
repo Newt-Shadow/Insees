@@ -104,12 +104,12 @@ export default function AlphaCrescendoPage() {
       <section className="relative  h-screen flex items-center justify-center overflow-hidden bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-oz-dark via-black to-black">
         <div className="absolute inset-0 opacity-20 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]" />
 
-        <div className="z-10 mt-12 text-center px-4 max-w-5xl mx-auto">
+        <div className="z-10 mt-14 text-center px-4 max-w-5xl mx-auto">
           <motion.div
             initial={{ opacity: 0, scale: 0.5 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8 }}
-            className="mb-6 inline-block"
+            className="mb-6  inline-block"
           >
             <span className="px-4 py-2 rounded-full border border-oz-emerald/30 bg-oz-emerald/10 text-oz-emerald text-sm font-mono tracking-widest">
               {alphaContent.hero.dates} EDITION
@@ -143,21 +143,21 @@ export default function AlphaCrescendoPage() {
           <Countdown />
 
 
-          <motion.div
+          {/* <motion.div
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.6 }}
-            className="flex mt-8 flex-col sm:flex-row gap-4 justify-center"
+            className="flex mt-8  flex-col sm:flex-row gap-4 justify-center"
           >
-            {/* <button
+            <button
               onClick={scrollToEvents}
               className="px-8 py-4 bg-oz-emerald hover:cursor-pointer text-amber-50 font-bold rounded-full hover:bg-oz-emerald/90 hover:scale-105 transition-all shadow-[0_0_20px_rgba(16,185,129,0.4)]">
               Register for Events
-            </button> */}
-            <button className="px-8 py-4 bg-transparent border hover:cursor-pointer border-white/20 text-white font-bold rounded-full hover:bg-white/10 transition-all">
+            </button>
+            <button className="px-8  py-4 bg-transparent border hover:cursor-pointer border-white/20 text-white font-bold rounded-full hover:bg-white/10 transition-all">
               Download Brochure
             </button>
-          </motion.div>
+          </motion.div> */}
         </div>
       </section>
 

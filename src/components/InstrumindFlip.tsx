@@ -39,7 +39,7 @@ export function InstrumindFlipCard() {
                               bg-black/40 opacity-0 group-hover:opacity-100 
                               transition">
                 <span className="px-4 py-2 text-sm font-mono text-black bg-oz-emerald rounded-full">
-                  OPEN MAGAZINE
+                  
                 </span>
               </div>
             </motion.div>
@@ -51,7 +51,7 @@ export function InstrumindFlipCard() {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.5 }}
-              className="relative w-[260px] h-[380px]"
+              className="relative w-[550px] h-[380px]"
             >
               <iframe
                 src="https://online.fliphtml5.com/svrwe/aupi/index.html"
