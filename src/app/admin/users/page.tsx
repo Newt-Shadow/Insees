@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
-import { updateUserRole } from "@/app/actions/admin";
-import { FaUserShield, FaBan, FaCheck } from "react-icons/fa";
+import { deleteUser, updateUserRole } from "@/app/actions/admin";
+import { FaUserShield, FaBan, FaCheck, FaTimes } from "react-icons/fa";
 
 export default async function ManageUsers() {
   const users = await prisma.user.findMany({ orderBy: { role: 'asc' } });
@@ -23,9 +23,23 @@ export default async function ManageUsers() {
               <form action={updateUserRole} className="flex gap-2">
                 <input type="hidden" name="userId" value={user.id} />
                 {user.role === 'USER' && (
-                  <button name="role" value="ADMIN" className="bg-green-600 hover:bg-green-500 text-white px-3 py-1 rounded text-xs flex gap-1 items-center">
-                    <FaCheck /> Approve
-                  </button>
+                  <>
+                    {/* Approve Button */}
+                    <form action={updateUserRole}>
+                      <input type="hidden" name="userId" value={user.id} />
+                      <button name="role" value="ADMIN" className="bg-green-600 hover:bg-green-500 text-white px-3 py-1.5 rounded text-xs flex gap-1 items-center transition-colors">
+                        <FaCheck /> Approve
+                      </button>
+                    </form>
+
+                    {/* ✅ Reject Button */}
+                    <form action={deleteUser}>
+                      <input type="hidden" name="userId" value={user.id} />
+                      <button className="bg-red-600/10 hover:bg-red-600 text-red-500 hover:text-white border border-red-600/50 px-3 py-1.5 rounded text-xs flex gap-1 items-center transition-all">
+                        <FaTimes /> Reject
+                      </button>
+                    </form>
+                  </>
                 )}
                 {user.role === 'ADMIN' && (
                   <>

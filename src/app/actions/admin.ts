@@ -17,7 +17,7 @@ const DeveloperSchema = z.object({
 
 async function checkAuth(requiredRole: "ADMIN" | "SUPER_ADMIN" = "ADMIN") {
   const session = await getServerSession(authOptions);
-  
+
   if (!session || !session.user) {
     throw new Error("Unauthorized: No session found");
   }
@@ -52,19 +52,19 @@ export async function addDev(formData: FormData) {
   const result = DeveloperSchema.safeParse(rawData);
 
   if (!result.success) {
-    console.error(result.error.flatten()); 
+    console.error(result.error.flatten());
     throw new Error("Invalid form data");
   }
 
-  await prisma.developer.create({ 
+  await prisma.developer.create({
     data: {
-        name: result.data.name,
-        role: result.data.role,
-        image: result.data.image,
-        github: result.data.github,
-        linkedin: result.data.linkedin,
-        category: result.data.category,
-    } 
+      name: result.data.name,
+      role: result.data.role,
+      image: result.data.image,
+      github: result.data.github,
+      linkedin: result.data.linkedin,
+      category: result.data.category,
+    }
   });
   revalidatePath("/admin/developers");
   revalidatePath("/developers");
@@ -72,7 +72,7 @@ export async function addDev(formData: FormData) {
 
 export async function updateDev(formData: FormData) {
   await checkAuth("ADMIN");
-  
+
   const id = formData.get("id") as string;
   const rawData = {
     name: formData.get("name"),
@@ -92,12 +92,12 @@ export async function updateDev(formData: FormData) {
   await prisma.developer.update({
     where: { id },
     data: {
-        name: result.data.name,
-        role: result.data.role,
-        image: result.data.image,
-        github: result.data.github,
-        linkedin: result.data.linkedin,
-        category: result.data.category,
+      name: result.data.name,
+      role: result.data.role,
+      image: result.data.image,
+      github: result.data.github,
+      linkedin: result.data.linkedin,
+      category: result.data.category,
     }
   });
   revalidatePath("/admin/developers");
@@ -118,7 +118,17 @@ export async function updateUserRole(formData: FormData) {
   const userId = formData.get("userId") as string;
   await prisma.user.update({ where: { id: userId }, data: { role } });
   await logAction("UPDATE_ROLE", `Changed user ${userId} to ${role}`);
-  
+
+  revalidatePath("/admin/users");
+}
+
+export async function deleteUser(formData: FormData) {
+  await checkAuth("SUPER_ADMIN"); // Ensures only Super Admin can do this
+  const userId = formData.get("userId") as string;
+
+  const user = await prisma.user.delete({ where: { id: userId } });
+  await logAction("REJECT_USER", `Rejected/Deleted user: ${user.email}`);
+
   revalidatePath("/admin/users");
 }
 
@@ -148,7 +158,7 @@ export async function deleteMessage(formData: FormData) {
 // --- TEAM MEMBERS ---
 export async function addMember(formData: FormData) {
   await checkAuth("ADMIN");
-  
+
   await prisma.teamMember.create({
     data: {
       name: formData.get("name") as string,
@@ -163,12 +173,12 @@ export async function addMember(formData: FormData) {
     }
   });
   revalidatePath("/admin/team");
-  revalidatePath("/team"); 
+  revalidatePath("/team");
 }
 
 export async function updateMember(formData: FormData) {
   await checkAuth("ADMIN");
-  
+
   const id = formData.get("id") as string;
 
   await prisma.teamMember.update({
@@ -191,7 +201,7 @@ export async function updateMember(formData: FormData) {
 
 export async function deleteMember(formData: FormData) {
   await checkAuth("ADMIN");
-  
+
   const id = formData.get("id") as string;
 
   await prisma.teamMember.delete({ where: { id } });

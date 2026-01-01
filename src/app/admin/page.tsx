@@ -1,5 +1,7 @@
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth"
+import { authOptions } from "@/lib/auth";
+import { updateUserRole, deleteUser } from "@/app/actions/admin"; // ✅ Import deleteUser
+import { FaUserShield, FaBan, FaCheck, FaTimes } from "react-icons/fa"; // ✅ Import FaTimes for X icon
 
 import { prisma } from "@/lib/prisma";
 
