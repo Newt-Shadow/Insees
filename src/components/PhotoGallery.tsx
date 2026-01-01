@@ -392,7 +392,7 @@ export default function PhotoGallery({ initialData }: PhotoGalleryProps) {
                       COORD: {Math.random().toFixed(4)} , {Math.random().toFixed(4)}
                    </div>
                    <div className="absolute top-4 right-16 text-[10px] font-mono text-white/20">
-                      RES: HIGH_DEF
+                      RES: HIGH__DEF
                    </div>
                 </motion.div>
               </div>
