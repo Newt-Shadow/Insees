@@ -123,7 +123,7 @@ export default async function Home() {
       {/* ✅ Fixed casting: Cast generic JSON data to our specific EventType[] */}
       <EventsTimeline events={eventsData as unknown as EventType[]} />
       
-      <div id="contact" className="bg-black/70 py-2 mt-1">
+      <div className="bg-black/70 py-2 mt-1">
         <ContactSection />
       </div>
     </>

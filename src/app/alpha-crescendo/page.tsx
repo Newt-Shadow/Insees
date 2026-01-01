@@ -81,7 +81,7 @@ export default function AlphaCrescendoPage() {
            
             </span> <br /> */}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-oz-emerald via-green-300 to-oz-emerald ]">
-               {"1's and 0's"}
+               {"1's and 0z"}
             </span>
           </motion.h1>
 

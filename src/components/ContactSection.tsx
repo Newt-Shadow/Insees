@@ -52,7 +52,7 @@ export default function ContactSection() {
 
 
   return (
-    <section  className="py-24  px-6 bg-black border-t border-white/10">
+    <section id="contact"  className="py-24  px-6 bg-black border-t border-white/10">
       <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16">
         {/* Info Column */}
         <div className="space-y-8">

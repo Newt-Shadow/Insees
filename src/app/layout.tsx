@@ -52,9 +52,9 @@ export const metadata: Metadata = {
   ],
 
   openGraph: {
-    title: "INSEES - Innovating the Future",
+    title: "INSEES ",
     description:
-      "Premier technical society of NIT Silchar. Robotics, electronics, IoT, and innovation.",
+      "Society Of Electronics and Instrumentation Department of NIT Silchar. Robotics, electronics, IoT, and innovation.",
     url: "https://insees.tech",
     siteName: "INSEES",
     locale: "en_US",
