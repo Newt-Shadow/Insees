@@ -65,7 +65,7 @@ export const AboutSection = () => {
                   Legacy of Innovation
                 </p>
                 <p className="text-oz-emerald text-sm font-mono">
-                  EST. 20XX
+                  EST. 2007
                 </p>
               </div>
             </motion.div>
