@@ -1,5 +1,6 @@
 "use client";
 import { motion } from "framer-motion";
+import Image from "next/image";
 import { Navbar } from "@/components/navbar";
 import { WhatsNew } from "@/components/alpha/WhatsNew";
 import { EventsGrid } from "@/components/alpha/EventsGrid";
@@ -9,12 +10,13 @@ import { SponsorsMarquee } from "@/components/SponsorsMarquee";
 import { SponsorshipTiers } from "@/components/alpha/SponsorshipTiers";
 import { YellowBrickRoad } from "@/components/alpha/YellowBrickRoad";
 import { useEffect, useState } from "react";
+import { InstrumindFlipCard } from "@/components/InstrumindFlip";
 
 const Countdown = () => {
   const calculateTimeLeft = () => {
     // TARGET DATE: January 27, 2025
     const difference = +new Date("2026-01-27") - +new Date();
-    
+
     if (difference < 0) {
       return { days: 0, hours: 0, minutes: 0, seconds: 0 };
     }
@@ -41,7 +43,7 @@ const Countdown = () => {
           <div className="relative w-16 h-16 md:w-24 md:h-24 flex items-center justify-center bg-zinc-900/80 border border-white/10 rounded-xl backdrop-blur-md overflow-hidden group-hover:border-oz-emerald/50 transition-all duration-500 shadow-2xl">
             {/* Scanline Animation */}
             <div className="absolute top-0 w-full h-[2px] bg-oz-emerald/50 shadow-[0_0_10px_#50C878] animate-scan opacity-50" />
-            
+
             <span className="text-2xl md:text-4xl font-bold font-orbitron text-white group-hover:text-oz-emerald transition-colors">
               {String(value).padStart(2, '0')}
             </span>
@@ -99,10 +101,10 @@ export default function AlphaCrescendoPage() {
       <Navbar />
 
       {/* HERO */}
-      <section className="relative h-screen flex items-center justify-center overflow-hidden bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-oz-dark via-black to-black">
+      <section className="relative  h-screen flex items-center justify-center overflow-hidden bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-oz-dark via-black to-black">
         <div className="absolute inset-0 opacity-20 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]" />
 
-        <div className="z-10 text-center px-4 max-w-5xl mx-auto">
+        <div className="z-10 mt-12 text-center px-4 max-w-5xl mx-auto">
           <motion.div
             initial={{ opacity: 0, scale: 0.5 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -125,7 +127,7 @@ export default function AlphaCrescendoPage() {
            
             </span> <br /> */}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-oz-emerald via-green-300 to-oz-emerald ]">
-               {"1's and 0z"}
+              {"1's and 0z"}
             </span>
           </motion.h1>
 
@@ -139,23 +141,23 @@ export default function AlphaCrescendoPage() {
           </motion.p>
 
           <Countdown />
-          
 
-          {/* <motion.div
+
+          <motion.div
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.6 }}
-            className="flex flex-col sm:flex-row gap-4 justify-center"
+            className="flex mt-8 flex-col sm:flex-row gap-4 justify-center"
           >
-            <button
+            {/* <button
               onClick={scrollToEvents}
               className="px-8 py-4 bg-oz-emerald hover:cursor-pointer text-amber-50 font-bold rounded-full hover:bg-oz-emerald/90 hover:scale-105 transition-all shadow-[0_0_20px_rgba(16,185,129,0.4)]">
               Register for Events
-            </button>
+            </button> */}
             <button className="px-8 py-4 bg-transparent border hover:cursor-pointer border-white/20 text-white font-bold rounded-full hover:bg-white/10 transition-all">
               Download Brochure
             </button>
-          </motion.div> */}
+          </motion.div>
         </div>
       </section>
 
@@ -165,22 +167,53 @@ export default function AlphaCrescendoPage() {
       {/* <EventsGrid /> */}
 
       {/* Magazine Teaser */}
-      <section className="py-20 px-4 border-y border-white/5">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-12">
-          <div className="flex-1">
-            <h2 className="text-4xl text-white font-bold mb-4">The Instrumind</h2>
-            <p className="text-gray-400 text-lg mb-6">
-              The annual magazine of INSEES. [cite_start]A platform that celebrates innovation and technical excellence. [cite: 164]
+      {/* ================= INSTRUMIND MAGAZINE ================= */}
+      <section className="relative py-28 px-4 bg-black border-y border-white/5 overflow-hidden">
+        {/* Ambient glow */}
+        
+
+        <div className="relative max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-20 items-center">
+
+          {/* TEXT SIDE */}
+          <div>
+            <span className="text-oz-gold font-mono text-sm tracking-widest">
+              03. OFFICIAL PUBLICATION
+            </span>
+
+            <h2 className="mt-4 text-4xl md:text-5xl font-extrabold text-white leading-tight">
+              The <span className=" bg-clip-text bg-gradient-to-r from-oz-emerald to-green-300">
+                Instrumind
+              </span>
+            </h2>
+
+            <p className="mt-6 text-gray-400 text-lg leading-relaxed max-w-xl">
+              The annual magazine of INSEES — a curated archive of ideas, innovations,
+              and technical excellence that defines the spirit of Alpha Crescendo.
             </p>
-            <button className="text-oz-gold font-bold underline hover:text-white transition-colors">
-              Read the 1st Edition
-            </button>
+
+            <div className="mt-10 flex items-center gap-6">
+              <button
+                onClick={() =>
+                  window.open("https://online.fliphtml5.com/svrwe/aupi/", "_blank")
+                }
+                className="px-8 py-4 bg-oz-emerald text-white hover:cursor-pointer font-bold rounded-full
+                     hover:scale-105 transition-all shadow-[0_0_25px_rgba(16,185,129,0.4)]"
+              >
+                Read 1st Edition
+              </button>
+
+              <span className="text-xs font-mono text-gray-500 tracking-widest">
+                FLIPBOOK • DIGITAL
+              </span>
+            </div>
           </div>
-          <div className="flex-1 h-64 bg-gradient-to-br from-gray-800 to-black rounded-2xl flex items-center justify-center border border-white/10">
-            <span className="text-gray-500 font-mono">Magazine Cover Placeholder</span>
-          </div>
+
+          {/* COVER SIDE */}
+          <InstrumindFlipCard />
+
         </div>
       </section>
+
 
       <Sponsors />
 
