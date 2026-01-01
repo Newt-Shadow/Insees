@@ -5,6 +5,7 @@ import { Navbar } from "@/components/navbar";
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { Github, Linkedin, Instagram, Facebook, Search, Terminal as TerminalIcon, Shield } from "lucide-react";
 import Image from "next/image";
+import { SiGooglescholar } from "react-icons/si";
 
 // --- TYPES ---
 export interface Member {
@@ -16,6 +17,7 @@ export interface Member {
     facebook?: string;
     linkedin?: string;
     github?: string;
+    scholar?: string;
   };
 }
 
@@ -34,8 +36,20 @@ const FACULTY_ADVISOR: Member = {
   img: "/lalu_seban.jpeg", // Make sure to upload an image here
   socials: {
     linkedin: "https://www.linkedin.com/school/nitsilchar/", // Update with actual link
+    scholar: "https://scholar.google.co.in/citations?user=Mb8rUm0AAAAJ&hl=en"
     // Add others if available
+
   }
+};
+
+const HOD_EIE: Member = {
+  name: "Dr. Munmun Khanra",
+  por: "HOD (EIE)",
+  img: "/munmun.jpeg",
+  socials: {
+    linkedin: "https://www.linkedin.com/in/munmun-khanra-a9092243/?originalSubdomain=in",
+    scholar: "https://scholar.google.com/citations?user=5tKH7h0AAAAJ&hl=en",
+  },
 };
 
 // --- OPTIMIZED 3D TILT WRAPPER ---
@@ -97,6 +111,20 @@ const TiltCard = ({ children }: { children: React.ReactNode }) => {
     </div>
   );
 };
+
+const AvatarImage = ({ src, alt }: { src: string; alt: string }) => {
+  return (
+    <Image
+      src={src}
+      alt={alt}
+      fill
+      sizes="(max-width: 768px) 100vw, 33vw"
+      className="object-cover transition-transform duration-500"
+      priority
+    />
+  );
+};
+
 
 // --- HOLO CARD COMPONENT ---
 const HoloCard = ({ member, rank }: { member: Member, rank: "CORE" | "EXEC" | "FACULTY" }) => {
@@ -166,6 +194,7 @@ const HoloCard = ({ member, rank }: { member: Member, rank: "CORE" | "EXEC" | "F
 
             <div className="w-full h-full rounded-full overflow-hidden relative z-10 bg-zinc-900">
               <Image
+                key={member.img}
                 src={member.img || "/members/avatar-placeholder.png"}
                 alt={member.name}
                 fill
@@ -204,6 +233,17 @@ const HoloCard = ({ member, rank }: { member: Member, rank: "CORE" | "EXEC" | "F
               {member.socials.github && (
                 <a href={member.socials.github} target="_blank" rel="noreferrer" className="p-2 rounded-full bg-white/5 hover:bg-white hover:text-black transition-all duration-300 hover:scale-110">
                   <Github size={18} />
+                </a>
+              )}
+              {rank === "FACULTY" && member.socials.scholar && (
+                <a
+                  href={member.socials.scholar}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="p-2 rounded-full bg-white/5 hover:bg-[#4285F4] hover:text-white transition-all duration-300 hover:scale-110"
+                  title="Google Scholar"
+                >
+                  <SiGooglescholar size={18} />
                 </a>
               )}
             </div>
@@ -329,10 +369,11 @@ export default function TeamClient({ initialData, initialYear }: { initialData: 
             <span className="font-mono text-xs text-gray-500 mb-2">{"// LEVEL 0 CLEARANCE"}</span>
           </div>
 
-          <div className="flex justify-center">
-            <div className="w-full max-w-sm">
-               <HoloCard member={FACULTY_ADVISOR} rank="FACULTY" />
-            </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 justify-center">
+           
+              <HoloCard member={HOD_EIE} rank="FACULTY" />
+              <HoloCard member={FACULTY_ADVISOR} rank="FACULTY" />
+          
           </div>
         </section>
 
