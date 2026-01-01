@@ -26,6 +26,18 @@ export interface TeamData {
   };
 }
 
+// --- FACULTY DATA (STATIC) ---
+// Since the Faculty In-Charge is the same for all years, we define him here.
+const FACULTY_ADVISOR: Member = {
+  name: "Dr. Lalu Seban", // Update this if the current FIC is different
+  por: "Faculty In-Charge",
+  img: "/lalu_seban.jpeg", // Make sure to upload an image here
+  socials: {
+    linkedin: "https://www.linkedin.com/school/nitsilchar/", // Update with actual link
+    // Add others if available
+  }
+};
+
 // --- OPTIMIZED 3D TILT WRAPPER ---
 const TiltCard = ({ children }: { children: React.ReactNode }) => {
   const rectRef = useRef<DOMRect | null>(null);
@@ -87,11 +99,41 @@ const TiltCard = ({ children }: { children: React.ReactNode }) => {
 };
 
 // --- HOLO CARD COMPONENT ---
-const HoloCard = ({ member, rank }: { member: Member, rank: "CORE" | "EXEC" }) => {
-  // Using a stable ID for hydration consistency (or random if needed only on client)
-  // For SSR, it's better to avoid random() during initial render to prevent mismatches.
-  // We'll generate a pseudo-random ID based on name for consistency.
+const HoloCard = ({ member, rank }: { member: Member, rank: "CORE" | "EXEC" | "FACULTY" }) => {
   const pseudoId = member.name.substring(0, 3).toUpperCase() + Math.floor(member.name.length * 123).toString().substring(0, 3);
+
+  // Define styles based on rank
+  const styles = {
+    FACULTY: {
+      gradient: "from-white via-slate-200 to-gray-400",
+      border: "border-white/50",
+      text: "text-white",
+      bg: "bg-white/10",
+      label: "LVL_0 // OVERSEER",
+      scanColor: "bg-white/50",
+      spinColor: "border-white/40"
+    },
+    CORE: {
+      gradient: "from-oz-emerald via-teal-400 to-cyan-500",
+      border: "border-oz-emerald/50",
+      text: "text-oz-emerald",
+      bg: "bg-oz-emerald/10",
+      label: "LVL_1 // ADMIN",
+      scanColor: "bg-oz-emerald/50",
+      spinColor: "border-oz-emerald/40"
+    },
+    EXEC: {
+      gradient: "from-oz-gold via-orange-400 to-yellow-200",
+      border: "border-oz-gold/50",
+      text: "text-oz-gold",
+      bg: "bg-oz-gold/10",
+      label: "LVL_2 // EXEC",
+      scanColor: "bg-oz-gold/50",
+      spinColor: "border-oz-gold/40"
+    }
+  };
+
+  const style = styles[rank];
 
   return (
     <motion.div
@@ -104,25 +146,22 @@ const HoloCard = ({ member, rank }: { member: Member, rank: "CORE" | "EXEC" }) =
     >
       <TiltCard>
         {/* Holographic Border Glow */}
-        <div className={`absolute -inset-0.5 opacity-30 group-hover:opacity-100 blur transition duration-500 rounded-xl bg-gradient-to-b ${rank === "CORE" ? "from-oz-emerald via-teal-400 to-cyan-500" : "from-oz-gold via-orange-400 to-yellow-200"}`} />
+        <div className={`absolute -inset-0.5 opacity-30 group-hover:opacity-100 blur transition duration-500 rounded-xl bg-gradient-to-b ${style.gradient}`} />
 
         <div className="relative h-full bg-black/90  border border-white/10 p-6 rounded-xl flex flex-col items-center overflow-hidden shadow-2xl backface-hidden">
 
           <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10 group-hover:opacity-20 transition-opacity" />
-          <div className="absolute top-0 left-0 w-full h-1 bg-oz-emerald/50 shadow-[0_0_15px_rgba(80,200,120,0.8)] animate-scan opacity-0 group-hover:opacity-100 pointer-events-none" />
+          <div className={`absolute top-0 left-0 w-full h-1 shadow-[0_0_15px_rgba(255,255,255,0.5)] animate-scan opacity-0 group-hover:opacity-100 pointer-events-none ${style.scanColor}`} />
 
           {/* Rank Badge */}
-          <div className={`absolute top-4 right-4 text-[10px] font-mono border px-2 py-0.5 rounded backdrop-blur-md z-20 ${rank === "CORE"
-              ? "border-oz-emerald/50 text-oz-emerald bg-oz-emerald/10"
-              : "border-oz-gold/50 text-oz-gold bg-oz-gold/10"
-            }`}>
-            {rank === "CORE" ? "LVL_1 // ADMIN" : "LVL_2 // EXEC"}
+          <div className={`absolute top-4 right-4 text-[10px] font-mono border px-2 py-0.5 rounded backdrop-blur-md z-20 ${style.border} ${style.text} ${style.bg}`}>
+            {style.label}
           </div>
 
           {/* Image Container */}
           <div className="relative w-28 h-28 sm:w-32 sm:h-32 lg:w-40 lg:h-40 mb-4 sm:mb-6 mt-10 sm:mt-6 lg:mt-4 shrink-0">
             <div className="absolute inset-0 rounded-full border border-white/10" />
-            <div className={`absolute inset-[-4px] border-2 border-dashed rounded-full animate-spin-slow ${rank === "CORE" ? "border-oz-emerald/40" : "border-oz-gold/40"}`} />
+            <div className={`absolute inset-[-4px] border-2 border-dashed rounded-full animate-spin-slow ${style.spinColor}`} />
             <div className="absolute inset-[-6px] sm:inset-[-10px] lg:inset-[-12px] border border-white/5 rounded-full animate-reverse-spin opacity-50" />
 
             <div className="w-full h-full rounded-full overflow-hidden relative z-10 bg-zinc-900">
@@ -142,7 +181,7 @@ const HoloCard = ({ member, rank }: { member: Member, rank: "CORE" | "EXEC" }) =
               {member.name}
             </h3>
             <div className="h-px w-12 bg-white/20 mx-auto my-3 group-hover:w-24 transition-all duration-300" />
-            <p className={`font-mono text-xs uppercase tracking-[0.2em] mb-6 ${rank === "CORE" ? "text-oz-emerald" : "text-oz-gold"}`}>
+            <p className={`font-mono text-xs uppercase tracking-[0.2em] mb-6 ${style.text}`}>
               {member.por}
             </p>
 
@@ -283,7 +322,21 @@ export default function TeamClient({ initialData, initialYear }: { initialData: 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-6 pb-32 space-y-24">
 
-        {/* CORE SECTION */}
+        {/* 1. FACULTY IN-CHARGE SECTION (New) */}
+        <section>
+          <div className="flex items-end gap-4 mb-12 border-b border-white/10 pb-4">
+            <h2 className="text-4xl font-bold font-orbitron text-white">FACULTY <span className="text-gray-400">IN-CHARGE</span></h2>
+            <span className="font-mono text-xs text-gray-500 mb-2">{"// LEVEL 0 CLEARANCE"}</span>
+          </div>
+
+          <div className="flex justify-center">
+            <div className="w-full max-w-sm">
+               <HoloCard member={FACULTY_ADVISOR} rank="FACULTY" />
+            </div>
+          </div>
+        </section>
+
+        {/* 2. CORE SECTION */}
         <section>
           <div className="flex items-end gap-4 mb-12 border-b border-white/10 pb-4">
             <h2 className="text-4xl font-bold font-orbitron text-white">CORE <span className="text-oz-emerald">UNIT</span></h2>
@@ -303,7 +356,7 @@ export default function TeamClient({ initialData, initialYear }: { initialData: 
           </div>
         </section>
 
-        {/* EXECUTIVE SECTION */}
+        {/* 3. EXECUTIVE SECTION */}
         <section>
           <div className="flex items-end gap-4 mb-12 border-b border-white/10 pb-4">
             <h2 className="text-4xl font-bold font-orbitron text-white">EXECUTIVE <span className="text-oz-gold">UNIT</span></h2>
