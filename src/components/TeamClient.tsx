@@ -112,18 +112,6 @@ const TiltCard = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-const AvatarImage = ({ src, alt }: { src: string; alt: string }) => {
-  return (
-    <Image
-      src={src}
-      alt={alt}
-      fill
-      sizes="(max-width: 768px) 100vw, 33vw"
-      className="object-cover transition-transform duration-500"
-      priority
-    />
-  );
-};
 
 
 // --- HOLO CARD COMPONENT ---
