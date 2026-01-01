@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   // Base URL set to your custom domain
-  const baseUrl = 'https://insees.tech';
+  const baseUrl = 'https://insees.in';
 
   return [
     { url: `${baseUrl}`, lastModified: new Date(), changeFrequency: 'daily', priority: 1 },

@@ -25,7 +25,7 @@ const orbitron = Orbitron({
 
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://insees.tech"),
+  metadataBase: new URL("https://insees.in"),
 
   icons: {
     icon: "/favicon.ico",
@@ -61,7 +61,7 @@ export const metadata: Metadata = {
     title: "INSEES ",
     description:
       "Society Of Electronics and Instrumentation Department of NIT Silchar. Robotics, electronics, IoT, and innovation.",
-    url: "https://insees.tech",
+    url: "https://insees.in",
     siteName: "INSEES",
     locale: "en_US",
     type: "website",

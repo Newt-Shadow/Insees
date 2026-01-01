@@ -16,6 +16,6 @@ export default function robots(): MetadataRoute.Robots {
         ],
       },
     ],
-    sitemap: "https://insees.tech/sitemap.xml",
+    sitemap: "https://insees.in/sitemap.xml",
   };
 }

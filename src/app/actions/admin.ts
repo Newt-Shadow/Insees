@@ -122,14 +122,39 @@ export async function updateUserRole(formData: FormData) {
   revalidatePath("/admin/users");
 }
 
+// src/app/actions/admin.ts
+
 export async function deleteUser(formData: FormData) {
-  await checkAuth("SUPER_ADMIN"); // Ensures only Super Admin can do this
-  const userId = formData.get("userId") as string;
+  try {
+    // 1. Check Permissions (Allow SUPER_ADMIN or ADMIN)
+    const session = await getServerSession(authOptions);
+    const userRole = session?.user?.role;
 
-  const user = await prisma.user.delete({ where: { id: userId } });
-  await logAction("REJECT_USER", `Rejected/Deleted user: ${user.email}`);
+    if (userRole !== "SUPER_ADMIN" && userRole !== "ADMIN") {
+      throw new Error("Unauthorized: Insufficient permissions");
+    }
 
-  revalidatePath("/admin/users");
+    const userId = formData.get("userId") as string;
+    if (!userId) throw new Error("No User ID provided");
+
+    console.log(`Attempting to delete user: ${userId}`);
+
+    // 2. Delete the user
+    const user = await prisma.user.delete({ 
+      where: { id: userId } 
+    });
+
+    // 3. Log the action
+    await logAction("REJECT_USER", `Rejected/Deleted user: ${user.email}`);
+    
+    console.log("User deleted successfully");
+    revalidatePath("/admin/users");
+    
+  } catch (error) {
+    console.error("❌ DELETE USER FAILED:", error);
+    // You might want to return an error state here if you switch to useFormState later
+    throw error; 
+  }
 }
 
 // --- RESOURCES ---

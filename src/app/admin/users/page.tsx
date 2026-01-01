@@ -19,36 +19,65 @@ export default async function ManageUsers() {
               </div>
             </div>
             <div className="flex items-center gap-4">
-              <span className="text-xs px-2 py-1 rounded bg-zinc-800 text-white font-mono">{user.role}</span>
-              <form action={updateUserRole} className="flex gap-2">
-                <input type="hidden" name="userId" value={user.id} />
-                {user.role === 'USER' && (
-                  <>
-                    {/* Approve Button */}
-                    <form action={updateUserRole}>
-                      <input type="hidden" name="userId" value={user.id} />
-                      <button name="role" value="ADMIN" className="bg-green-600 hover:bg-green-500 text-white px-3 py-1.5 rounded text-xs flex gap-1 items-center transition-colors">
-                        <FaCheck /> Approve
-                      </button>
-                    </form>
+              <span className="text-xs px-2 py-1 rounded bg-zinc-800 text-white font-mono">
+                {user.role}
+              </span>
 
-                    {/* ✅ Reject Button */}
-                    <form action={deleteUser}>
-                      <input type="hidden" name="userId" value={user.id} />
-                      <button className="bg-red-600/10 hover:bg-red-600 text-red-500 hover:text-white border border-red-600/50 px-3 py-1.5 rounded text-xs flex gap-1 items-center transition-all">
-                        <FaTimes /> Reject
-                      </button>
-                    </form>
-                  </>
-                )}
-                {user.role === 'ADMIN' && (
-                  <>
-                    <button name="role" value="SUPER_ADMIN" className="bg-purple-600 hover:bg-purple-500 text-white px-3 py-1 rounded text-xs flex gap-1 items-center"><FaUserShield /> Make Super</button>
-                    <button name="role" value="USER" className="bg-red-600 hover:bg-red-500 text-white px-3 py-1 rounded text-xs flex gap-1 items-center"><FaBan /> Revoke</button>
-                  </>
-                )}
-              </form>
+              {user.role === "USER" && (
+                <div className="flex gap-2">
+                  {/* ✅ APPROVE */}
+                  <form>
+                    <input type="hidden" name="userId" value={user.id} />
+                    <button
+                      formAction={updateUserRole}
+                      name="role"
+                      value="ADMIN"
+                      className="bg-green-600 hover:bg-green-500 text-white px-3 py-1.5 rounded text-xs flex gap-1 items-center"
+                    >
+                      <FaCheck /> Approve
+                    </button>
+                  </form>
+
+                  {/* ✅ REJECT */}
+                  <form>
+                    <input type="hidden" name="userId" value={user.id} />
+                    <button
+                      formAction={deleteUser}
+                      className="bg-red-600/10 hover:bg-red-600 text-red-500 hover:text-white
+                     border border-red-600/50 px-3 py-1.5 rounded text-xs
+                     flex gap-1 items-center transition-all"
+                    >
+                      <FaTimes /> Reject
+                    </button>
+                  </form>
+                </div>
+              )}
+
+              {user.role === "ADMIN" && (
+                <form className="flex gap-2">
+                  <input type="hidden" name="userId" value={user.id} />
+
+                  <button
+                    formAction={updateUserRole}
+                    name="role"
+                    value="SUPER_ADMIN"
+                    className="bg-purple-600 hover:bg-purple-500 text-white px-3 py-1 rounded text-xs flex gap-1 items-center"
+                  >
+                    <FaUserShield /> Make Super
+                  </button>
+
+                  <button
+                    formAction={updateUserRole}
+                    name="role"
+                    value="USER"
+                    className="bg-red-600 hover:bg-red-500 text-white px-3 py-1 rounded text-xs flex gap-1 items-center"
+                  >
+                    <FaBan /> Revoke
+                  </button>
+                </form>
+              )}
             </div>
+
           </div>
         ))}
       </div>

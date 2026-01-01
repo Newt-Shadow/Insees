@@ -2,6 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   output: "standalone",
+
   images: {
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
@@ -27,6 +28,23 @@ const nextConfig: NextConfig = {
         pathname: "/**",
       },
     ],
+  },
+
+  // ✅ ADD THIS BLOCK
+  async redirects() {
+    return [
+      {
+        source: "/:path*",
+        has: [
+          {
+            type: "host",
+            value: "insees.tech",
+          },
+        ],
+        destination: "https://insees.in/:path*",
+        permanent: true, // 301 redirect
+      },
+    ];
   },
 };
 
