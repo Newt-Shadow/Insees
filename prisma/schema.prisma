@@ -147,6 +147,7 @@ model Developer {
   image     String?
   github    String?
   linkedin  String?
+  category  String   @default("Junior") // Added: "Senior" or "Junior"
   createdAt DateTime @default(now())
 }
 

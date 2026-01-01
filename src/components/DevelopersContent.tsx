@@ -17,14 +17,16 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 
-/* ================== CATEGORIES ================== */
+/* ================== TYPES ================== */
+// Aligning with the Prisma Model
 type Dev = {
-  id: number;
+  id: string;
   name: string;
   role: string;
-  img: string;
-  github: string;
-  linkedin: string;
+  image: string | null;
+  github: string | null;
+  linkedin: string | null;
+  category: string;
 };
 
 const categories = [
@@ -60,79 +62,12 @@ const categories = [
   },
 ];
 
-/* ================== DEVELOPERS ================== */
-const seniorDevs = [
-  {
-    id: 1,
-    name: "Anmol",
-    role: "Web Development",
-    img: "/members/Anmol.jpeg",
-    github: "#",
-    linkedin: "https://www.linkedin.com/in/anmol77/",
-  },
-  {
-    id: 2,
-    name: "Devanuj",
-    role: "IoT",
-    img: "/members/devanuj.jpg",
-    github: "#",
-    linkedin: "https://linkedin.com/in/devanuj",
-  },
-];
-
-const juniorDevs = [
-  {
-    id: 3,
-    name: "Swapnil",
-    role: "Web Development",
-    img: "/members/Swapnil.jpeg",
-    github: "#",
-    linkedin: "https://www.linkedin.com/in/swapnil-deka-467975332/",
-  },
-  {
-    id: 4,
-    name: "Hafizur",
-    role: "App Development",
-    img: "/members/yeah.jpg",
-    github: "#",
-    linkedin: "https://www.linkedin.com/in/hafijurnits",
-  },
-  {
-    id: 5,
-    name: "Darpan",
-    role: "UI / UX",
-    img: "/members/darpan.jpg",
-    github: "#",
-    linkedin: "https://www.linkedin.com/mwlite/profile/me",
-  },
-  {
-    id: 6,
-    name: "Kavish",
-    role: "Cloud",
-    img: "/members/kavish.jpeg",
-    github: "#",
-    linkedin: "https://www.linkedin.com/in/kavish-sharma-724168314",
-  },
-  {
-    id: 7,
-    name: "Param",
-    role: "Web",
-    img: "/members/param.jpeg",
-    github: "#",
-    linkedin: "https://www.linkedin.com/in/param-nagar-786586244",
-  },
-  {
-    id: 8,
-    name: "Dhrubojyoti",
-    role: "Cloud",
-    img: "/members/Dhrubo.jpeg",
-    github: "#",
-    linkedin: "https://www.linkedin.com/in/dhrubajyoti-sarma-355488334",
-  },
-];
-
-export default function DevelopersContent() {
+export default function DevelopersContent({ initialDevelopers }: { initialDevelopers: Dev[] }) {
   const [activeTab, setActiveTab] = useState("developers.tsx");
+
+  // Filter developers based on the DB category
+  const seniorDevs = initialDevelopers.filter(d => d.category === 'Senior');
+  const juniorDevs = initialDevelopers.filter(d => d.category === 'Junior');
 
   return (
     <div className="min-h-screen bg-[#1e1e1e] text-gray-300 font-mono pt-24 pb-10 px-4 flex justify-center">
@@ -240,6 +175,10 @@ export default function DevelopersContent() {
 
 /* ================== DEV GRID COMPONENT ================== */
 function DevGrid({ devs }: { devs: Dev[] }) {
+  if (devs.length === 0) {
+    return <div className="text-gray-600 italic text-sm pl-4">{"// No developers found in this category."}</div>;
+  }
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {devs.map((dev, i) => (
@@ -261,7 +200,7 @@ function DevGrid({ devs }: { devs: Dev[] }) {
             <div className="flex items-center gap-4 mb-4">
               <div className="relative w-16 h-16 rounded-full overflow-hidden border-2 border-blue-500/30">
                 <Image
-                  src={dev.img}
+                  src={dev.image || "/default.jpg"}
                   alt={dev.name}
                   fill
                   className="object-cover"
@@ -282,18 +221,24 @@ function DevGrid({ devs }: { devs: Dev[] }) {
                 <span className="text-pink-400">return</span> (
               </p>
               <div className="pl-4 flex gap-3">
-                <a
-                  href={dev.github}
-                  className="text-gray-500 hover:text-white transition"
-                >
-                  <Github size={18} />
-                </a>
-                <a
-                  href={dev.linkedin}
-                  className="text-gray-500 hover:text-blue-400 transition"
-                >
-                  <Linkedin size={18} />
-                </a>
+                {dev.github && (
+                  <a
+                    href={dev.github}
+                    target="_blank"
+                    className="text-gray-500 hover:text-white transition"
+                  >
+                    <Github size={18} />
+                  </a>
+                )}
+                {dev.linkedin && (
+                   <a
+                   href={dev.linkedin}
+                   target="_blank"
+                   className="text-gray-500 hover:text-blue-400 transition"
+                 >
+                   <Linkedin size={18} />
+                 </a>
+                )}
               </div>
               <p>);</p>
             </div>

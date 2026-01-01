@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { addMember, updateMember, deleteMember } from "@/app/actions/admin";
 import { FaTrash, FaUserPlus, FaEdit, FaTimes } from "react-icons/fa";
 import ImageUpload from "./ImageUpload";
@@ -14,18 +15,18 @@ type Member = {
   image: string | null;
   linkedin: string | null;
   github: string | null;
+  instagram: string | null; // Added
+  facebook: string | null;  // Added
 };
 
 export default function TeamManager({ initialData }: { initialData: Member[] }) {
+  const router = useRouter();
   const [editingMember, setEditingMember] = useState<Member | null>(null);
-  
-  // State to manage the image URL specifically for the upload component
   const [imageUrl, setImageUrl] = useState("");
 
   const sessions = ["2025-26", "2024-25", "2023-24"];
   const categories = ["Core", "Executive", "Faculty"];
 
-  // Sync state when editing changes
   useEffect(() => {
     if (editingMember) {
       setImageUrl(editingMember.image || "");
@@ -35,7 +36,6 @@ export default function TeamManager({ initialData }: { initialData: Member[] }) 
   }, [editingMember]);
 
   const handleSubmit = async (formData: FormData) => {
-    // Ensure the image URL from state is in the form data (in case manual input wasn't used)
     formData.set("image", imageUrl);
 
     if (editingMember) {
@@ -46,10 +46,10 @@ export default function TeamManager({ initialData }: { initialData: Member[] }) 
     } else {
       await addMember(formData);
       setImageUrl("");
-      // Optional: Reset other form fields manually if not reloading
     }
-    // Force refresh to show new data
-    window.location.reload(); 
+    
+    // Soft refresh to update data without reloading the page
+    router.refresh();
   };
 
   return (
@@ -69,7 +69,8 @@ export default function TeamManager({ initialData }: { initialData: Member[] }) 
           )}
         </div>
 
-        <form action={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Key forces form reset when switching between 'Add' and 'Edit' modes */}
+        <form key={editingMember ? editingMember.id : "new"} action={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Full Name */}
           <div className="space-y-1">
             <label className="text-xs text-zinc-500 uppercase font-bold ml-1">Name</label>
@@ -98,12 +99,12 @@ export default function TeamManager({ initialData }: { initialData: Member[] }) 
             </select>
           </div>
 
-          {/* Image Upload - Spans full width on mobile, half on desktop */}
+          {/* Image Upload */}
           <div className="md:col-span-2 bg-zinc-950/50 p-4 rounded-xl border border-zinc-800">
             <ImageUpload value={imageUrl} onChange={setImageUrl} />
           </div>
           
-          {/* Social Links */}
+          {/* Social Links - Row 1 */}
           <div className="flex gap-4 md:col-span-2">
             <div className="w-1/2 space-y-1">
               <label className="text-xs text-zinc-500 uppercase font-bold ml-1">LinkedIn</label>
@@ -112,6 +113,18 @@ export default function TeamManager({ initialData }: { initialData: Member[] }) 
             <div className="w-1/2 space-y-1">
               <label className="text-xs text-zinc-500 uppercase font-bold ml-1">GitHub</label>
               <input name="github" defaultValue={editingMember?.github || ""} placeholder="https://github.com/..." className="w-full bg-black border border-zinc-700 p-3 rounded text-white focus:border-blue-500 transition-colors" />
+            </div>
+          </div>
+
+          {/* Social Links - Row 2 (Added) */}
+          <div className="flex gap-4 md:col-span-2">
+            <div className="w-1/2 space-y-1">
+              <label className="text-xs text-zinc-500 uppercase font-bold ml-1">Instagram</label>
+              <input name="instagram" defaultValue={editingMember?.instagram || ""} placeholder="https://instagram.com/..." className="w-full bg-black border border-zinc-700 p-3 rounded text-white focus:border-blue-500 transition-colors" />
+            </div>
+            <div className="w-1/2 space-y-1">
+              <label className="text-xs text-zinc-500 uppercase font-bold ml-1">Facebook</label>
+              <input name="facebook" defaultValue={editingMember?.facebook || ""} placeholder="https://facebook.com/..." className="w-full bg-black border border-zinc-700 p-3 rounded text-white focus:border-blue-500 transition-colors" />
             </div>
           </div>
 
