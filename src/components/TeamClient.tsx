@@ -112,8 +112,6 @@ const TiltCard = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-
-
 // --- HOLO CARD COMPONENT ---
 const HoloCard = ({ member, rank }: { member: Member, rank: "CORE" | "EXEC" | "FACULTY" }) => {
   const pseudoId = member.name.substring(0, 3).toUpperCase() + Math.floor(member.name.length * 123).toString().substring(0, 3);
@@ -358,10 +356,10 @@ export default function TeamClient({ initialData, initialYear }: { initialData: 
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 justify-center">
-           
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 justify-center">
               <HoloCard member={HOD_EIE} rank="FACULTY" />
               <HoloCard member={FACULTY_ADVISOR} rank="FACULTY" />
-          
+            </div>
           </div>
         </section>
 
