@@ -5,6 +5,18 @@ import { cloudinary } from "@/lib/cloudinary";
 export const runtime = "nodejs"; // Required for Cloudinary upload
 export const dynamic = "force-dynamic";
 
+type CloudinaryResource = {
+  public_id: string;
+  secure_url: string;
+  width: number;
+  height: number;
+};
+
+type CloudinaryFolder = {
+  name: string;
+};
+
+
 // GET: Fetch Images + Filter Options
 export async function GET() {
   try {
@@ -17,9 +29,9 @@ export async function GET() {
     const years = [...new Set(images.map((img) => img.year))].sort().reverse();
     const events = [...new Set(images.map((img) => img.event))].sort();
 
-    return NextResponse.json({ 
-      images, 
-      filters: { years, events } 
+    return NextResponse.json({
+      images,
+      filters: { years, events }
     });
   } catch (err) {
     console.error("Gallery Fetch Error:", err);
@@ -43,7 +55,12 @@ export async function POST(req: Request) {
       const arrayBuffer = await file.arrayBuffer();
       const buffer = Buffer.from(arrayBuffer);
 
-      return new Promise<any>((resolve, reject) => {
+      return new Promise<{
+        id: string;
+        src: string;
+        publicId: string;
+      }>((resolve, reject) => {
+
         cloudinary.uploader.upload_stream(
           {
             folder: `insees/gallery/${year}/${event}`, // Organize in Cloudinary too
@@ -51,7 +68,7 @@ export async function POST(req: Request) {
           },
           async (error, result) => {
             if (error) return reject(error);
-            
+
             // Save to DB
             if (result) {
               const savedImage = await prisma.galleryImage.create({
@@ -84,14 +101,14 @@ export async function POST(req: Request) {
 export async function DELETE(req: Request) {
   try {
     const { ids } = await req.json(); // Array of DB IDs
-    
+
     // 1. Get publicIds from DB to delete from Cloudinary
     const imagesToDelete = await prisma.galleryImage.findMany({
       where: { id: { in: ids } },
     });
 
     // 2. Delete from Cloudinary
-    const deletePromises = imagesToDelete.map((img) => 
+    const deletePromises = imagesToDelete.map((img) =>
       cloudinary.uploader.destroy(img.publicId)
     );
     await Promise.all(deletePromises);
