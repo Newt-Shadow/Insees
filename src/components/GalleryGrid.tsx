@@ -45,7 +45,7 @@ const GalleryGrid: React.FC<GalleryGridProps> = ({ category, images }) => {
             >
               <Image
                 src={img.src}
-                alt={img.category}
+                alt={img.src}
                 fill
                 sizes="(max-width: 640px) 100vw,
                        (max-width: 1024px) 50vw,
