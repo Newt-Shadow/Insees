@@ -79,6 +79,10 @@ export const AboutSection = () => {
             transition={{ duration: 0.7, delay: 0.15 }}
             className="w-full lg:w-7/12 space-y-6"
           >
+            <p className="sr-only">
+              INSEES is the official Instrumentation and Electronics Engineering Society of
+              NIT Silchar.
+            </p>
             <p className="text-lg md:text-xl text-gray-300 leading-relaxed font-light border-l-2 border-oz-emerald/50 pl-6">
               The{" "}
               <span className="font-semibold text-oz-emerald">
