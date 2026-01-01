@@ -6,6 +6,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Zap, LogIn, User } from "lucide-react";
 import { createPortal } from "react-dom";
 import { usePreloader } from "@/app/context/PreloaderContext";
+import { useRouter } from "next/navigation";
+
 
 const NAV_ITEMS = [
   { name: "HOME", href: "/", label: "HOME" },
@@ -14,7 +16,7 @@ const NAV_ITEMS = [
   { name: "TEAM", href: "/team", label: "TEAM" },
   { name: "GALLERY", href: "/gallery", label: "GALLERY" },
   { name: "RESOURCES", href: "/resources", label: "RESOURCES" },
-  { name: "CONTACT", href: "/#contact", label: "CONTACT" },
+  // { name: "CONTACT", href: null, label: "CONTACT" },
 ];
 
 export const Navbar = () => {
