@@ -333,7 +333,7 @@ export default function AdminGallery() {
                      <AlertTriangle className="text-blue-400" />
                      <div className="text-left">
                        <p className="text-blue-200 text-sm font-bold">Database Empty?</p>
-                       <p className="text-blue-400/80 text-xs">Click "Sync Cloudinary" at the top right to restore your existing images as "Legacy".</p>
+                       <p className="text-blue-400/80 text-xs">Click &quot;Sync Cloudinary&quot; at the top right to restore your existing images as "Legacy".</p>
                      </div>
                   </div>
                 )}
