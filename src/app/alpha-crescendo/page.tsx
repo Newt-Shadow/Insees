@@ -8,6 +8,50 @@ import { alphaContent } from "@/data/alphaCrescendoData";
 import { SponsorsMarquee } from "@/components/SponsorsMarquee";
 import { SponsorshipTiers } from "@/components/alpha/SponsorshipTiers";
 import { YellowBrickRoad } from "@/components/alpha/YellowBrickRoad";
+import { useEffect, useState } from "react";
+
+const Countdown = () => {
+  const calculateTimeLeft = () => {
+    // TARGET DATE: January 27, 2025
+    const difference = +new Date("2026-01-27") - +new Date();
+    
+    if (difference < 0) {
+      return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+    }
+
+    return {
+      days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+      hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+      minutes: Math.floor((difference / 1000 / 60) % 60),
+      seconds: Math.floor((difference / 1000) % 60),
+    };
+  };
+
+  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
+
+  useEffect(() => {
+    const timer = setTimeout(() => setTimeLeft(calculateTimeLeft()), 1000);
+    return () => clearTimeout(timer);
+  }, [timeLeft]);
+
+  return (
+    <div className="flex gap-3 md:gap-6 justify-center mt-12 flex-wrap relative z-20">
+      {Object.entries(timeLeft).map(([unit, value]) => (
+        <div key={unit} className="text-center group">
+          <div className="relative w-16 h-16 md:w-24 md:h-24 flex items-center justify-center bg-zinc-900/80 border border-white/10 rounded-xl backdrop-blur-md overflow-hidden group-hover:border-oz-emerald/50 transition-all duration-500 shadow-2xl">
+            {/* Scanline Animation */}
+            <div className="absolute top-0 w-full h-[2px] bg-oz-emerald/50 shadow-[0_0_10px_#50C878] animate-scan opacity-50" />
+            
+            <span className="text-2xl md:text-4xl font-bold font-orbitron text-white group-hover:text-oz-emerald transition-colors">
+              {String(value).padStart(2, '0')}
+            </span>
+          </div>
+          <p className="text-[10px] md:text-xs font-mono uppercase text-gray-500 mt-3 tracking-widest">{unit}</p>
+        </div>
+      ))}
+    </div>
+  );
+};
 
 // Simple About Component for Layout
 const AboutSection = () => (
@@ -94,7 +138,10 @@ export default function AlphaCrescendoPage() {
             {alphaContent.hero.tagline}
           </motion.p>
 
-          <motion.div
+          <Countdown />
+          
+
+          {/* <motion.div
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.6 }}
@@ -108,14 +155,14 @@ export default function AlphaCrescendoPage() {
             <button className="px-8 py-4 bg-transparent border hover:cursor-pointer border-white/20 text-white font-bold rounded-full hover:bg-white/10 transition-all">
               Download Brochure
             </button>
-          </motion.div>
+          </motion.div> */}
         </div>
       </section>
 
       {/* COMPONENTS */}
       <AboutSection />
       <WhatsNew />
-      <EventsGrid />
+      {/* <EventsGrid /> */}
 
       {/* Magazine Teaser */}
       <section className="py-20 px-4 border-y border-white/5">

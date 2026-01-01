@@ -113,7 +113,7 @@ export const SponsorshipTiers = () => {
                     ))}
                   </div>
 
-                  <button className="mt-12 w-full py-4 bg-oz-emerald text-amber-100 font-bold rounded-xl hover:scale-[1.02] transition-transform shadow-[0_0_20px_rgba(80,200,120,0.4)]">
+                  <button className="mt-12 w-full hover:cursor-pointer py-4 bg-oz-emerald text-amber-100 font-bold rounded-xl hover:scale-[1.02] transition-transform shadow-[0_0_20px_rgba(80,200,120,0.4)]">
                     DOWNLOAD PROSPECTUS
                   </button>
                 </motion.div>
