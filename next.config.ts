@@ -32,20 +32,22 @@ const nextConfig: NextConfig = {
 
   // ✅ ADD THIS BLOCK
   async redirects() {
-    return [
-      {
-        source: "/:path*",
-        has: [
-          {
-            type: "host",
-            value: "insees.tech",
-          },
-        ],
-        destination: "https://insees.in/:path*",
-        permanent: true, // 301 redirect
-      },
-    ];
-  },
+  return [
+    {
+      source: "/:path*",
+      has: [{ type: "host", value: "insees.tech" }],
+      destination: "https://insees.in/:path*",
+      permanent: true,
+    },
+    {
+      source: "/:path*",
+      has: [{ type: "host", value: "www.insees.tech" }],
+      destination: "https://insees.in/:path*",
+      permanent: true,
+    },
+  ];
+},
+
 };
 
 export default nextConfig;

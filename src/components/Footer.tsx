@@ -75,7 +75,7 @@ export const Footer = () => {
              <a href="https://www.instagram.com/insees_nits_/" target="_blank" className="p-2 bg-white/5 rounded-full hover:bg-pink-600 hover:text-white transition-all group border border-white/10">
                <Instagram size={18} />
              </a>
-             <a href="mailto:inseessociety.nits@gmail.com" className="p-2 bg-white/5 rounded-full hover:bg-oz-emerald hover:text-black transition-all group border border-white/10">
+             <a href="mailto:inseessociety.nits@gmail.com" className="p-2 bg-white/5 rounded-full hover:bg-oz-emerald hover:bg-sky-300 hover:text-white transition-all group border border-white/10">
                <Mail size={18} />
              </a>
           </div>

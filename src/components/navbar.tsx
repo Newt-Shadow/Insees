@@ -260,7 +260,7 @@ export const Navbar = () => {
                     <Link
                       href="/alpha-crescendo"
                       onClick={() => handleLinkClick("ALPHA CRESCENDO")}
-                      className="flex items-center justify-center w-full gap-2 py-4 bg-oz-emerald text-black font-orbitron font-bold text-sm tracking-widest uppercase rounded hover:bg-white transition-colors shadow-[0_0_20px_rgba(80,200,120,0.2)] hover:shadow-[0_0_30px_rgba(255,255,255,0.3)]"
+                      className="flex items-center justify-center w-full gap-2 py-4 bg-oz-emerald text-white font-orbitron font-bold text-sm tracking-widest uppercase rounded hover:bg-white transition-colors shadow-[0_0_20px_rgba(80,200,120,0.2)] hover:shadow-[0_0_30px_rgba(255,255,255,0.3)]"
                     >
                       <Zap size={18} fill="currentColor" />
                       Alpha Crescendo 2026
