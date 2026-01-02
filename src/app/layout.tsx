@@ -43,7 +43,7 @@ export const metadata: Metadata = {
   },
 
   description:
-    "The Instrumentation and Electronics Engineering Society (INSEES) at NIT Silchar. Driving innovation in robotics, IoT, embedded systems, and automation.",
+    "The Instrumentation and Engineering Society (INSEES) is the official technical and cultural society of the Department of Electronics and Instrumentation ",
 
   keywords: [
     "INSEES",

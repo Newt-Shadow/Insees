@@ -97,7 +97,7 @@ export const Navbar = () => {
             onClick={() => triggerBoot("HOME")}
           >
             <div className="relative flex items-center justify-center w-10 h-10 bg-oz-emerald/10 rounded-lg border border-oz-emerald/50 group-hover:bg-oz-emerald group-hover:text-black transition-all duration-300">
-              <Zap size={20} className="text-oz-emerald group-hover:text-black" />
+              <Zap size={20} className="text-oz-emerald group-hover:text-blue-100" />
             </div>
             <span className="text-xl font-orbitron font-bold text-white tracking-wider group-hover:text-oz-emerald transition-colors hidden sm:block">
               INSEES
