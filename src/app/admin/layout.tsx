@@ -10,6 +10,7 @@ import {
   FaEnvelope,
   FaShieldAlt
 } from "react-icons/fa";
+import SecurityGatekeeper from "@/components/admin/SecurityGatekeeper";
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const session = await getServerSession(authOptions);
@@ -35,6 +36,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
 
   return (role === "SUPER_ADMIN" || role === "ADMIN")&&  (
     <div className="min-h-screen flex bg-black text-white font-sans selection:bg-green-500/30">
+      <SecurityGatekeeper />
       {/* SIDEBAR */}
       <aside className="w-64 bg-zinc-900 border-r border-zinc-800 flex flex-col fixed h-full z-50">
         <div className="p-6 border-b border-zinc-800">

@@ -45,27 +45,43 @@ export const authOptions: NextAuthOptions = {
       },
     }),
   ],
-  session: { strategy: "jwt" },
+  session: {
+    strategy: "jwt",
+    maxAge: 30 * 60,
+  },
+  cookies: {
+    sessionToken: {
+      name: `next-auth.session-token`,
+      options: {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: process.env.NODE_ENV === 'production',
+        // ✅ KEY FIX: undefined maxAge makes it a "Session Cookie" (clears on browser close)
+        maxAge: undefined 
+      }
+    }
+  },
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id
-        
+
         token.role = user.role
       }
       return token
     },
     async session({ session, token }) {
       if (session.user) {
-      
+
         session.user.id = token.id as string
-   
+
         session.user.role = token.role as string
         prisma.user.update({
           where: { id: token.id as string },
           data: { lastActive: new Date() }
         }).catch(err => console.error("Error updating lastActive:", err));
-      
+
       }
       return session
     },
@@ -83,7 +99,7 @@ export const authOptions: NextAuthOptions = {
     async signOut({ token }) {
       // Note: In JWT sessions, 'token' contains the user payload
       if (token && token.sub) {
-         await logAdminAction(token.sub, "LOGOUT", "User logged out");
+        await logAdminAction(token.sub, "LOGOUT", "User logged out");
       }
     },
     async createUser({ user }) {
