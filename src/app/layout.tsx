@@ -9,6 +9,7 @@ import ScrollToTop from "@/components/ScrollToTop";
 import PreLoader from "@/components/PreLoader";
 import { PreloaderProvider } from "@/app/context/PreloaderContext"; // Import Provider
 
+
 const poppins = Poppins({ 
   subsets: ["latin"], 
   weight: ["300", "400", "600", "700", "800"], 
