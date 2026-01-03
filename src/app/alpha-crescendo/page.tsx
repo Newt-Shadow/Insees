@@ -122,12 +122,12 @@ export default function AlphaCrescendoPage() {
             transition={{ delay: 0.2 }}
             className="text-6xl md:text-9xl font-extrabold tracking-tighter mb-6 bg-clip-text text-transparent bg-gradient-to-b from-white to-gray-600"
           >
-            THE Land Of  <br />
+            Alpha  <br />
             {/* <span className="text-transparent bg-clip-text bg-gradient-to-r from-oz-emerald via-green-300 to-oz-emerald ]">
            
             </span> <br /> */}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-oz-emerald via-green-300 to-oz-emerald ]">
-              {"1's and 0z"}
+              {"Crescendo"}
             </span>
           </motion.h1>
 
