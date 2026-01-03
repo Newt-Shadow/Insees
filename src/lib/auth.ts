@@ -50,22 +50,27 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id
-        
         token.role = user.role
       }
       return token
     },
     async session({ session, token }) {
       if (session.user) {
-      
         session.user.id = token.id as string
-   
         session.user.role = token.role as string
-        prisma.user.update({
-          where: { id: token.id as string },
+
+        // ✅ OPTIMIZED: Update lastActive at most once per hour
+        // This prevents database spam on every session check/page load
+        const userId = token.id as string;
+        const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
+
+        prisma.user.updateMany({
+          where: {
+            id: userId,
+            lastActive: { lt: oneHourAgo }
+          },
           data: { lastActive: new Date() }
         }).catch(err => console.error("Error updating lastActive:", err));
-      
       }
       return session
     },
@@ -73,6 +78,12 @@ export const authOptions: NextAuthOptions = {
   events: {
     async signIn({ user, account, isNewUser }) {
       if (user.id) {
+        // Also update immediately on explicit login
+        await prisma.user.update({
+          where: { id: user.id },
+          data: { lastActive: new Date() }
+        }).catch(() => { }); // Ignore error if update fails
+
         await logAdminAction(
           user.id,
           isNewUser ? "REGISTER" : "LOGIN",
@@ -81,9 +92,8 @@ export const authOptions: NextAuthOptions = {
       }
     },
     async signOut({ token }) {
-      // Note: In JWT sessions, 'token' contains the user payload
       if (token && token.sub) {
-         await logAdminAction(token.sub, "LOGOUT", "User logged out");
+        await logAdminAction(token.sub, "LOGOUT", "User logged out");
       }
     },
     async createUser({ user }) {
