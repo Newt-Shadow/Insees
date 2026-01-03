@@ -52,7 +52,7 @@ export const AboutSection = () => {
               className="relative w-full rounded-2xl overflow-hidden border border-white/10 bg-zinc-900 shadow-2xl"
             >
               <Image
-                src="/image.png"
+                src="/og-v7.png"
                 alt="INSEES"
                 fill
                 className="object-cover"
