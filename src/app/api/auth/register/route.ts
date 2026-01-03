@@ -1,33 +1,50 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
+import { z } from "zod";
+
+// 1. Add Validation Schema
+const RegisterSchema = z.object({
+  name: z.string().min(2),
+  email: z.string().email(),
+  password: z.string().min(8, "Password must be at least 8 chars"),
+  department: z.string().optional(),
+});
 
 export async function POST(req: Request) {
   try {
-    const { name, email, password, department } = await req.json();
-
-    if (!email || !password || !name) {
-      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    const body = await req.json();
+    
+    // 2. Validate Input
+    const result = RegisterSchema.safeParse(body);
+    if (!result.success) {
+      return NextResponse.json({ error: result.error.flatten() }, { status: 400 });
     }
+    
+    const { name, email, password, department } = result.data;
 
-    // Check if user exists
     const existingUser = await prisma.user.findUnique({ where: { email } });
     if (existingUser) {
       return NextResponse.json({ error: "User already exists" }, { status: 400 });
     }
 
-    // Hash password
     const hashedPassword = await bcrypt.hash(password, 12);
 
-    // Create user
     const user = await prisma.user.create({
       data: {
         name,
         email,
         password: hashedPassword,
         department,
-        role: "USER", // Default role
+        role: "USER",
       },
+      // 3. SELECT only safe fields to return
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+      }
     });
 
     return NextResponse.json({ success: true, user });
