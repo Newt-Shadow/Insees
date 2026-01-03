@@ -163,7 +163,7 @@ export default function AlphaCrescendoPage() {
 
       {/* COMPONENTS */}
       <AboutSection />
-      <WhatsNew />
+      {/* <WhatsNew /> */}
       {/* <EventsGrid /> */}
 
       {/* Magazine Teaser */}

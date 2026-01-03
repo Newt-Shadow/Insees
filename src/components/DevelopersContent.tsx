@@ -132,7 +132,7 @@ export default function DevelopersContent({ initialDevelopers }: { initialDevelo
                 <br />
                 <span className="text-pink-400">const</span>{" "}
                 <span className="text-yellow-300">CurrentYear</span> ={" "}
-                <span className="text-green-300">2025</span>;
+                <span className="text-green-300">2026</span>;
               </div>
 
               {/* Categories */}

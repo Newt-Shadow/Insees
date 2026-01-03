@@ -37,7 +37,7 @@ export interface Event {
   registrationOpen: string | null;
 }
 
-const categories = ["Flagship", "Technical", "Cultural"];
+const categories = ["Flagship", "Technical", "Cultural", "Sports", "Others"];
 const years = ["2026", "2025", "Archives"];
 
 // --- STATUS BADGE ---
