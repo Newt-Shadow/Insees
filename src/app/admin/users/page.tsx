@@ -69,8 +69,8 @@ export default async function ManageUsers() {
                   {/* Role */}
                   <td className="p-4">
                     <span className={`text-xs px-2 py-1 rounded font-mono ${user.role === 'SUPER_ADMIN' ? 'bg-purple-500/20 text-purple-400' :
-                        user.role === 'ADMIN' ? 'bg-blue-500/20 text-blue-400' :
-                          'bg-zinc-700 text-zinc-300'
+                      user.role === 'ADMIN' ? 'bg-blue-500/20 text-blue-400' :
+                        'bg-zinc-700 text-zinc-300'
                       }`}>
                       {user.role}
                     </span>
@@ -115,15 +115,22 @@ export default async function ManageUsers() {
                       )}
 
                       {user.role === "ADMIN" && (
+                        <>
                         <form className="flex gap-2">
                           <input type="hidden" name="userId" value={user.id} />
+                          <input type="hidden" name="role" value="SUPER_ADMIN" />
                           <button formAction={updateUserRole} name="role" value="SUPER_ADMIN" className="px-3 py-1 bg-purple-600 hover:bg-purple-500 text-white rounded text-xs flex gap-1 items-center">
                             <FaUserShield /> Promote
                           </button>
+                        </form>
+                         <form className="flex gap-2">
+                          <input type="hidden" name="userId" value={user.id} />
+                          <input type="hidden" name="role" value="USER" />
                           <button formAction={updateUserRole} name="role" value="USER" className="px-3 py-1 bg-red-600 hover:bg-red-500 text-white rounded text-xs flex gap-1 items-center">
                             <FaBan /> Revoke
                           </button>
                         </form>
+                        </>
                       )}
                     </div>
                   </td>
