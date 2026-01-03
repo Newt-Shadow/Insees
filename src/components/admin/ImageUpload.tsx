@@ -10,6 +10,46 @@ interface ImageUploadProps {
   label?: string;
 }
 
+// Inside your component (e.g., src/components/admin/ImageUpload.tsx)
+
+const handleUpload = async (file: File) => {
+  try {
+    // 1. Get the signature from your new API route
+    const signResponse = await fetch("/api/sign-cloudinary", { method: "POST" });
+    const signData = await signResponse.json();
+
+    // 2. Prepare the form data for Cloudinary
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("api_key", process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY!);
+    formData.append("timestamp", signData.timestamp);
+    formData.append("signature", signData.signature);
+    formData.append("folder", "gallery_uploads");
+
+    // 3. Upload DIRECTLY to Cloudinary (Bypassing Vercel)
+    const cloudinaryResponse = await fetch(
+      `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
+    const data = await cloudinaryResponse.json();
+
+    if (!cloudinaryResponse.ok) throw new Error(data.error.message);
+
+    // 4. Success! You now have the URL
+    console.log("Uploaded Image URL:", data.secure_url);
+    
+    // NOW call your original backend API to save the URL to the database
+    // await saveToDatabase({ imageUrl: data.secure_url, ...otherData });
+
+  } catch (error) {
+    console.error("Upload failed:", error);
+    alert("Upload failed. Check console for details.");
+  }
+};
+
 export default function ImageUpload({
   value,
   onChange,
