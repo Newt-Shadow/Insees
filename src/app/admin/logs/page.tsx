@@ -6,6 +6,8 @@ import { authOptions } from "@/lib/auth";
 import LogFilters from "./LogFilters";
 import { Prisma } from "@prisma/client";
 import { FaFilter } from "react-icons/fa";
+import { Role } from "@prisma/client";
+
 
 // Define the shape of search params
 // interface SearchParams {
@@ -52,13 +54,12 @@ export default async function AuditLogs(props: {
   }
 
   // 3. Filter by User Role
-  if (role) {
-    // We need to filter based on the relation
-    where.user = {
-      // @ts-ignore - Prisma types sometimes struggle with enums in filters
-      role: role 
-    };
-  }
+  if (role && Object.values(Role).includes(role as Role)) {
+  where.user = {
+    role: role as Role,
+  };
+}
+
 
   // Fetch Logs (Increased limit to 500 for better history)
   const logs = await prisma.auditLog.findMany({
