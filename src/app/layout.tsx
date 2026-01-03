@@ -29,9 +29,14 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://insees.in"),
 
   icons: {
-    icon: "/favicon.ico",
-    shortcut: "/favicon.ico",
-    apple: "/favicon.ico",
+     icon: [
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/favicon.ico", sizes: "any" }
+    ],
+    apple: [
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }
+    ],
   },
 
   alternates: {
@@ -47,31 +52,19 @@ export const metadata: Metadata = {
     "The Instrumentation and Engineering Society (INSEES) is the official technical and cultural society of the Department of Electronics and Instrumentation at NIT Silchar",
 
   keywords: [
-    "INSEES",
-    "NIT Silchar",
-    "Instrumentation Engineering",
-    "Electronics Society",
-    "Robotics Club India",
-    "Embedded Systems NIT",
-    "IoT Projects",
-    "Student Tech Society",
-    "Technical Club NIT",
-    "Alpha Crescendo",
-    "EIE Department NIT Silchar",
-    "Innovation and Technology",
-    "Tech Events NIT",
-    "Cultural Society NIT",
-    "Electronics Workshops",
-    "Instrumentation Projects",
-    "NIT Silchar Clubs",
-    "Electronics and Instrumentation",
-    "Electronics and Instrumentation Engineering NIT Silchar",
-  ],
+  "INSEES",
+  "INSEES NIT Silchar",
+  "Instrumentation and Electronics Engineering Society",
+  "NIT Silchar",
+  "EIE Department NIT Silchar",
+  "Alpha Crescendo",
+  "Electronics and Instrumentation Department NIT Silchar",
+],
 
   openGraph: {
     title: "INSEES ",
     description:
-      "Official technical and cultural society of the Department of Electronics and Instrumentation .",
+      "Official technical and cultural society of the Department of Electronics and Instrumentation Engineering .",
     url: "https://insees.in",
     siteName: "INSEES",
     locale: "en_US",
