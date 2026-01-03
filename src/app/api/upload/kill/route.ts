@@ -1,129 +1,191 @@
-// src/app/api/upload/kill/route.ts
 import { NextResponse } from "next/server";
 import { v2 as cloudinary } from "cloudinary";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { logAdminAction } from "@/lib/logger";
 
-// 🔧 CONFIGURATION
+/* ------------------------------------------------------------------ */
+/* 🔧 CLOUDINARY CONFIG                                                 */
+/* ------------------------------------------------------------------ */
+
 cloudinary.config({
   cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// 🔒 STRICT WHITELIST
-// Only these emails can trigger the nuke, even if they are SUPER_ADMIN.
-const ALLOWED_COMMANDERS = [
-  "anmol.s.sahoo@gmail.com",
-  // Add other approved emails here
-];
+/* ------------------------------------------------------------------ */
+/* 🔒 ABSOLUTE WHITELIST (HUMAN IDENTITY)                                */
+/* ------------------------------------------------------------------ */
 
-// --- HELPER FUNCTIONS ---
+const ALLOWED_COMMANDERS = new Set<string>([
+  "anmol.s.sahoo@gmail.com",
+  // add more explicitly if needed
+]);
+
+/* ------------------------------------------------------------------ */
+/* 🔐 TYPES                                                             */
+/* ------------------------------------------------------------------ */
+
+type NukeRequestBody = {
+  confirm_step_1: string;
+  confirm_step_2: string;
+  passphrase: string;
+  nonce: string;
+  issuedAt: number;
+};
+
+type CloudinaryDeleteResponse = {
+  next_cursor?: string;
+};
+
+/* ------------------------------------------------------------------ */
+/* ⏱️ SECURITY CONSTANTS                                                 */
+/* ------------------------------------------------------------------ */
+
+const REQUIRED_CONFIRM_1 = "I_UNDERSTAND_THIS_ACTION_IS_IRREVERSIBLE";
+const REQUIRED_CONFIRM_2 = "EXECUTE_SYSTEM_NUCLEAR_WIPE";
+
+const PASSPHRASE = process.env.NUKE_PASSPHRASE!;
+const WINDOW_SECONDS = Number(process.env.NUKE_WINDOW_SECONDS ?? 30);
+
+/* ------------------------------------------------------------------ */
+/* 🛡️ HELPERS                                                           */
+/* ------------------------------------------------------------------ */
+
+function isWithinWindow(issuedAt: number): boolean {
+  const now = Date.now();
+  return Math.abs(now - issuedAt) <= WINDOW_SECONDS * 1000;
+}
+
+/* ------------------------------------------------------------------ */
+/* 💣 DESTRUCTION ROUTINES                                               */
+/* ------------------------------------------------------------------ */
 
 async function nukeAllResources() {
-  const resourceTypes = ["image", "video", "raw"];
+  const resourceTypes: Array<"image" | "video" | "raw"> = [
+    "image",
+    "video",
+    "raw",
+  ];
+
   for (const type of resourceTypes) {
-    let nextCursor: string | undefined = undefined;
+    let cursor: string | undefined;
+
     do {
-      // @ts-ignore - Cloudinary types can be finicky
-      const res = await cloudinary.api.delete_all_resources({
+      const res = (await cloudinary.api.delete_all_resources({
         resource_type: type,
-        next_cursor: nextCursor,
+        next_cursor: cursor,
         invalidate: true,
-      });
-      console.log(`🗑 Deleted ${type} batch`, res);
-      nextCursor = res.next_cursor;
-    } while (nextCursor);
+      })) as CloudinaryDeleteResponse;
+
+      cursor = res.next_cursor;
+    } while (cursor);
   }
 }
 
 async function nukeAllFolders() {
-  try {
-    const { folders } = await cloudinary.api.root_folders();
-    for (const folder of folders) {
-      console.log(`📂 Deleting folder: ${folder.name}`);
-      await cloudinary.api.delete_folder(folder.name).catch((err) => {
-        console.warn(`⚠️ Could not delete folder ${folder.name} (likely virtual or non-empty)`, err);
-      });
-    }
-  } catch (err) {
-    console.error("Folder deletion failed:", err);
+  const { folders } = await cloudinary.api.root_folders();
+  for (const folder of folders) {
+    await cloudinary.api.delete_folder(folder.name).catch(() => {
+      // Ignore virtual / protected folders
+    });
   }
 }
 
-// --- MAIN ROUTE ---
+/* ------------------------------------------------------------------ */
+/* ☢️ MAIN ROUTE                                                        */
+/* ------------------------------------------------------------------ */
 
 export async function POST(req: Request) {
   try {
-    // 🛡️ 1. AUTHENTICATION & ROLE CHECK
+    /* -------------------------------------------------------------- */
+    /* 🔑 AUTHENTICATION                                               */
+    /* -------------------------------------------------------------- */
+
     const session = await getServerSession(authOptions);
+
     if (!session || session.user.role !== "SUPER_ADMIN") {
-      // 🚨 Log Hacking Attempt
-      if (session?.user?.id) {
-        await logAdminAction(
-            session.user.id, 
-            "SECURITY_ALERT", 
-            "Insufficient privileges to access KILL switch"
-        );
-      }
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // 🛡️ 2. STRICT IDENTITY CHECK (The "Anmol Only" Rule)
-    if (!session.user.email || !ALLOWED_COMMANDERS.includes(session.user.email)) {
-      // 🚨 Log Insider Threat
+    if (!session.user.email || !ALLOWED_COMMANDERS.has(session.user.email)) {
       await logAdminAction(
-        session.user.id, 
-        "SECURITY_ALERT", 
-        `Unauthorized Commander: ${session.user.email} tried to NUKE the system.`
+        session.user.id,
+        "SECURITY_ALERT",
+        `Unauthorized commander attempt: ${session.user.email}`
       );
+      return NextResponse.json({ error: "Access denied" }, { status: 403 });
+    }
+
+    /* -------------------------------------------------------------- */
+    /* 🔐 PAYLOAD VALIDATION                                           */
+    /* -------------------------------------------------------------- */
+
+    const body = (await req.json()) as NukeRequestBody;
+
+    if (
+      body.confirm_step_1 !== REQUIRED_CONFIRM_1 ||
+      body.confirm_step_2 !== REQUIRED_CONFIRM_2
+    ) {
       return NextResponse.json(
-        { error: "Access Denied: You are not authorized for this destructive command." }, 
-        { status: 403 }
+        { error: "Double confirmation failed" },
+        { status: 400 }
       );
     }
 
-    // 🛡️ 3. "ASK TWICE" PROTOCOL (Double Confirmation)
-    // The request body MUST contain these two specific strings to proceed.
-    const body = await req.json();
-    
-    const check1 = body.confirm_step_1 === "I_AM_FULLY_AWARE_THIS_IS_PERMANENT";
-    const check2 = body.confirm_step_2 === "EXECUTE_NUCLEAR_WIPE";
-
-    if (!check1 || !check2) {
-      return NextResponse.json({ 
-        error: "Confirmation Failed",
-        message: "You must provide double confirmation to proceed.",
-        required_fields: {
-            confirm_step_1: "I_AM_FULLY_AWARE_THIS_IS_PERMANENT",
-            confirm_step_2: "EXECUTE_NUCLEAR_WIPE"
-        }
-      }, { status: 400 });
+    if (body.passphrase !== PASSPHRASE) {
+      await logAdminAction(
+        session.user.id,
+        "SECURITY_ALERT",
+        "Invalid nuclear passphrase attempt"
+      );
+      return NextResponse.json({ error: "Invalid passphrase" }, { status: 403 });
     }
 
-    console.log(`💀 NUCLEAR EVENT STARTED BY: ${session.user.email}`);
+    if (!isWithinWindow(body.issuedAt)) {
+      return NextResponse.json(
+        { error: "Request expired" },
+        { status: 408 }
+      );
+    }
 
-    // 📝 4. AUDIT LOGGING (Before Execution)
+    /* -------------------------------------------------------------- */
+    /* 📝 AUDIT BEFORE EXECUTION                                       */
+    /* -------------------------------------------------------------- */
+
     await logAdminAction(
       session.user.id,
       "SYSTEM_NUKE",
-      "⚠️ EXECUTED NUCLEAR WIPE: All assets are being deleted."
+      `NUCLEAR WIPE INITIATED | nonce=${body.nonce}`
     );
 
-    // 💣 5. EXECUTE WIPE
+    /* -------------------------------------------------------------- */
+    /* 💥 EXECUTION                                                    */
+    /* -------------------------------------------------------------- */
+
     await nukeAllResources();
     await nukeAllFolders();
 
-    console.log("✅ Nuclear wipe complete.");
+    /* -------------------------------------------------------------- */
+    /* 🧾 AUDIT AFTER EXECUTION                                        */
+    /* -------------------------------------------------------------- */
 
-    return NextResponse.json({ 
-      ok: true, 
-      message: "System Sanitized. All Cloudinary assets have been destroyed." 
+    await logAdminAction(
+      session.user.id,
+      "SYSTEM_NUKE_COMPLETE",
+      "All Cloudinary assets destroyed"
+    );
+
+    return NextResponse.json({
+      ok: true,
+      message: "☢️ System sanitized. All assets destroyed.",
     });
-
   } catch (error) {
-    console.error("Nuke failed:", error);
-    return NextResponse.json({ error: "Operation failed due to server error" }, { status: 500 });
+    console.error("NUKE FAILURE:", error);
+    return NextResponse.json(
+      { error: "Nuclear operation failed" },
+      { status: 500 }
+    );
   }
 }
