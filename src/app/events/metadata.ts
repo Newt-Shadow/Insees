@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Events | INSEES NIT Silchar",
+  title: "Events ",
   description:
     "Events, workshops, hackathons, and flagship programs conducted by INSEES, the Official Technical and Cultural Society of Electronics and Instrumentation Department (EIE) of NIT Silchar.",
   alternates: {

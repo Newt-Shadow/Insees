@@ -10,18 +10,18 @@ import PreLoader from "@/components/PreLoader";
 import { PreloaderProvider } from "@/app/context/PreloaderContext"; // Import Provider
 
 
-const poppins = Poppins({ 
-  subsets: ["latin"], 
-  weight: ["300", "400", "600", "700", "800"], 
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["300", "400", "600", "700", "800"],
   variable: "--font-poppins",
-  display: "swap" 
+  display: "swap"
 });
 
-const orbitron = Orbitron({ 
-  subsets: ["latin"], 
-  weight: ["400", "700", "900"], 
+const orbitron = Orbitron({
+  subsets: ["latin"],
+  weight: ["400", "700", "900"],
   variable: "--font-orbitron",
-  display: "swap" 
+  display: "swap"
 });
 
 
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://insees.in"),
 
   icons: {
-     icon: [
+    icon: [
       { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
       { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
       { url: "/favicon.ico", sizes: "any" }
@@ -52,14 +52,14 @@ export const metadata: Metadata = {
     "The Instrumentation and Engineering Society (INSEES) is the official technical and cultural society of the Department of Electronics and Instrumentation at NIT Silchar",
 
   keywords: [
-  "INSEES",
-  "INSEES NIT Silchar",
-  "Instrumentation and Electronics Engineering Society",
-  "NIT Silchar",
-  "EIE Department NIT Silchar",
-  "Alpha Crescendo",
-  "Electronics and Instrumentation Department NIT Silchar",
-],
+    "INSEES",
+    "INSEES NIT Silchar",
+    "Instrumentation and Electronics Engineering Society",
+    "NIT Silchar",
+    "EIE Department NIT Silchar",
+    "Alpha Crescendo",
+    "Electronics and Instrumentation Department NIT Silchar",
+  ],
 
   openGraph: {
     title: "INSEES ",
@@ -69,14 +69,24 @@ export const metadata: Metadata = {
     siteName: "INSEES",
     locale: "en_US",
     type: "website",
-    
+    images: [
+      {
+        url: "https://insees.in/og.png",
+        width: 1200,
+        height: 630,
+        alt: "INSEES - NIT Silchar",
+        type: "image/png",
+      },
+    ],
+
   },
 
   twitter: {
     card: "summary_large_image",
     title: "INSEES - NIT Silchar",
     description:
-      "Instrumentation and Electronics Engineering Society ",
+      "Official technical & cultural society of the Department of Electronics and Instrumentation Engineering.",
+    images: ["https://insees.in/og.png"],
   },
 
   robots: {
@@ -107,17 +117,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <PreloaderProvider>
           <GlobalLoader>
             {/* Global Effects */}
-           
-            
+
+
             {/* The Boot Sequence */}
             <PreLoader />
-            
+
             {/* Utilities */}
             <CommandPalette />
-            
+
             {/* Main Content */}
             {children}
-            
+
             {/* Footer - Note: Links inside Footer do NOT have onClick={triggerBoot}, so no animation */}
             <Footer />
             <ScrollToTop />

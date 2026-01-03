@@ -9,7 +9,7 @@ export const dynamic = "force-dynamic";
    METADATA (SEO)
 ========================= */
 export const metadata: Metadata = {
-  title: "Events | INSEES NIT Silchar",
+  title: "Events ",
   description:
     "Explore upcoming and past events, hackathons, workshops, and flagship programs organized by INSEES, the official Electronics and Instrumentation Engineering Society of NIT Silchar.",
   alternates: {

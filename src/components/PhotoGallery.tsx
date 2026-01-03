@@ -200,8 +200,8 @@ export default function PhotoGallery({ initialData }: PhotoGalleryProps) {
                  onClick={() => setFunc(item)}
                  className={`relative px-4 py-2 text-sm font-mono uppercase tracking-wider transition-all border rounded-sm ${
                    current === item
-                     ? `bg-white text-black border-white font-bold shadow-[0_0_10px_white]`
-                     : `bg-transparent text-gray-400 border-white/10 hover:border-white/50 hover:text-white`
+                     ? `bg-white text-black border-white hover:cursor-pointer font-bold shadow-[0_0_10px_white]`
+                     : `bg-transparent text-gray-400 border-white/10 hover:border-white/50 hover:cursor-pointer hover:text-white`
                  }`}
                >
                  {item}
