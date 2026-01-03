@@ -5,6 +5,16 @@ import { cloudinary } from "@/lib/cloudinary";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+type GalleryUpload = {
+  src: string;
+  publicId: string;
+  year: string;
+  event: string;
+  width?: number | null;
+  height?: number | null;
+};
+
+
 // GET (Keep this as is)
 export async function GET() {
   try {
