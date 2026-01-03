@@ -1,102 +1,98 @@
 "use client";
 
 import { useState } from "react";
-import { UploadCloud, X, Loader2, Image as ImageIcon } from "lucide-react";
-import Image from "next/image";
+import { FaCloudUploadAlt, FaTrash } from "react-icons/fa";
+import { getSignature } from "@/app/actions/cloudinary"; // Import the action
 
 interface ImageUploadProps {
-  value: string;
-  onChange: (url: string) => void;
+  onUpload: (url: string) => void;
+  defaultImage?: string;
+  label?: string;
 }
 
-export default function ImageUpload({ value, onChange }: ImageUploadProps) {
+export default function ImageUpload({ onUpload, defaultImage, label = "Upload Image" }: ImageUploadProps) {
+  const [image, setImage] = useState(defaultImage || "");
   const [uploading, setUploading] = useState(false);
 
-  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     setUploading(true);
-    const formData = new FormData();
-    formData.append("file", file);
 
     try {
-      // Uses your existing upload API
-      const res = await fetch("/api/upload", {
+      // 1. Get Secure Signature from Server
+      const { timestamp, signature } = await getSignature();
+
+      // 2. Prepare Direct Upload Form Data
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("api_key", process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY || ""); // Make sure this env var is public
+      formData.append("timestamp", timestamp.toString());
+      formData.append("signature", signature);
+      formData.append("folder", "gallery");
+
+      // 3. Upload Directly to Cloudinary
+      const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+      const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
         method: "POST",
         body: formData,
       });
-      
-      if (!res.ok) throw new Error("Upload failed");
-      
+
       const data = await res.json();
-      // Supports standard Cloudinary response or your custom response
-      const url = data.url || data.secure_url || data.data?.url; 
-      
-      if (url) {
-        onChange(url);
+
+      if (res.ok) {
+        setImage(data.secure_url);
+        onUpload(data.secure_url);
       } else {
-        alert("Upload successful but no URL returned.");
+        console.error("Cloudinary error:", data);
+        alert(`Upload failed: ${data.error?.message || "Unknown error"}`);
       }
     } catch (error) {
       console.error("Upload error:", error);
-      alert("Failed to upload image. Check console for details.");
+      alert("Something went wrong");
     } finally {
       setUploading(false);
     }
   };
 
   return (
-    <div className="space-y-4 w-full">
+    // ... (Keep your existing UI JSX) ...
+    <div className="space-y-2">
+      <label className="text-sm text-gray-400 block">{label}</label>
+      
       <div className="flex items-center gap-4">
-        {/* Preview / Upload Box */}
-        {value ? (
-          <div className="relative w-24 h-24 shrink-0 rounded-lg overflow-hidden border border-zinc-700 group bg-black">
-            <Image src={value} alt="Preview" fill className="object-cover" />
+        {image ? (
+          <div className="relative w-24 h-24 rounded-lg overflow-hidden border border-zinc-700 group">
+            <img src={image} alt="Uploaded" className="w-full h-full object-cover" />
             <button
-              onClick={() => onChange("")}
               type="button"
-              className="absolute top-1 right-1 bg-red-500/80 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600"
+              onClick={() => {
+                setImage("");
+                onUpload("");
+              }}
+              className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-red-400"
             >
-              <X size={12} />
+              <FaTrash />
             </button>
           </div>
         ) : (
-          <label className="flex flex-col items-center justify-center w-24 h-24 shrink-0 border-2 border-dashed border-zinc-700 rounded-lg cursor-pointer hover:border-blue-500 hover:bg-zinc-800/50 transition-all group">
-            <div className="flex flex-col items-center justify-center pt-2 pb-3">
-              {uploading ? (
-                <Loader2 className="w-6 h-6 text-blue-500 animate-spin" />
-              ) : (
-                <>
-                  <UploadCloud className="w-6 h-6 text-zinc-500 group-hover:text-blue-400 mb-1" />
-                  <span className="text-[10px] text-zinc-500 uppercase font-bold group-hover:text-blue-400">Upload</span>
-                </>
-              )}
-            </div>
-            <input 
-              type="file" 
-              className="hidden" 
-              onChange={handleUpload} 
-              accept="image/*" 
-              disabled={uploading} 
-            />
-          </label>
+          <div className="w-24 h-24 rounded-lg border-2 border-dashed border-zinc-700 flex items-center justify-center bg-zinc-900/50">
+            {uploading ? (
+              <div className="w-5 h-5 border-2 border-green-500 border-t-transparent rounded-full animate-spin"></div>
+            ) : (
+              <FaCloudUploadAlt className="text-zinc-600 text-2xl" />
+            )}
+          </div>
         )}
 
-        {/* Manual URL Input (Fallback) */}
-        <div className="flex-1 space-y-1">
-          <label className="text-xs text-zinc-500 uppercase font-bold flex items-center gap-2">
-            <ImageIcon size={12} /> Image Source
-          </label>
-          <input 
-            type="text"
-            name="image" // Important for FormData
-            value={value}
-            onChange={(e) => onChange(e.target.value)}
-            placeholder="Upload file OR paste URL..."
-            className="w-full bg-black border border-zinc-700 p-3 rounded text-white text-sm focus:border-blue-500 transition-colors placeholder:text-zinc-600" 
-          />
-        </div>
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleFileChange}
+          disabled={uploading}
+          className="text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-zinc-800 file:text-green-400 hover:file:bg-zinc-700 cursor-pointer"
+        />
       </div>
     </div>
   );
