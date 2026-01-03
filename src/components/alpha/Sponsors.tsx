@@ -88,7 +88,7 @@ export const Sponsors = () => {
           </motion.div>
         </div>
 
-        <SponsorshipTiers />
+        {/* <SponsorshipTiers /> */}
 
         {/* --- CTA CARD --- */}
         <div className="px-4">
@@ -103,9 +103,9 @@ export const Sponsors = () => {
                 {alphaContent.sponsors.cta}
               </p>
               <div className="flex flex-wrap justify-center gap-4">
-                <button className="px-8 py-3 hover:cursor-pointer rounded-full bg-white text-emerald-900 font-bold hover:bg-oz-gold hover:text-black transition-colors duration-300 shadow-[0_0_20px_rgba(255,255,255,0.3)] transform hover:scale-105">
+                {/* <button className="px-8 py-3 hover:cursor-pointer rounded-full bg-white text-emerald-900 font-bold hover:bg-oz-gold hover:text-black transition-colors duration-300 shadow-[0_0_20px_rgba(255,255,255,0.3)] transform hover:scale-105">
                   Download Prospectus
-                </button>
+                </button> */}
            
                 <Link
                   href="/#contact"
