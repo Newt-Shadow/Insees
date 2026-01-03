@@ -77,6 +77,13 @@ export const metadata: Metadata = {
         alt: "INSEES - NIT Silchar",
         type: "image/png",
       },
+      {
+        url: "https://insees.in/og-v3.png",
+        width: 1080,
+        height: 1080,
+        alt: "INSEES - NIT Silchar",
+        type: "image/png",
+      },
     ],
 
   },
