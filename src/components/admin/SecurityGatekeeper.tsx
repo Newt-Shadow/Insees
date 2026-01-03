@@ -7,8 +7,9 @@ import { FaUserClock } from "react-icons/fa";
 const MAX_TABS = 3;
 const INACTIVITY_LIMIT_MS = 10 * 60 * 1000; // 10 Minutes
 const WARNING_MS = 60 * 1000; // Warning 1 min before logout
-const HEARTBEAT_INTERVAL_MS = 3000; // Send "I'm alive" every 3s
-const PEER_TIMEOUT_MS = 10000; // Assume peer dead if no heartbeat for 10s
+const HEARTBEAT_INTERVAL_MS = 3000; // Local Tab Communication (Fast)
+const PEER_TIMEOUT_MS = 10000; 
+const DB_HEARTBEAT_MS = 2 * 60 * 1000; // ✅ Database Update (Slow - Every 2 mins)
 
 type Peer = {
   id: string;
@@ -20,8 +21,8 @@ export default function SecurityGatekeeper() {
   const { data: session } = useSession();
   const [warning, setWarning] = useState(false);
   
-  // Refs for state that shouldn't trigger re-renders
-  const peers = useRef<Map<string, number>>(new Map()); // Map<TabID, Timestamp>
+  // Refs
+  const peers = useRef<Map<string, number>>(new Map());
   const tabId = useRef<string>(Math.random().toString(36).substring(7));
   const csrfToken = useRef<string | undefined>(undefined);
   
@@ -30,11 +31,11 @@ export default function SecurityGatekeeper() {
   const warningTimer = useRef<NodeJS.Timeout | null>(null);
   const heartbeatTimer = useRef<NodeJS.Timeout | null>(null);
   const pruneTimer = useRef<NodeJS.Timeout | null>(null);
+  const dbHeartbeatTimer = useRef<NodeJS.Timeout | null>(null); // ✅ New Timer
 
   useEffect(() => {
     if (!session) return;
 
-    // 0. Fetch CSRF Token (Needed for "on-close" logout)
     getCsrfToken().then((token) => {
       csrfToken.current = token;
     });
@@ -44,38 +45,49 @@ export default function SecurityGatekeeper() {
 
     const handleMessage = (msg: MessageEvent) => {
       const { type, sender } = msg.data;
-      if (sender === tabId.current) return; // Ignore self
+      if (sender === tabId.current) return;
 
       const now = Date.now();
 
       if (type === "HEARTBEAT" || type === "PING") {
-        // Register/Update Peer
         peers.current.set(sender, now);
       }
 
       if (type === "PING") {
-        // Reply so they know we exist
         channel.postMessage({ type: "HEARTBEAT", sender: tabId.current });
       }
 
       if (type === "GOODBYE") {
-        // Peer closed gracefully
         peers.current.delete(sender);
       }
     };
 
     channel.onmessage = handleMessage;
 
-    // --- 2. HEARTBEAT & PRUNING ---
-    // Announce self immediately
+    // --- 2. LOCAL TAB HEARTBEAT & PRUNING ---
     channel.postMessage({ type: "PING", sender: tabId.current });
 
-    // Send Heartbeat periodically
+    // Send Local Heartbeat (Fast)
     heartbeatTimer.current = setInterval(() => {
       channel.postMessage({ type: "HEARTBEAT", sender: tabId.current });
     }, HEARTBEAT_INTERVAL_MS);
 
-    // Prune dead peers periodically
+    // ✅ DATABASE HEARTBEAT (Slow & Efficient)
+    // This prevents the "Connection Pool Timeout" crash
+    const sendDbHeartbeat = () => {
+      // Only update if tab is visible to save resources
+      if (document.visibilityState === 'visible') {
+        fetch("/api/admin/heartbeat", { method: "POST" }).catch((err) => {
+            console.warn("Background heartbeat failed", err);
+        });
+      }
+    };
+    // Send one immediately, then every 2 mins
+    sendDbHeartbeat(); 
+    dbHeartbeatTimer.current = setInterval(sendDbHeartbeat, DB_HEARTBEAT_MS);
+
+
+    // Prune dead peers
     pruneTimer.current = setInterval(() => {
       const now = Date.now();
       let activePeers = 0;
@@ -88,12 +100,9 @@ export default function SecurityGatekeeper() {
         }
       });
 
-      // 🔒 MAX TAB PROTECTION (FIXED LOGIC)
-      // activePeers = Number of *other* tabs open.
-      // If MAX_TABS is 3, and activePeers is 3, that means YOU are the 4th tab.
+      // 🔒 MAX TAB PROTECTION
       if (activePeers >= MAX_TABS) {
          console.warn(`Too many admin tabs open (${activePeers + 1}). Closing this session.`);
-         // Force strict logout if limit exceeded
          signOut({ callbackUrl: "/login?error=max_tabs" });
       }
     }, HEARTBEAT_INTERVAL_MS);
@@ -104,7 +113,6 @@ export default function SecurityGatekeeper() {
 
     const updateActivity = () => {
       const now = Date.now();
-      // If less than 1 second has passed since last reset, do nothing
       if (now - lastActivityRef.current < 1000) return;
       
       lastActivityRef.current = now;
@@ -123,17 +131,13 @@ export default function SecurityGatekeeper() {
     
     const events = ["mousedown", "mousemove", "keydown", "scroll", "touchstart"];
     events.forEach(event => window.addEventListener(event, onUserActivity, { passive: true }));
-    
-    // Initialize
     updateActivity();
 
 
-    // --- 4. EXIT HANDLER (The "Last Tab" Logic - UPDATED) ---
+    // --- 4. EXIT HANDLER (Last Tab Logic) ---
     const handleUnload = () => {
-      // 1. Tell others we are leaving
       channel.postMessage({ type: "GOODBYE", sender: tabId.current });
 
-      // 2. Check if we are the LAST one
       const now = Date.now();
       let activePeers = 0;
       peers.current.forEach((lastSeen) => {
@@ -141,20 +145,17 @@ export default function SecurityGatekeeper() {
       });
 
       if (activePeers === 0 && csrfToken.current) {
-        // 🚨 WE ARE THE LAST ADMIN TAB!
-        // Use sendBeacon for reliable delivery when browser is closing
         const params = new URLSearchParams();
         params.append("csrfToken", csrfToken.current);
         params.append("callbackUrl", "/login");
         params.append("json", "true");
 
-        // Create blob for Beacon
         const blob = new Blob([params.toString()], { type: "application/x-www-form-urlencoded" });
         
-        // 1. Try Beacon (Most Reliable on Unload)
+        // Try Beacon first
         const sent = navigator.sendBeacon("/api/auth/signout", blob);
 
-        // 2. Fallback to fetch with keepalive if Beacon fails
+        // Fallback
         if (!sent) {
             fetch("/api/auth/signout", {
                 method: "POST",
@@ -172,10 +173,12 @@ export default function SecurityGatekeeper() {
       channel.close();
       window.removeEventListener("beforeunload", handleUnload);
       events.forEach(event => window.removeEventListener(event, onUserActivity));
+      
       if (inactivityTimer.current) clearTimeout(inactivityTimer.current);
       if (warningTimer.current) clearTimeout(warningTimer.current);
       if (heartbeatTimer.current) clearInterval(heartbeatTimer.current);
       if (pruneTimer.current) clearInterval(pruneTimer.current);
+      if (dbHeartbeatTimer.current) clearInterval(dbHeartbeatTimer.current); // ✅ Clear DB Timer
     };
   }, [session]);
 

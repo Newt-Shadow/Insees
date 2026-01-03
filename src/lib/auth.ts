@@ -1,3 +1,4 @@
+// src/lib/auth.ts
 import type { NextAuthOptions } from "next-auth"
 import GoogleProvider from "next-auth/providers/google"
 import CredentialsProvider from "next-auth/providers/credentials"
@@ -23,32 +24,25 @@ export const authOptions: NextAuthOptions = {
         if (!credentials?.email || !credentials?.password) {
           throw new Error("Missing credentials")
         }
-
         const user = await prisma.user.findUnique({
           where: { email: credentials.email },
         })
-
         if (!user || !user.password) {
           throw new Error("Invalid credentials")
         }
-
-        const isValid = await bcrypt.compare(
-          credentials.password,
-          user.password
-        )
-
+        const isValid = await bcrypt.compare(credentials.password, user.password)
         if (!isValid) {
           throw new Error("Invalid credentials")
         }
-
         return user
       },
     }),
   ],
-  session: {
+  session: { 
     strategy: "jwt",
-    maxAge: 30 * 60,
+    maxAge: 30 * 60, // 30 minutes
   },
+  
   cookies: {
     sessionToken: {
       name: `next-auth.session-token`,
@@ -57,31 +51,26 @@ export const authOptions: NextAuthOptions = {
         sameSite: 'lax',
         path: '/',
         secure: process.env.NODE_ENV === 'production',
-        // ✅ KEY FIX: undefined maxAge makes it a "Session Cookie" (clears on browser close)
-        maxAge: undefined 
+        maxAge: undefined // Session cookie (deletes on browser close)
       }
     }
   },
+
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id
-
         token.role = user.role
       }
       return token
     },
     async session({ session, token }) {
       if (session.user) {
-
         session.user.id = token.id as string
-
         session.user.role = token.role as string
-        prisma.user.update({
-          where: { id: token.id as string },
-          data: { lastActive: new Date() }
-        }).catch(err => console.error("Error updating lastActive:", err));
-
+        
+        // ❌ DELETED: The database update that caused the crash is GONE.
+        // We handle this in SecurityGatekeeper now.
       }
       return session
     },
@@ -97,9 +86,8 @@ export const authOptions: NextAuthOptions = {
       }
     },
     async signOut({ token }) {
-      // Note: In JWT sessions, 'token' contains the user payload
       if (token && token.sub) {
-        await logAdminAction(token.sub, "LOGOUT", "User logged out");
+         await logAdminAction(token.sub, "LOGOUT", "User logged out");
       }
     },
     async createUser({ user }) {
