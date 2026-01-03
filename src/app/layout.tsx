@@ -71,7 +71,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "https://insees.in/og.png",
+        url: "https://insees.in/og-v2.png",
         width: 1200,
         height: 630,
         alt: "INSEES - NIT Silchar",
@@ -86,7 +86,7 @@ export const metadata: Metadata = {
     title: "INSEES - NIT Silchar",
     description:
       "Official technical & cultural society of the Department of Electronics and Instrumentation Engineering.",
-    images: ["https://insees.in/og.png"],
+    images: ["https://insees.in/og-v2.png"],
   },
 
   robots: {
