@@ -46,13 +46,19 @@ export interface AlphaContent {
     cta: string;
   };
 }
+  // hero: {
+  //   title: "Alpha Crescendo 2026",
+  //   subtitle: "The Wizard of Oz",
+  //   tagline: "Follow the Binary Brick Road to the Emerald City of Innovation.",
+  //   dates: "2026",
+  // },
 
 // --- Data ---
 export const alphaContent: AlphaContent = {
   hero: {
     title: "Alpha Crescendo 2026",
-    subtitle: "The Wizard of Oz",
-    tagline: "Follow the Binary Brick Road to the Emerald City of Innovation.",
+    subtitle: "",
+    tagline: "",
     dates: "2026",
   },
   about: {

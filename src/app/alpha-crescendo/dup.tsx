@@ -11,84 +11,49 @@ import { SponsorshipTiers } from "@/components/alpha/SponsorshipTiers";
 import { YellowBrickRoad } from "@/components/alpha/YellowBrickRoad";
 import { useEffect, useState } from "react";
 import { InstrumindFlipCard } from "@/components/InstrumindFlip";
-import Countdown from "./count";
 
-// const PHASES = [
-//   "AWAKENING",
-//   "IGNITION",
-//   "SURGE",
-//   "ASCENSION",
-//   "CRESCENDO",
-// ];
+const Countdown = () => {
+  const calculateTimeLeft = () => {
+    // TARGET DATE: January 27, 2025
+    const difference = +new Date("2026-01-27") - +new Date();
 
-// const Countdown = () => {
-//   const TARGET = new Date("2026-01-27T00:00:00Z").getTime();
-//   const ARC = 1000 * 60 * 60 * 24 * 42; // narrative arc
-//   const START = TARGET - ARC;
+    if (difference < 0) {
+      return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+    }
 
-//   const [tick, setTick] = useState(0);
+    return {
+      days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+      hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+      minutes: Math.floor((difference / 1000 / 60) % 60),
+      seconds: Math.floor((difference / 1000) % 60),
+    };
+  };
 
-//   useEffect(() => {
-//     const i = setInterval(() => setTick(t => t + 1), 1200);
-//     return () => clearInterval(i);
-//   }, []);
+  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
 
-//   const now = Date.now();
-//   const raw = Math.min(1, Math.max(0, (now - START) / ARC));
-//   const progress = Math.pow(raw, 0.7); // smooth, non-linear
+  useEffect(() => {
+    const timer = setTimeout(() => setTimeLeft(calculateTimeLeft()), 1000);
+    return () => clearTimeout(timer);
+  }, [timeLeft]);
 
-//   const phase = PHASES[Math.min(PHASES.length - 1, Math.floor(progress * PHASES.length))];
+  return (
+    <div className="flex gap-3 md:gap-6 justify-center mt-12 flex-wrap relative z-20">
+      {Object.entries(timeLeft).map(([unit, value]) => (
+        <div key={unit} className="text-center group">
+          <div className="relative w-16 h-16 md:w-24 md:h-24 flex items-center justify-center bg-zinc-900/80 border border-white/10 rounded-xl backdrop-blur-md overflow-hidden group-hover:border-oz-emerald/50 transition-all duration-500 shadow-2xl">
+            {/* Scanline Animation */}
+            <div className="absolute top-0 w-full h-[2px] bg-oz-emerald/50 shadow-[0_0_10px_#50C878] animate-scan opacity-50" />
 
-//   // Abstract signal (cannot be reverse engineered)
-//   const signal = Math.floor(60 + progress * 39 + Math.sin(tick) * 3);
-
-//   return (
-//     <div className="mt-16 flex flex-col items-center text-center relative z-20">
-
-//       {/* PHASE */}
-//       <motion.h3
-//         key={phase}
-//         initial={{ opacity: 0, y: 8 }}
-//         animate={{ opacity: 1, y: 0 }}
-//         transition={{ duration: 0.6 }}
-//         className="text-3xl md:text-4xl font-orbitron tracking-[0.4em] text-oz-emerald"
-//       >
-//         {phase}
-//       </motion.h3>
-
-//       {/* SUBTEXT */}
-//       <p className="mt-4 text-sm md:text-base text-gray-400 font-mono tracking-widest">
-//         SIGNAL STRENGTH INCREASING
-//       </p>
-
-//       {/* SIGNAL */}
-//       <div className="mt-10 flex items-baseline gap-3">
-//         <span className="text-6xl md:text-8xl font-extrabold tracking-tight text-white">
-//           {signal}
-//         </span>
-//         <span className="text-lg md:text-xl font-mono text-gray-500">
-//           %
-//         </span>
-//       </div>
-
-//       {/* PROGRESS LINE */}
-//       <div className="mt-10 w-64 md:w-80 h-[2px] bg-white/10 overflow-hidden rounded-full">
-//         <motion.div
-//           initial={{ width: 0 }}
-//           animate={{ width: `${signal}%` }}
-//           transition={{ duration: 0.8 }}
-//           className="h-full bg-gradient-to-r from-oz-emerald via-green-300 to-oz-emerald"
-//         />
-//       </div>
-
-//       {/* FOOTER TEXT */}
-//       <p className="mt-6 text-[10px] uppercase tracking-[0.5em] text-gray-600">
-//         Exact timing classified
-//       </p>
-//     </div>
-//   );
-// };
-
+            <span className="text-2xl md:text-4xl font-bold font-orbitron text-white group-hover:text-oz-emerald transition-colors">
+              {String(value).padStart(2, '0')}
+            </span>
+          </div>
+          <p className="text-[10px] md:text-xs font-mono uppercase text-gray-500 mt-3 tracking-widest">{unit}</p>
+        </div>
+      ))}
+    </div>
+  );
+};
 
 // Simple About Component for Layout
 const AboutSection = () => (
