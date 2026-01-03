@@ -239,7 +239,7 @@ export default function EventsClient({ initialEvents }: { initialEvents: Event[]
         </div>
         <div className="w-[1px] bg-white/10 h-8 hidden md:block" />
         <div className="flex gap-2 overflow-x-auto no-scrollbar">
-          <button onClick={() => setSelectedCategory("All")} className={`px-4 py-2 rounded-full text-xs font-bold border transition-all whitespace-nowrap ${selectedCategory === "All" ? "bg-oz-emerald text-black border-oz-emerald" : "border-white/10 text-gray-400 hover:border-white"}`}>ALL</button>
+          <button onClick={() => setSelectedCategory("All")} className={`px-4 py-2 rounded-full text-xs font-bold border transition-all whitespace-nowrap ${selectedCategory === "All" ? "bg-oz-emerald text-amber-50 border-oz-emerald" : "border-white/10 text-gray-400 hover:border-white"}`}>ALL</button>
           {categories.map((cat) => (
             <button key={cat} onClick={() => setSelectedCategory(cat)} className={`px-4 py-2 rounded-full text-xs font-bold border transition-all whitespace-nowrap ${selectedCategory === cat ? "bg-zinc-800 text-white border-white" : "border-white/10 text-gray-400 hover:border-white"}`}>{cat}</button>
           ))}

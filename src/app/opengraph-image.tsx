@@ -4,7 +4,7 @@ export const runtime = "edge";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-export default function Image() {
+export default function OpenGraphImage() {
   return new ImageResponse(
     (
       <div
@@ -12,123 +12,115 @@ export default function Image() {
           width: "100%",
           height: "100%",
           display: "flex",
-          flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
           backgroundColor: "#050505",
-          backgroundImage:
-            "radial-gradient(circle at 50% 50%, #103020 0%, #000000 80%)",
-          position: "relative",
+          fontFamily: "system-ui, -apple-system, BlinkMacSystemFont",
         }}
       >
-        {/* GRID */}
+        {/* Main Container */}
         <div
           style={{
-            position: "absolute",
-            inset: 0,
-            display: "flex",
-            backgroundImage:
-              "linear-gradient(rgba(52,211,153,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(52,211,153,0.1) 1px, transparent 1px)",
-            backgroundSize: "40px 40px",
-            opacity: 0.4,
-          }}
-        />
-
-        {/* CENTER LINE */}
-        <div
-          style={{
-            position: "absolute",
-            bottom: 0,
-            left: "50%",
-            width: 4,
-            height: "50%",
-            background: "linear-gradient(to top, #f59e0b, transparent)",
-            transform: "translateX(-50%)",
-            boxShadow: "0 0 20px #f59e0b",
-            display: "flex",
-          }}
-        />
-
-        {/* CONTENT */}
-        <div
-          style={{
-            zIndex: 10,
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            padding: 40,
-            border: "1px solid rgba(52,211,153,0.3)",
-            backgroundColor: "rgba(0,0,0,0.6)",
-            borderRadius: 20,
-            boxShadow: "0 0 60px rgba(52,211,153,0.25)",
+            padding: 80,
+            borderRadius: 24,
+            background:
+              "linear-gradient(180deg, rgba(16,185,129,0.08), rgba(0,0,0,0))",
+            border: "1px solid rgba(16,185,129,0.25)",
+            boxShadow: "0 0 80px rgba(16,185,129,0.18)",
           }}
         >
-          {/* ICON */}
+          {/* INSEES */}
           <div
             style={{
-              width: 80,
-              height: 80,
-              borderRadius: 12,
-              border: "4px solid #34d399",
               display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              marginBottom: 20,
-              boxShadow: "0 0 30px #34d399",
-              color: "#34d399",
-              fontSize: 40,
+              fontSize: 110,
               fontWeight: 900,
-            }}
-          >
-            ⚡
-          </div>
-
-          {/* TITLE */}
-          <div
-            style={{
-              display: "flex",
+              letterSpacing: "-0.03em",
               color: "#ffffff",
-              fontSize: 100,
-              fontWeight: 900,
-              letterSpacing: "-0.02em",
-              textShadow: "0 0 40px rgba(52,211,153,0.6)",
+              marginBottom: 12,
             }}
           >
             INSEES
           </div>
 
-          {/* SUBTITLE */}
+          {/* Subtitle */}
           <div
             style={{
               display: "flex",
-              gap: 12,
-              marginTop: 12,
               fontSize: 28,
-              fontFamily: "monospace",
-              letterSpacing: "0.2em",
-              textTransform: "uppercase",
-              color: "#a1a1aa",
+              fontWeight: 500,
+              color: "#d1d5db",
+              marginBottom: 26,
+              textAlign: "center",
+              maxWidth: 900,
             }}
           >
-            <span style={{ color: "#f59e0b" }}>// NIT SILCHAR</span>
-            <span style={{ color: "#34d399" }}>•</span>
-            <span style={{ color: "#f59e0b" }}>//</span>
+            Electronics & Instrumentation Engineering Society
           </div>
-        </div>
 
-        {/* FOOTER */}
-        <div
-          style={{
-            position: "absolute",
-            bottom: 30,
-            display: "flex",
-            fontFamily: "monospace",
-            fontSize: 16,
-            color: "#34d399",
-            opacity: 0.8,
-          }}
-        >
-          SYSTEM_STATUS:&nbsp;<span style={{ color: "#ffffff" }}>ONLINE</span>
+          {/* Divider */}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 16,
+              marginBottom: 26,
+            }}
+          >
+            <div
+              style={{
+                width: 120,
+                height: 2,
+                backgroundColor: "#10b981",
+                opacity: 0.6,
+              }}
+            />
+            <div
+              style={{
+                width: 10,
+                height: 10,
+                borderRadius: 999,
+                backgroundColor: "#10b981",
+              }}
+            />
+            <div
+              style={{
+                width: 120,
+                height: 2,
+                backgroundColor: "#10b981",
+                opacity: 0.6,
+              }}
+            />
+          </div>
+
+          {/* Institute */}
+          <div
+            style={{
+              display: "flex",
+              fontSize: 26,
+              fontWeight: 700,
+              letterSpacing: "0.15em",
+              color: "#10b981",
+              marginBottom: 14,
+            }}
+          >
+            NIT SILCHAR
+          </div>
+
+          {/* Footer line */}
+          <div
+            style={{
+              display: "flex",
+              fontSize: 18,
+              color: "#9ca3af",
+              textAlign: "center",
+            }}
+          >
+            Official Technical & Cultural Society
+          </div>
         </div>
       </div>
     ),
