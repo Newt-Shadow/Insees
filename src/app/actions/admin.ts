@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { z } from "zod";
+import { Role } from "@prisma/client";
 
 const DeveloperSchema = z.object({
   name: z.string().min(2, "Name too short"),
@@ -120,8 +121,19 @@ export async function deleteDev(formData: FormData) {
 // --- USERS (SUPER ADMIN) ---
 export async function updateUserRole(formData: FormData) {
   const session = await checkAuth("SUPER_ADMIN");
+  
   const role = formData.get("role") as "USER" | "ADMIN" | "SUPER_ADMIN";
   const userId = formData.get("userId") as string;
+  if (typeof userId !== "string") {
+    throw new Error("Invalid userId");
+  }
+  if (
+    typeof role !== "string" ||
+    !Object.values(Role).includes(role as Role)
+  ) {
+    throw new Error(`Invalid role value: ${role}`);
+  }
+
   await prisma.user.update({ where: { id: userId }, data: { role } });
   await logAction("UPDATE_ROLE", `Changed user ${userId} to ${role}`);
 
