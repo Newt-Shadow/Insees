@@ -12,7 +12,7 @@ import eventsData from "./../../public/data/events.json";
 // ✅ Keep the function logic available as requested, but we won't call it if not needed
 async function getEvents() {
   try {
-    const res = await fetch("https://insees.in/api/events", { 
+    const res = await fetch("https://www.insees.in/api/events", { 
       next: { revalidate: 60 }, 
     });
 
@@ -40,8 +40,8 @@ export default async function Home() {
     "@type": "StudentOrganization",
     "name": "INSEES",
     "alternateName": "Instrumentation and Electronics Engineering Society",
-    "url": "https://insees.in",
-    "logo": "https://insees.in/favicon.ico",
+    "url": "https://www.insees.in",
+    "logo": "https://www.insees.in/favicon.ico",
     "foundingDate": "2000", 
     "address": {
       "@type": "PostalAddress",

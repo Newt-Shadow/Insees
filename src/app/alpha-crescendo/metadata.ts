@@ -22,13 +22,13 @@ export const metadata: Metadata = {
     title: "Alpha Crescendo | INSEES NIT Silchar",
     description:
       "Discover Alpha Crescendo — the flagship techno-cultural fest of INSEES at NIT Silchar, featuring technical events, workshops, competitions, and innovation.",
-    url: "https://insees.in/alpha-crescendo",
+    url: "https://www.insees.in/alpha-crescendo",
     siteName: "INSEES",
     type: "website",
     locale: "en_IN",
     images: [
       {
-        url: "https://insees.in/image.png",
+        url: "https://www.insees.in/image.png",
         width: 1200,
         height: 630,
         alt: "Alpha Crescendo — INSEES NIT Silchar",
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     title: "Alpha Crescendo | INSEES NIT Silchar",
     description:
       "The flagship techno-cultural fest of INSEES at NIT Silchar — innovation, technology, and celebration.",
-    images: ["https://insees.in/image.png"],
+    images: ["https://www.insees.in/image.png"],
   },
 
   robots: {

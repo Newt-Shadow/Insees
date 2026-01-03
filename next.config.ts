@@ -46,13 +46,19 @@ const nextConfig: NextConfig = {
     {
       source: "/:path*",
       has: [{ type: "host", value: "insees.tech" }],
-      destination: "https://insees.in/:path*",
+      destination: "https://www.insees.in/:path*",
       permanent: true,
     },
     {
       source: "/:path*",
       has: [{ type: "host", value: "www.insees.tech" }],
-      destination: "https://insees.in/:path*",
+      destination: "https://www.insees.in/:path*",
+      permanent: true,
+    },
+    {
+      source: "/:path*",
+      has: [{ type: "host", value: "insees.in" }],
+      destination: "https://www.insees.in/:path*",
       permanent: true,
     },
   ];

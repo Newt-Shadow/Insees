@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     title: "Events | INSEES NIT Silchar",
     description:
       "Discover technical, cultural, and flagship events conducted by INSEES at NIT Silchar.",
-    url: "https://insees.in/events",
+    url: "https://www.insees.in/events",
     siteName: "INSEES",
     type: "website",
     locale: "en_IN",
@@ -81,7 +81,7 @@ export default async function EventsPage() {
       organizer: {
         "@type": "Organization",
         name: "INSEES",
-        url: "https://insees.in",
+        url: "https://www.insees.in",
       },
     })),
   };

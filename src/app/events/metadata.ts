@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     title: "Events | INSEES NIT Silchar",
     description:
       "Explore all technical, cultural, and flagship events organized by INSEES at NIT Silchar.",
-    url: "https://insees.in/events",
+    url: "https://www.insees.in/events",
     type: "website",
   },
 };

@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     title: "Team | INSEES NIT Silchar",
     description:
       "Discover the team behind INSEES — students driving innovation, leadership, and technical excellence at NIT Silchar.",
-    url: "https://insees.in/team",
+    url: "https://www.insees.in/team",
     siteName: "INSEES",
     type: "website",
   },

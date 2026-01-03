@@ -26,7 +26,7 @@ const orbitron = Orbitron({
 
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://insees.in"),
+  metadataBase: new URL("https://www.insees.in"),
 
   icons: {
     icon: [
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
   },
 
   alternates: {
-    canonical: "/",
+    canonical: "https://www.insees.in",
   },
 
   title: {
@@ -65,20 +65,20 @@ export const metadata: Metadata = {
     title: "INSEES ",
     description:
       "Official technical & cultural society of the Department of Electronics and Instrumentation Engineering .",
-    url: "https://insees.in",
+    url: "https://www.insees.in",
     siteName: "INSEES",
-    locale: "en_US",
+    locale: "en_IN",
     type: "website",
     images: [
       {
-        url: "https://insees.in/og-v2.png",
+        url: "https://www.insees.in/og-v2.png",
         width: 1200,
         height: 630,
         alt: "INSEES - NIT Silchar",
         type: "image/png",
       },
       {
-        url: "https://insees.in/og-v3.png",
+        url: "https://www.insees.in/og-v3.png",
         width: 1080,
         height: 1080,
         alt: "INSEES - NIT Silchar",
@@ -93,7 +93,7 @@ export const metadata: Metadata = {
     title: "INSEES - NIT Silchar",
     description:
       "Official technical & cultural society of the Department of Electronics and Instrumentation Engineering.",
-    images: ["https://insees.in/og-v2.png"],
+    images: ["https://www.insees.in/og-v2.png"],
   },
 
   robots: {
