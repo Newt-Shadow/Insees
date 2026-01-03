@@ -8,13 +8,14 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-export async function getSignature() {
+// ✅ UPDATED: Accepts a dynamic folder path
+export async function getSignature(folder: string) {
   const timestamp = Math.round(new Date().getTime() / 1000);
 
   const signature = cloudinary.utils.api_sign_request(
     {
       timestamp,
-      folder: "gallery", // Optional: Organize your uploads
+      folder, 
     },
     process.env.CLOUDINARY_API_SECRET!
   );

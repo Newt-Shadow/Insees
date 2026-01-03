@@ -2,30 +2,15 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { cloudinary } from "@/lib/cloudinary";
 
-export const runtime = "nodejs"; // Required for Cloudinary upload
+export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-type CloudinaryResource = {
-  public_id: string;
-  secure_url: string;
-  width: number;
-  height: number;
-};
-
-type CloudinaryFolder = {
-  name: string;
-};
-
-
-// GET: Fetch Images + Filter Options
+// GET (Keep this as is)
 export async function GET() {
   try {
     const images = await prisma.galleryImage.findMany({
       orderBy: { createdAt: "desc" },
     });
-
-    // Extract unique Years and Events dynamically from the data
-    // This ensures if you add a new year in Admin, it appears here automatically.
     const years = [...new Set(images.map((img) => img.year))].sort().reverse();
     const events = [...new Set(images.map((img) => img.event))].sort();
 
@@ -39,81 +24,53 @@ export async function GET() {
   }
 }
 
-// POST: Upload Images
+// ✅ POST (UPDATED: Receives URLs, does NOT upload files)
 export async function POST(req: Request) {
   try {
-    const formData = await req.formData();
-    const files = formData.getAll("files") as File[];
-    const year = formData.get("year") as string;
-    const event = formData.get("event") as string;
+    const body = await req.json(); // Read JSON, not FormData
+    const { uploads } = body; 
 
-    if (!files.length || !year || !event) {
-      return NextResponse.json({ error: "Missing fields" }, { status: 400 });
+    if (!uploads || !Array.isArray(uploads)) {
+      return NextResponse.json({ error: "Invalid data" }, { status: 400 });
     }
 
-    const uploadPromises = files.map(async (file) => {
-      const arrayBuffer = await file.arrayBuffer();
-      const buffer = Buffer.from(arrayBuffer);
-
-      return new Promise<{
-        id: string;
-        src: string;
-        publicId: string;
-      }>((resolve, reject) => {
-
-        cloudinary.uploader.upload_stream(
-          {
-            folder: `insees/gallery/${year}/${event}`, // Organize in Cloudinary too
-            resource_type: "image",
+    // Save all to database
+    const savedImages = await prisma.$transaction(
+      uploads.map((img: any) => 
+        prisma.galleryImage.create({
+          data: {
+            src: img.src,
+            publicId: img.publicId,
+            width: img.width,
+            height: img.height,
+            year: img.year,
+            event: img.event,
           },
-          async (error, result) => {
-            if (error) return reject(error);
+        })
+      )
+    );
 
-            // Save to DB
-            if (result) {
-              const savedImage = await prisma.galleryImage.create({
-                data: {
-                  src: result.secure_url,
-                  publicId: result.public_id,
-                  width: result.width,
-                  height: result.height,
-                  year,
-                  event,
-                },
-              });
-              resolve(savedImage);
-            }
-          }
-        ).end(buffer);
-      });
-    });
-
-    const results = await Promise.all(uploadPromises);
-    return NextResponse.json({ success: true, data: results });
+    return NextResponse.json({ success: true, data: savedImages });
 
   } catch (err) {
-    console.error("Upload Error:", err);
-    return NextResponse.json({ error: "Upload failed" }, { status: 500 });
+    console.error("DB Save Error:", err);
+    return NextResponse.json({ error: "Database save failed" }, { status: 500 });
   }
 }
 
-// DELETE: Bulk Delete
+// DELETE (Keep this as is)
 export async function DELETE(req: Request) {
   try {
-    const { ids } = await req.json(); // Array of DB IDs
-
-    // 1. Get publicIds from DB to delete from Cloudinary
+    const { ids } = await req.json(); 
     const imagesToDelete = await prisma.galleryImage.findMany({
       where: { id: { in: ids } },
     });
 
-    // 2. Delete from Cloudinary
     const deletePromises = imagesToDelete.map((img) =>
       cloudinary.uploader.destroy(img.publicId)
     );
     await Promise.all(deletePromises);
 
-    // 3. Delete from DB
     await prisma.galleryImage.deleteMany({
       where: { id: { in: ids } },
     });

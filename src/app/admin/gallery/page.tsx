@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
+import { getSignature } from "@/app/actions/cloudinary"; // Import the updated action
 import { UploadCloud, Trash2, RefreshCw, Plus, Filter, CheckCircle, Database, CheckSquare, Square, AlertTriangle } from "lucide-react";
 
 interface GalleryImage {
@@ -57,25 +58,75 @@ export default function AdminGallery() {
     if (!uploadEvent) return alert("Please select or enter an event name");
     
     setUploading(true);
-    const formData = new FormData();
-    formData.append("year", uploadYear);
-    formData.append("event", uploadEvent);
-    files.forEach(f => formData.append("files", f));
 
     try {
-      const res = await fetch("/api/gallery", { method: "POST", body: formData });
-      const data = await res.json();
-      if (data.success) {
-        alert(`Successfully uploaded ${data.data.length} images!`);
-        setFiles([]);
-        setNewEventMode(false);
-        fetchData(); // Refresh UI
-      } else {
-        alert("Upload failed");
+      const uploadedData = [];
+      const folder = `insees/gallery/${uploadYear}/${uploadEvent}`;
+
+      // 1. Get One Signature for the batch (Efficiency!)
+      const { timestamp, signature } = await getSignature(folder);
+
+      // 2. Loop and Upload to Cloudinary Client-Side
+      for (const file of files) {
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("api_key", process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY!);
+        formData.append("timestamp", timestamp.toString());
+        formData.append("signature", signature);
+        formData.append("folder", folder);
+
+        // Upload to Cloudinary
+        const uploadRes = await fetch(
+          `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
+          {
+            method: "POST",
+            body: formData,
+          }
+        );
+
+        if (!uploadRes.ok) {
+           console.error("Failed to upload", file.name);
+           continue;
+        }
+
+        const result = await uploadRes.json();
+        
+        // Prepare data for our DB
+        uploadedData.push({
+          src: result.secure_url,
+          publicId: result.public_id,
+          width: result.width,
+          height: result.height,
+          year: uploadYear,
+          event: uploadEvent
+        });
       }
+
+      // 3. Save metadata to your Database
+      if (uploadedData.length > 0) {
+        const dbRes = await fetch("/api/gallery", { 
+          method: "POST", 
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ uploads: uploadedData }) // Send JSON
+        });
+        
+        const dbData = await dbRes.json();
+        
+        if (dbData.success) {
+          alert(`Successfully uploaded ${uploadedData.length} images!`);
+          setFiles([]);
+          setNewEventMode(false);
+          fetchData(); 
+        } else {
+          alert("Images uploaded to Cloud, but DB save failed.");
+        }
+      } else {
+        alert("Upload failed. Check API Keys.");
+      }
+
     } catch (e) {
       console.error(e);
-      alert("Error uploading");
+      alert("Error during upload process");
     }
     setUploading(false);
   };
