@@ -101,7 +101,8 @@ export default async function ManageUsers() {
                         <>
                           <form>
                             <input type="hidden" name="userId" value={user.id} />
-                            <button formAction={updateUserRole} name="role" value="ADMIN" className="p-2 bg-green-600 hover:bg-green-500 text-white rounded text-xs" title="Approve">
+                            <input type="hidden" name="role" value="ADMIN" />
+                            <button formAction={updateUserRole}  className="p-2 bg-green-600 hover:bg-green-500 text-white rounded text-xs" title="Approve">
                               <FaCheck />
                             </button>
                           </form>
@@ -119,14 +120,14 @@ export default async function ManageUsers() {
                         <form className="flex gap-2">
                           <input type="hidden" name="userId" value={user.id} />
                           <input type="hidden" name="role" value="SUPER_ADMIN" />
-                          <button formAction={updateUserRole} name="role" value="SUPER_ADMIN" className="px-3 py-1 bg-purple-600 hover:bg-purple-500 text-white rounded text-xs flex gap-1 items-center">
+                          <button formAction={updateUserRole}  className="px-3 py-1 bg-purple-600 hover:bg-purple-500 text-white rounded text-xs flex gap-1 items-center">
                             <FaUserShield /> Promote
                           </button>
                         </form>
                          <form className="flex gap-2">
                           <input type="hidden" name="userId" value={user.id} />
                           <input type="hidden" name="role" value="USER" />
-                          <button formAction={updateUserRole} name="role" value="USER" className="px-3 py-1 bg-red-600 hover:bg-red-500 text-white rounded text-xs flex gap-1 items-center">
+                          <button formAction={updateUserRole}  className="px-3 py-1 bg-red-600 hover:bg-red-500 text-white rounded text-xs flex gap-1 items-center">
                             <FaBan /> Revoke
                           </button>
                         </form>
