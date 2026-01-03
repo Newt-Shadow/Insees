@@ -27,6 +27,16 @@ const nextConfig: NextConfig = {
         hostname: "logo.clearbit.com",
         pathname: "/**",
       },
+      {
+      protocol: "https",
+      hostname: "lh3.googleusercontent.com",
+      pathname: "/**",
+    },
+    {
+      protocol: "https",
+      hostname: "avatars.githubusercontent.com",
+      pathname: "/**",
+    },
     ],
   },
 

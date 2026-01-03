@@ -39,9 +39,10 @@ async function logAction(action: string, details: string) {
 // --- DEVELOPERS ---
 export async function addDev(formData: FormData) {
   await checkAuth("ADMIN");
+  const name = formData.get("name") as string;
 
   const rawData = {
-    name: formData.get("name"),
+    name: name,
     role: formData.get("role"),
     github: formData.get("github"),
     linkedin: formData.get("linkedin"),
@@ -66,6 +67,7 @@ export async function addDev(formData: FormData) {
       category: result.data.category,
     }
   });
+  await logAction("CREATE_DEV", `Added developer: ${name}`);
   revalidatePath("/admin/developers");
   revalidatePath("/developers");
 }
@@ -74,8 +76,9 @@ export async function updateDev(formData: FormData) {
   await checkAuth("ADMIN");
 
   const id = formData.get("id") as string;
+  const name = formData.get("name") as string;
   const rawData = {
-    name: formData.get("name"),
+    name: name,
     role: formData.get("role"),
     github: formData.get("github"),
     linkedin: formData.get("linkedin"),
@@ -100,13 +103,16 @@ export async function updateDev(formData: FormData) {
       category: result.data.category,
     }
   });
+  await logAction("UPDATE_DEV", `Updated developer: ${name}`);
   revalidatePath("/admin/developers");
   revalidatePath("/developers");
 }
 
 export async function deleteDev(formData: FormData) {
   await checkAuth("ADMIN");
+  const id = formData.get("id") as string;
   await prisma.developer.delete({ where: { id: formData.get("id") as string } });
+  await logAction("DELETE_DEV", `Deleted developer ID: ${id}`); 
   revalidatePath("/admin/developers");
   revalidatePath("/developers");
 }
@@ -130,7 +136,7 @@ export async function deleteUser(formData: FormData) {
     const session = await getServerSession(authOptions);
     const userRole = session?.user?.role;
 
-    if (userRole !== "SUPER_ADMIN" && userRole !== "ADMIN") {
+    if (session?.user?.role !== "SUPER_ADMIN" && session?.user?.role !== "ADMIN") {
       throw new Error("Unauthorized: Insufficient permissions");
     }
 
@@ -159,11 +165,16 @@ export async function deleteUser(formData: FormData) {
 
 // --- RESOURCES ---
 export async function addSemester(formData: FormData) {
+  await checkAuth("ADMIN");
+  const title = formData.get("title") as string;
   await prisma.semester.create({ data: { title: formData.get("title") as string } });
+  await logAction("CREATE_SEMESTER", `Added semester: ${title}`);
   revalidatePath("/admin/resources");
 }
 
 export async function addSubject(formData: FormData) {
+  await checkAuth("ADMIN");
+  const name = formData.get("name") as string;
   await prisma.subject.create({
     data: {
       name: formData.get("name") as string,
@@ -171,18 +182,23 @@ export async function addSubject(formData: FormData) {
       semesterId: formData.get("semesterId") as string,
     }
   });
+  await logAction("CREATE_SUBJECT", `Added subject: ${name}`);
   revalidatePath("/admin/resources");
 }
 
 // --- INBOX ---
 export async function deleteMessage(formData: FormData) {
+  await checkAuth("ADMIN");
+  const id = formData.get("id") as string;
   await prisma.contactMessage.delete({ where: { id: formData.get("id") as string } });
+  await logAction("DELETE_MESSAGE", `Deleted message ID: ${id}`);
   revalidatePath("/admin/inbox");
 }
 
 // --- TEAM MEMBERS ---
 export async function addMember(formData: FormData) {
   await checkAuth("ADMIN");
+  const name = formData.get("name") as string;
 
   await prisma.teamMember.create({
     data: {
@@ -197,6 +213,7 @@ export async function addMember(formData: FormData) {
       facebook: formData.get("facebook") as string,
     }
   });
+  await logAction("CREATE_MEMBER", `Added team member: ${name}`);
   revalidatePath("/admin/team");
   revalidatePath("/team");
 }
@@ -205,6 +222,7 @@ export async function updateMember(formData: FormData) {
   await checkAuth("ADMIN");
 
   const id = formData.get("id") as string;
+  const name = formData.get("name") as string;
 
   await prisma.teamMember.update({
     where: { id },
@@ -220,6 +238,7 @@ export async function updateMember(formData: FormData) {
       facebook: formData.get("facebook") as string,
     }
   });
+  await logAction("UPDATE_MEMBER", `Updated team member: ${name}`);
   revalidatePath("/admin/team");
   revalidatePath("/team");
 }

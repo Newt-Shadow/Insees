@@ -61,6 +61,11 @@ export const authOptions: NextAuthOptions = {
         session.user.id = token.id as string
    
         session.user.role = token.role as string
+        prisma.user.update({
+          where: { id: token.id as string },
+          data: { lastActive: new Date() }
+        }).catch(err => console.error("Error updating lastActive:", err));
+      
       }
       return session
     },

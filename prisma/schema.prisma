@@ -57,6 +57,7 @@ model User {
   role          Role      @default(USER) 
   password      String?   // Optional because Google users won't have one
   department    String?
+  lastActive    DateTime  @default(now())
   accounts      Account[]
   sessions      Session[]
   logs          AuditLog[] 
