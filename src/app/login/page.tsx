@@ -74,7 +74,17 @@ export default function LoginPage() {
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error);
+      if (!res.ok) {
+        // Check if it's a Zod error object (flattened)
+        if (typeof data.error === "object" && data.error.fieldErrors) {
+          // Join all error messages into a single string for the alert
+          const allErrors = Object.values(data.error.fieldErrors).flat().join("\n");
+          throw new Error(allErrors);
+        } else {
+          // Fallback for generic strings (e.g. "User already exists")
+          throw new Error(data.error || "Signup failed");
+        }
+      }
 
       // Auto login after signup
       await signIn("credentials", {

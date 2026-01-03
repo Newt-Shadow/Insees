@@ -56,21 +56,14 @@ export const authOptions: NextAuthOptions = {
     },
     async session({ session, token }) {
       if (session.user) {
+        // TypeScript safe assignments
         session.user.id = token.id as string
         session.user.role = token.role as string
 
-        // ✅ OPTIMIZED: Update lastActive at most once per hour
-        // This prevents database spam on every session check/page load
-        const userId = token.id as string;
-        const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
-
-        prisma.user.updateMany({
-          where: {
-            id: userId,
-            lastActive: { lt: oneHourAgo }
-          },
-          data: { lastActive: new Date() }
-        }).catch(err => console.error("Error updating lastActive:", err));
+        // ⚡ PERFORMANCE FIX:
+        // Removed the 'updateMany' call here. 
+        // 'lastActive' is now only updated on Login (see events.signIn below).
+        // This prevents the "Too Many Connections" error on Vercel.
       }
       return session
     },
@@ -78,11 +71,14 @@ export const authOptions: NextAuthOptions = {
   events: {
     async signIn({ user, account, isNewUser }) {
       if (user.id) {
-        // Also update immediately on explicit login
+        // Update lastActive only once per login session
+        // This is much lighter on the database
         await prisma.user.update({
           where: { id: user.id },
           data: { lastActive: new Date() }
-        }).catch(() => { }); // Ignore error if update fails
+        }).catch((err) => {
+          console.error("Failed to update lastActive:", err);
+        });
 
         await logAdminAction(
           user.id,
