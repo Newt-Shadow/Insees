@@ -46,7 +46,7 @@ export async function POST(req: Request) {
 
     // Save all to database
     const savedImages = await prisma.$transaction(
-      uploads.map((img: any) => 
+      uploads.map((img: GalleryUpload) => 
         prisma.galleryImage.create({
           data: {
             src: img.src,
