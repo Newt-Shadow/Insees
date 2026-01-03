@@ -197,7 +197,7 @@ export default function SecurityGatekeeper() {
           onClick={() => window.location.reload()} 
           className="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-3 rounded-xl transition-all"
         >
-          I'm still here
+          I&apos;m still here
         </button>
       </div>
     </div>
