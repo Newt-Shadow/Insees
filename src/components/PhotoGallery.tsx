@@ -177,7 +177,7 @@ export default function PhotoGallery({ initialData }: PhotoGalleryProps) {
           {icon} {label}
         </p>
 
-        {realItems.length > 3 ? (
+        {realItems.length > 5 ? (
            // DROPDOWN MODE (If > 3 items)
            <div className="relative group">
               <select 
