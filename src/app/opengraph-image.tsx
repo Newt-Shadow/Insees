@@ -14,33 +14,40 @@ export default function OpenGraphImage() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          backgroundColor: "#050505",
-          fontFamily: "system-ui, -apple-system, BlinkMacSystemFont",
+          background: "linear-gradient(135deg, #020617, #000000)",
+          fontFamily:
+            "system-ui, -apple-system, BlinkMacSystemFont, Segoe UI",
         }}
       >
-        {/* Main Container */}
+        {/* Main Content */}
         <div
           style={{
+            width: "100%",
+            padding: "0 120px",
             display: "flex",
             flexDirection: "column",
-            alignItems: "center",
-            padding: 80,
-            borderRadius: 24,
-            background:
-              "linear-gradient(180deg, rgba(16,185,129,0.08), rgba(0,0,0,0))",
-            border: "1px solid rgba(16,185,129,0.25)",
-            boxShadow: "0 0 80px rgba(16,185,129,0.18)",
+            justifyContent: "center",
           }}
         >
-          {/* INSEES */}
+          {/* Accent Line */}
           <div
             style={{
-              display: "flex",
-              fontSize: 110,
+              width: 90,
+              height: 6,
+              backgroundColor: "#10b981",
+              borderRadius: 999,
+              marginBottom: 32,
+            }}
+          />
+
+          {/* Brand */}
+          <div
+            style={{
+              fontSize: 120,
               fontWeight: 900,
-              letterSpacing: "-0.03em",
+              letterSpacing: "-0.04em",
               color: "#ffffff",
-              marginBottom: 12,
+              lineHeight: 1,
             }}
           >
             INSEES
@@ -49,78 +56,31 @@ export default function OpenGraphImage() {
           {/* Subtitle */}
           <div
             style={{
-              display: "flex",
-              fontSize: 28,
+              marginTop: 24,
+              fontSize: 34,
               fontWeight: 500,
               color: "#d1d5db",
-              marginBottom: 26,
-              textAlign: "center",
               maxWidth: 900,
             }}
           >
-            Electronics & Instrumentation Engineering Society
-          </div>
-
-          {/* Divider */}
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 16,
-              marginBottom: 26,
-            }}
-          >
-            <div
-              style={{
-                width: 120,
-                height: 2,
-                backgroundColor: "#10b981",
-                opacity: 0.6,
-              }}
-            />
-            <div
-              style={{
-                width: 10,
-                height: 10,
-                borderRadius: 999,
-                backgroundColor: "#10b981",
-              }}
-            />
-            <div
-              style={{
-                width: 120,
-                height: 2,
-                backgroundColor: "#10b981",
-                opacity: 0.6,
-              }}
-            />
+            Instrumentation & Electronics Engineering Society
           </div>
 
           {/* Institute */}
           <div
             style={{
-              display: "flex",
-              fontSize: 26,
-              fontWeight: 700,
-              letterSpacing: "0.15em",
+              marginTop: 28,
+              fontSize: 22,
+              fontWeight: 600,
+              letterSpacing: "0.12em",
               color: "#10b981",
-              marginBottom: 14,
             }}
           >
-            NIT SILCHAR
+            NIT SILCHAR 
           </div>
 
-          {/* Footer line */}
-          <div
-            style={{
-              display: "flex",
-              fontSize: 18,
-              color: "#9ca3af",
-              textAlign: "center",
-            }}
-          >
-            Official Technical & Cultural Society
-          </div>
+          {/* Micro tagline */}
+          
         </div>
       </div>
     ),

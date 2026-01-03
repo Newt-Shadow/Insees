@@ -64,7 +64,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "INSEES ",
     description:
-      "Official technical and cultural society of the Department of Electronics and Instrumentation Engineering .",
+      "Official technical & cultural society of the Department of Electronics and Instrumentation Engineering .",
     url: "https://insees.in",
     siteName: "INSEES",
     locale: "en_US",
