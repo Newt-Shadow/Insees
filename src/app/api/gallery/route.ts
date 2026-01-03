@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { cloudinary } from "@/lib/cloudinary";
+import { getServerSession } from "next-auth"; // ✅ Import Auth
+import { authOptions } from "@/lib/auth";     // ✅ Import Options
+import { logAdminAction } from "@/lib/logger"; // ✅ Import Logger
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -37,6 +40,10 @@ export async function GET() {
 // ✅ POST (UPDATED: Receives URLs, does NOT upload files)
 export async function POST(req: Request) {
   try {
+    const session = await getServerSession(authOptions);
+    if (!session || (session.user.role !== "ADMIN" && session.user.role !== "SUPER_ADMIN")) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
     const body = await req.json(); // Read JSON, not FormData
     const { uploads } = body; 
 
@@ -59,6 +66,12 @@ export async function POST(req: Request) {
         })
       )
     );
+    const firstImg = uploads[0];
+    const logDetail = firstImg 
+      ? `Uploaded ${uploads.length} photos to ${firstImg.event} (${firstImg.year})`
+      : `Uploaded ${uploads.length} photos`;
+
+    await logAdminAction(session.user.id, "UPLOAD_GALLERY", logDetail);
 
     return NextResponse.json({ success: true, data: savedImages });
 
@@ -71,6 +84,10 @@ export async function POST(req: Request) {
 // DELETE (Keep this as is)
 export async function DELETE(req: Request) {
   try {
+    const session = await getServerSession(authOptions);
+    if (!session || (session.user.role !== "ADMIN" && session.user.role !== "SUPER_ADMIN")) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
     const { ids } = await req.json(); 
     const imagesToDelete = await prisma.galleryImage.findMany({
       where: { id: { in: ids } },
@@ -84,6 +101,11 @@ export async function DELETE(req: Request) {
     await prisma.galleryImage.deleteMany({
       where: { id: { in: ids } },
     });
+    await logAdminAction(
+      session.user.id, 
+      "DELETE_GALLERY", 
+      `Deleted ${ids.length} photos from gallery`
+    );
 
     return NextResponse.json({ success: true });
   } catch (err) {

@@ -7,7 +7,8 @@ import { redirect } from "next/navigation";
 import {
   FaChartPie, FaCalendarAlt, FaImages, FaUsers,
   FaCode, FaUserShield, FaSignOutAlt,
-  FaEnvelope
+  FaEnvelope,
+  FaShieldAlt
 } from "react-icons/fa";
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -61,6 +62,10 @@ export default async function AdminLayout({ children }: { children: React.ReactN
               <Link href="/admin/users" className="flex items-center gap-3 px-4 py-3 rounded-lg text-purple-400 hover:bg-purple-500/10 transition-all">
                 <FaUserShield />
                 <span>Access Control</span>
+              </Link>
+              <Link href="/admin/logs" className="flex items-center gap-3 px-4 py-3 rounded-lg text-red-400 hover:bg-red-500/10 transition-all">
+                <FaShieldAlt />
+                <span>Security Logs</span>
               </Link>
             </>
           )}
