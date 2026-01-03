@@ -16,7 +16,7 @@ type Peer = {
 };
 
 export default function SecurityGatekeeper() {
-    const lastActivityRef = useRef<number>(Date.now());
+  const lastActivityRef = useRef<number>(Date.now());
   const { data: session } = useSession();
   const [warning, setWarning] = useState(false);
   
@@ -88,17 +88,13 @@ export default function SecurityGatekeeper() {
         }
       });
 
-      // 🔒 MAX TAB PROTECTION
-      // If we see more peers than allowed, and we are the newest, we self-destruct.
+      // 🔒 MAX TAB PROTECTION (FIXED LOGIC)
+      // activePeers = Number of *other* tabs open.
+      // If MAX_TABS is 3, and activePeers is 3, that means YOU are the 4th tab.
       if (activePeers >= MAX_TABS) {
-        // Note: This logic is simple; strictly newly opened tabs beyond limit get rejected.
-        // Complex locking isn't needed for this use case.
-        // We delay slightly to ensure we aren't just seeing echoes.
-        if (activePeers > MAX_TABS) { 
-             console.warn("Too many admin tabs open.");
-             // Optional: Uncomment to enforce strict closing
-             // signOut({ callbackUrl: "/login?error=max_tabs" });
-        }
+         console.warn(`Too many admin tabs open (${activePeers + 1}). Closing this session.`);
+         // Force strict logout if limit exceeded
+         signOut({ callbackUrl: "/login?error=max_tabs" });
       }
     }, HEARTBEAT_INTERVAL_MS);
 
@@ -120,50 +116,52 @@ export default function SecurityGatekeeper() {
       warningTimer.current = setTimeout(() => setWarning(true), INACTIVITY_LIMIT_MS - WARNING_MS);
       inactivityTimer.current = setTimeout(logout, INACTIVITY_LIMIT_MS);
     };
-   
-
-    const events = ["mousedown", "mousemove", "keydown", "scroll", "touchstart"];
+    
     const onUserActivity = () => {
         requestAnimationFrame(updateActivity);
     };
     
+    const events = ["mousedown", "mousemove", "keydown", "scroll", "touchstart"];
     events.forEach(event => window.addEventListener(event, onUserActivity, { passive: true }));
     
     // Initialize
     updateActivity();
-    // resetActivityTimer();
 
 
-    // --- 4. EXIT HANDLER (The "Last Tab" Logic) ---
+    // --- 4. EXIT HANDLER (The "Last Tab" Logic - UPDATED) ---
     const handleUnload = () => {
       // 1. Tell others we are leaving
       channel.postMessage({ type: "GOODBYE", sender: tabId.current });
 
       // 2. Check if we are the LAST one
-      // We perform a quick prune logic here just in case
       const now = Date.now();
       let activePeers = 0;
       peers.current.forEach((lastSeen) => {
         if (now - lastSeen < PEER_TIMEOUT_MS) activePeers++;
       });
 
-      if (activePeers === 0) {
+      if (activePeers === 0 && csrfToken.current) {
         // 🚨 WE ARE THE LAST ADMIN TAB!
-        // Trigger server-side logout using 'keepalive' (reliable on page unload)
-        if (csrfToken.current) {
-          const params = new URLSearchParams();
-          params.append("csrfToken", csrfToken.current);
-          params.append("callbackUrl", "/login");
-          params.append("json", "true");
+        // Use sendBeacon for reliable delivery when browser is closing
+        const params = new URLSearchParams();
+        params.append("csrfToken", csrfToken.current);
+        params.append("callbackUrl", "/login");
+        params.append("json", "true");
 
-          fetch("/api/auth/signout", {
-            method: "POST",
-            body: params,
-            headers: {
-              "Content-Type": "application/x-www-form-urlencoded",
-            },
-            keepalive: true, // Key: Keeps request alive after tab dies
-          });
+        // Create blob for Beacon
+        const blob = new Blob([params.toString()], { type: "application/x-www-form-urlencoded" });
+        
+        // 1. Try Beacon (Most Reliable on Unload)
+        const sent = navigator.sendBeacon("/api/auth/signout", blob);
+
+        // 2. Fallback to fetch with keepalive if Beacon fails
+        if (!sent) {
+            fetch("/api/auth/signout", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: params,
+                keepalive: true,
+            });
         }
       }
     };
