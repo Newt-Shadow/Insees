@@ -108,7 +108,7 @@ export const Sponsors = () => {
                 </button> */}
            
                 <Link
-                  href="/#contact"
+                  href="/contact"
                   className="px-8 py-3 rounded-full border border-white/30 text-white font-bold hover:bg-white/10 transition-colors backdrop-blur-md inline-block"
                 >
                   Contact Us

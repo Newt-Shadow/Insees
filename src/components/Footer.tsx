@@ -80,7 +80,7 @@ export const Footer = () => {
              </a>
           </div>
           <div className="mt-6">
-             <Link href="/#contact" className="text-xs text-gray-500 hover:text-oz-emerald transition-colors flex items-center gap-2">
+             <Link href="/contact" className="text-xs text-gray-500 hover:text-oz-emerald transition-colors flex items-center gap-2">
                <MapPin size={14} /> NIT Silchar, 788010
              </Link>
           </div>

@@ -19,7 +19,7 @@ const NAV_ITEMS = [
   { name: "TEAM", href: "/team", label: "TEAM" },
   { name: "GALLERY", href: "/gallery", label: "GALLERY" },
   { name: "RESOURCES", href: "/resources", label: "RESOURCES" },
-  // { name: "CONTACT", href: null, label: "CONTACT" },
+  { name: "CONTACT", href: "/contact", label: "CONTACT" },
 ];
 
 const containerVariants: Variants = {
