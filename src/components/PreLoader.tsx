@@ -13,16 +13,18 @@ export default function PreLoader() {
   // --- Dynamic Boot Sequence Generator ---
   const bootSequence = useMemo(() => {
     const base = ["INITIALIZING KERNEL...", "LOADING MODULES: [OZ_CORE, GLITCH_UI]"];
-    
+
     // Determine context (either from click trigger or current URL on refresh)
     let context = targetLabel;
-    
+
     // If default "SYSTEM" (initial load), try to guess based on URL
     if (context === "SYSTEM") {
       if (pathname.includes("team")) context = "TEAM";
       else if (pathname.includes("alpha")) context = "ALPHA CRESCENDO";
+      else if (pathname.includes("events")) context = "EVENTS";
       else if (pathname.includes("gallery")) context = "GALLERY";
       else if (pathname.includes("resources")) context = "RESOURCES";
+      else if (pathname.includes("contact")) context = "CONTACT";
       else if (pathname === "/") context = "HOME";
     }
 
@@ -33,10 +35,16 @@ export default function PreLoader() {
         return [...base, "CONNECTING TO EMERALD CITY...", "LOADING FESTIVAL ASSETS...", "OPENING THE GATES..."];
       case "TEAM":
         return [...base, "DECRYPTING PERSONNEL DATABASE...", "FETCHING AGENT PROFILES...", "ACCESS GRANTED."];
+      case "EVENTS":
+        return [...base, "LOADING TIMELINE...", "SYNCING SCHEDULES...", "EVENTS CALIBRATED."];
       case "GALLERY":
         return [...base, "RETRIEVING VISUAL ARCHIVES...", "PROCESSING IMAGE DATA...", "DISPLAYING LOGS."];
       case "RESOURCES":
         return [...base, "ACCESSING KNOWLEDGE BANK...", "DOWNLOADING SCHEMATICS...", "LIBRARY OPEN."];
+      case "CONTACT":
+        return [...base, "ESTABLISHING UPLINK...", "ENCRYPTING CHANNEL...", "COMMS LINK READY..."];
+      case "LOGIN":
+        return [...base, "AUTHENTICATION PROTOCOL...", "SECURE GATEWAY...", "ACCESS STANDBY.",];
       default:
         return [...base, "ESTABLISHING SECURE CONNECTION...", "SYSTEM READY."];
     }
@@ -92,16 +100,16 @@ export default function PreLoader() {
             </motion.div>
           ))}
           <motion.div
-             animate={{ opacity: [0, 1, 0] }}
-             transition={{ duration: 0.8, repeat: Infinity }}
-             className="w-3 h-5 bg-oz-emerald mt-2 ml-6"
+            animate={{ opacity: [0, 1, 0] }}
+            transition={{ duration: 0.8, repeat: Infinity }}
+            className="w-3 h-5 bg-oz-emerald mt-2 ml-6"
           />
         </div>
-        
+
         {/* Progress Bar */}
         <div className="absolute bottom-10 left-10 right-10 max-w-xl mx-auto">
           <div className="h-1 bg-gray-800 w-full overflow-hidden">
-            <motion.div 
+            <motion.div
               initial={{ width: "0%" }}
               animate={{ width: "100%" }}
               transition={{ duration: 3, ease: "easeInOut" }}
@@ -109,8 +117,8 @@ export default function PreLoader() {
             />
           </div>
           <div className="flex justify-between text-xs text-gray-500 mt-2 font-mono">
-             <span>MODULE: {targetLabel === "SYSTEM" ? "CORE" : targetLabel}</span>
-             <span>STATUS: LOADING...</span>
+            <span>MODULE: {targetLabel === "SYSTEM" ? "CORE" : targetLabel}</span>
+            <span>STATUS: LOADING...</span>
           </div>
         </div>
       </motion.div>
