@@ -37,7 +37,7 @@
     "prisma/seed.js",
     "prisma/seed.ts",
     "src/types"
-, "prisma/check-team-from-file.js"  ],
+, "prisma/check-team-from-file.js", "scripts/scan.js"  ],
   "exclude": [
     "node_modules"
   ]
