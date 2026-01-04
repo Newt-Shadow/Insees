@@ -8,6 +8,7 @@ import CommandPalette from "@/components/CommandPalette";
 import ScrollToTop from "@/components/ScrollToTop";
 import PreLoader from "@/components/PreLoader";
 import { PreloaderProvider } from "@/app/context/PreloaderContext"; // Import Provider
+import { Analytics } from "@vercel/analytics/next"
 
 
 const poppins = Poppins({
@@ -134,6 +135,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
             {/* Main Content */}
             {children}
+            <Analytics />
 
             {/* Footer - Note: Links inside Footer do NOT have onClick={triggerBoot}, so no animation */}
             <Footer />
