@@ -178,7 +178,7 @@ export default function AlphaCrescendoPage() {
           <Countdown />
 
 
-          {/* <motion.div
+          { <motion.div
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.6 }}
@@ -192,14 +192,14 @@ export default function AlphaCrescendoPage() {
             <button className="px-8  py-4 bg-transparent border hover:cursor-pointer border-white/20 text-white font-bold rounded-full hover:bg-white/10 transition-all">
               Download Brochure
             </button>
-          </motion.div> */}
+          </motion.div> }
         </div>
       </section>
 
       {/* COMPONENTS */}
       <AboutSection />
-      {/* <WhatsNew /> */}
-      {/* <EventsGrid /> */}
+      { <WhatsNew /> }
+      {<EventsGrid /> }
 
       {/* Magazine Teaser */}
       {/* ================= INSTRUMIND MAGAZINE ================= */}

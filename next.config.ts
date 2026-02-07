@@ -2,6 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   output: "standalone",
+  poweredByHeader: false,
 
   images: {
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
@@ -28,41 +29,41 @@ const nextConfig: NextConfig = {
         pathname: "/**",
       },
       {
-      protocol: "https",
-      hostname: "lh3.googleusercontent.com",
-      pathname: "/**",
-    },
-    {
-      protocol: "https",
-      hostname: "avatars.githubusercontent.com",
-      pathname: "/**",
-    },
+        protocol: "https",
+        hostname: "lh3.googleusercontent.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "avatars.githubusercontent.com",
+        pathname: "/**",
+      },
     ],
   },
 
   // ✅ ADD THIS BLOCK
   async redirects() {
-  return [
-    {
-      source: "/:path*",
-      has: [{ type: "host", value: "insees.tech" }],
-      destination: "https://www.insees.in/:path*",
-      permanent: true,
-    },
-    {
-      source: "/:path*",
-      has: [{ type: "host", value: "www.insees.tech" }],
-      destination: "https://www.insees.in/:path*",
-      permanent: true,
-    },
-    {
-      source: "/:path*",
-      has: [{ type: "host", value: "insees.in" }],
-      destination: "https://www.insees.in/:path*",
-      permanent: true,
-    },
-  ];
-},
+    return [
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "insees.tech" }],
+        destination: "https://www.insees.in/:path*",
+        permanent: true,
+      },
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "www.insees.tech" }],
+        destination: "https://www.insees.in/:path*",
+        permanent: true,
+      },
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "insees.in" }],
+        destination: "https://www.insees.in/:path*",
+        permanent: true,
+      },
+    ];
+  },
 
 };
 

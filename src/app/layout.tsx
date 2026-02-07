@@ -60,7 +60,14 @@ export const metadata: Metadata = {
     "EIE Department NIT Silchar",
     "Alpha Crescendo",
     "Electronics and Instrumentation Department NIT Silchar",
+    "Student Society",
+    "Technical Society",
+    "Engineering",
+    "Robotics",
+    "Automation",
   ],
+
+  manifest: "/manifest.json",
 
   openGraph: {
     title: "INSEES ",
